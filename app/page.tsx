@@ -2,6 +2,7 @@ import Image from "next/image";
 import Navbar from "@/views/navbar/Navbar";
 import HeroSection from "@/views/hero/HeroSection";
 import StatisticsSection from "@/views/statistic/StatisticsSection";
+import Footer from "@/views/footer/Footer";
 
 export default function Home() {
   return (
@@ -9,6 +10,7 @@ export default function Home() {
       <Navbar />
       <HeroSection/>
       <StatisticsSection/>
+      <Footer/>
     </div>
   );
 }

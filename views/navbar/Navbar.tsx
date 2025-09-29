@@ -38,7 +38,7 @@ export default function Navbar() {
         isScrolled ? "bg-black shadow-lg" : "bg-transparent"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="py-2 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <div className="flex-shrink-0">
@@ -171,7 +171,7 @@ export default function Navbar() {
           </div>
 
           {/* Right Icons */}
-          <div className="hidden lg:flex items-center space-x-4">
+          {/* <div className="hidden lg:flex items-center space-x-4">
             <Button
               variant="ghost"
               size="icon"
@@ -186,7 +186,7 @@ export default function Navbar() {
             >
               <Search className="h-5 w-5" />
             </Button>
-          </div>
+          </div> */}
 
           {/* Mobile menu button */}
           <div className="lg:hidden">
