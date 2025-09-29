@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { Menu, X, ChevronDown, Info, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,44 +13,29 @@ import {
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-black shadow-lg" : "bg-transparent"
-      }`}
-    >
+    <nav className="sticky top-0 py-4 left-0 right-0 z-50 bg-transparent text-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <img
-              src="/images/logoLight.png"
-              alt="Team holding frames"
-              className="w-45 h-full object-cover"
-            />
+            <Link href="/" className="text-2xl font-bold text-white">
+              <img
+                src="/images/logoLight.png"
+                alt="Team holding frames"
+                className="w-45 h-full object-cover"
+                
+              />
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-8  ">
             {/* Demos Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -171,7 +156,7 @@ export default function Navbar() {
           </div>
 
           {/* Right Icons */}
-          <div className="hidden lg:flex items-center space-x-4">
+          {/* <div className="hidden lg:flex items-center space-x-4">
             <Button
               variant="ghost"
               size="icon"
@@ -186,7 +171,7 @@ export default function Navbar() {
             >
               <Search className="h-5 w-5" />
             </Button>
-          </div>
+          </div> */}
 
           {/* Mobile menu button */}
           <div className="lg:hidden">
