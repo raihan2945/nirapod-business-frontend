@@ -5,6 +5,8 @@ import StatisticsSection from "@/views/statistic/StatisticsSection";
 import Footer from "@/views/footer/Footer";
 import FAQSection from "@/views/faq/FAQSection";
 import FeedbackSection from "@/views/feedback/FeedbackSection";
+import BlogSection from "@/views/blogs/BlogSection";
+import NewsletterSection from "@/views/newsLetter/NewsLetterSection";
 
 export default function Home() {
   return (
@@ -16,6 +18,8 @@ export default function Home() {
       <StatisticsSection />
       <FAQSection />
       <FeedbackSection/>
+      <BlogSection/>
+      <NewsletterSection/>
       {/* </div>
       </section> */}
       <Footer />

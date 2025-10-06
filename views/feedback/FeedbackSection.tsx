@@ -6,68 +6,72 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import FeedbackCard from "./FeedbackCard";
+
+const feedbacks = [
+  {
+    id: 1,
+    name: "Adnan Shahariar",
+    designation: "Mechanical Engineer (powerplant)",
+    text: `ছোট মিনিমাম লেভেলের একটা বিনিয়োগ করেছি। কথা মতো ২৪ মাসের ৩ মাস পর রিটার্ন করেছে, ৪র্থ মাসে কিছু সমস্যার জন্য ফুল রিটার্ন করতে না পারলেও পরে যােগাযোগ করেছে। তাই আমার সামর্থ্য হলে আবার ইনভেস্ট করবো।`,
+  },
+  {
+    id: 2,
+    name: "Adnan Shahariar",
+    designation: "Mechanical Engineer (powerplant)",
+    text: `I am connected with this group since 1 year (approximately). I invest
+          in 2 project. I have received the profit of the project in time. In
+          this current situation halal business is very rare while Halal
+          `,
+  },
+  {
+    id: 3,
+    name: "Adnan Shahariar",
+    designation: "Mechanical Engineer (powerplant)",
+    text: `I am connected with this group since 1 year (approximately). I invest
+          in 2 project. I have received the profit of the project in time. In
+          this current situation halal business is very rare while Halal
+          Investment working with commitment. Specially Abu Bakar Siddique vai
+          is very helpful person. I believe in their commitment. If we need any
+          query we can ask them via what's app. Most of the time we get the
+          reply within the day. I wish their success.`,
+  },
+];
 
 export default function FeedbackSection() {
   return (
-    <section className="py-12 sm:py-16 lg:py-20 bg-white-500">
+    <section className="py-8 sm:py-16 lg:py-20 bg-white-500">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-center gap-4 mb-2">
+        <div className="flex items-center justify-center gap-4 mb-8">
           <h2 className="text-3xl center sm:text-4xl lg:text-5xl font-bold text-gray-900">
             Investor Success Story
           </h2>
         </div>
-        <Accordion
-          type="single"
-          collapsible
+
+        <Carousel
+          opts={{
+            align: "center",
+          }}
           className="w-full"
-          defaultValue="item-1"
-          
         >
-          <AccordionItem value="item-1">
-            <AccordionTrigger>Product Information</AccordionTrigger>
-            <AccordionContent className="flex flex-col gap-4 text-balance">
-              <p>
-                Our flagship product combines cutting-edge technology with sleek
-                design. Built with premium materials, it offers unparalleled
-                performance and reliability.
-              </p>
-              <p>
-                Key features include advanced processing capabilities, and an
-                intuitive user interface designed for both beginners and
-                experts.
-              </p>
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-2">
-            <AccordionTrigger>Shipping Details</AccordionTrigger>
-            <AccordionContent className="flex flex-col gap-4 text-balance">
-              <p>
-                We offer worldwide shipping through trusted courier partners.
-                Standard delivery takes 3-5 business days, while express
-                shipping ensures delivery within 1-2 business days.
-              </p>
-              <p>
-                All orders are carefully packaged and fully insured. Track your
-                shipment in real-time through our dedicated tracking portal.
-              </p>
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-3">
-            <AccordionTrigger>Return Policy</AccordionTrigger>
-            <AccordionContent className="flex flex-col gap-4 text-balance">
-              <p>
-                We stand behind our products with a comprehensive 30-day return
-                policy. If you&apos;re not completely satisfied, simply return
-                the item in its original condition.
-              </p>
-              <p>
-                Our hassle-free return process includes free return shipping and
-                full refunds processed within 48 hours of receiving the returned
-                item.
-              </p>
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
+          <CarouselContent>
+            {feedbacks.map((item, index) => (
+              <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                <FeedbackCard index={index} data={item} />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
       </div>
     </section>
   );
