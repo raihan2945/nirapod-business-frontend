@@ -17,10 +17,10 @@ import {
 
 export default function FAQSection() {
   return (
-    <section className="py-12 sm:py-16 lg:py-20 bg-lime-600">
+    <section className="py-8 sm:py-16 lg:py-20 bg-gray-100">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-center gap-4 mb-6">
-          <h2 className="text-3xl center sm:text-4xl lg:text-5xl font-bold text-white">
+          <h2 className="text-3xl center sm:text-4xl lg:text-5xl font-bold text-gray-800">
             Frequently Asked Questions
           </h2>
         </div>
@@ -31,8 +31,8 @@ export default function FAQSection() {
           defaultValue="item-1"
         >
           <AccordionItem value="item-1">
-            <AccordionTrigger className="text-white text-xl">Product Information</AccordionTrigger>
-            <AccordionContent className="flex flex-col gap-4 text-balance text-white">
+            <AccordionTrigger className="text-gray-800 text-xl">Product Information</AccordionTrigger>
+            <AccordionContent className="flex flex-col gap-4 text-balance">
               <p>
                 Our flagship product combines cutting-edge technology with sleek
                 design. Built with premium materials, it offers unparalleled
@@ -46,9 +46,9 @@ export default function FAQSection() {
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-2">
-            <AccordionTrigger>Shipping Details</AccordionTrigger>
+            <AccordionTrigger  className="text-gray-800 text-xl">Shipping Details</AccordionTrigger>
             <AccordionContent className="flex flex-col gap-4 text-balance">
-              <p>
+              <p>   
                 We offer worldwide shipping through trusted courier partners.
                 Standard delivery takes 3-5 business days, while express
                 shipping ensures delivery within 1-2 business days.
@@ -60,7 +60,7 @@ export default function FAQSection() {
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-3">
-            <AccordionTrigger>Return Policy</AccordionTrigger>
+            <AccordionTrigger  className="text-gray-800 text-xl">Return Policy</AccordionTrigger>
             <AccordionContent className="flex flex-col gap-4 text-balance">
               <p>
                 We stand behind our products with a comprehensive 30-day return

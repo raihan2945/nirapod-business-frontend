@@ -1,0 +1,19 @@
+import Navbar from "@/views/navbar/Navbar";
+import React from "react";
+import Footer from "@/views/footer/Footer";
+// props
+type DashboardLayoutProps = {
+  children: React.ReactNode;
+};
+
+const Layout = ({ children }: DashboardLayoutProps) => {
+  return (
+    <div>
+      <Navbar variant="fixed" />
+      <div className="mt-23">{children}</div>
+      <Footer />
+    </div>
+  );
+};
+
+export default Layout;

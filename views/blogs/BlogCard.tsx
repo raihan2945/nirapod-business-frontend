@@ -13,13 +13,13 @@ const BlogCard = (props: any) => {
         src={data?.image}
         alt="Team holding frames"
         className="w-full h-full object-cover absolute z-0"
-        style={{ zIndex: "-50" }}
+        // style={{ zIndex: "-50" }}
       />
 
-      <div className="w-full h-full p-8 flex flex-col justify-end items-start">
+      <div className="relative w-full h-full p-8 flex flex-col justify-end items-start z-10">
         <div>
-          <p className="font-bold text-md text-white text-3xl">{data?.title}</p>
-          <p className="text-white">{data?.description}</p>
+          <p className="font-bold text-md text-white text-3xl z-10">{data?.title}</p>
+          <p className="text-white z-10">{data?.description}</p>
         </div>
       </div>
     </div>

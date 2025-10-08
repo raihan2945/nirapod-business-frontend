@@ -11,7 +11,7 @@ const HeroSection = () => {
           alt="Team holding frames"
           className="w-full h-full object-cover"
         />
-        {/* <div className="absolute inset-0 bg-gray-500/60" /> */}
+        <div className="absolute inset-0 bg-gray-800/40" />
       </div>
 
       {/* Hero Content */}

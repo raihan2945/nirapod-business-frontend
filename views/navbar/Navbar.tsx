@@ -11,7 +11,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export default function Navbar() {
+interface NavbarProps {
+  variant?: "transparent" | "fixed";
+}
+
+export default function Navbar({ variant = "transparent" }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -32,161 +36,98 @@ export default function Navbar() {
     setIsOpen(!isOpen);
   };
 
+  const navBackground =
+    variant === "fixed"
+      ? "bg-[#31ad5c] shadow-lg"
+      : isScrolled
+      ? "bg-[#31ad5c] shadow-lg"
+      : "bg-transparent";
+
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-black shadow-lg" : "bg-transparent"
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navBackground}`}
     >
       <div className="py-2 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <img
-              src="/images/logoLight.png"
-              alt="Team holding frames"
-              className="w-45 h-full object-cover"
-            />
+            <Link href={"/"}>
+              <img
+                src={
+                  variant === "fixed" || isScrolled
+                    ? "/images/logoDark.png"
+                    : "/images/logoLight.png"
+                }
+                alt="Team holding frames"
+                className="w-45 h-full object-cover"
+              />
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-8">
+            <Link
+              href="/projects"
+              className="text-white hover:text-cyan-400 px-3 py-2 text-md font-medium"
+            >
+              Projects
+            </Link>
+            <Link
+              href="/blogs"
+              className="text-white hover:text-cyan-400 px-3 py-2 text-md font-medium"
+            >
+              Blog
+            </Link>
+            <Link
+              href="/investment"
+              className="text-white hover:text-cyan-400 px-3 py-2 text-md font-medium"
+            >
+              Apply for Investments
+            </Link>
+            {/* <Link
+              href="/faq"
+              className="text-white hover:text-cyan-400 px-3 py-2 text-md font-medium"
+            >
+              FAQ's
+            </Link> */}
+            <Link
+              href="/about"
+              className="text-white hover:text-cyan-400 px-3 py-2 text-md font-medium"
+            >
+              About
+            </Link>
+            <Link
+              href="/contact"
+              className="text-white hover:text-cyan-400 px-3 py-2 text-md font-medium"
+            >
+              Contact
+            </Link>
+
             {/* Demos Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
-                  variant="ghost"
-                  className="flex items-center space-x-1 text-white hover:text-cyan-400 hover:bg-transparent"
+                  // variant="ghost"
+                  className="pointer flex items-center space-x-1 text-white bg-gray-800"
                 >
-                  <span>Demos</span>
+                  <span>Login</span>
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem>
-                  <Link href="/demos/demo1">Demo 1</Link>
+                  <Link href="/demos/demo1" className="text-md">
+                    As Investor
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link href="/demos/demo2">Demo 2</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link href="/demos/demo3">Demo 3</Link>
+                  <Link href="/demos/demo2" className="text-md">
+                    As Finance
+                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-
-            {/* Pages Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="flex items-center space-x-1 text-white hover:text-cyan-400 hover:bg-transparent"
-                >
-                  <span>Pages</span>
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem>
-                  <Link href="/pages/about">About</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link href="/pages/services">Services</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link href="/pages/contact">Contact</Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Projects Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="flex items-center space-x-1 text-white hover:text-cyan-400 hover:bg-transparent"
-                >
-                  <span>Projects</span>
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem>
-                  <Link href="/projects/project1">Project 1</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link href="/projects/project2">Project 2</Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Blog Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="flex items-center space-x-1 text-white hover:text-cyan-400 hover:bg-transparent"
-                >
-                  <span>Blog</span>
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem>
-                  <Link href="/blog/latest">Latest Posts</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link href="/blog/categories">Categories</Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Blocks Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="flex items-center space-x-1 text-white hover:text-cyan-400 hover:bg-transparent"
-                >
-                  <span>Blocks</span>
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem>
-                  <Link href="/blocks/headers">Headers</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link href="/blocks/footers">Footers</Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <Link
-              href="/documentation"
-              className="text-white hover:text-cyan-400 px-3 py-2 text-sm font-medium"
-            >
-              Documentation
-            </Link>
           </div>
-
-          {/* Right Icons */}
-          {/* <div className="hidden lg:flex items-center space-x-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-white hover:text-cyan-400 hover:bg-transparent"
-            >
-              <Info className="h-5 w-5" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-white hover:text-cyan-400 hover:bg-transparent"
-            >
-              <Search className="h-5 w-5" />
-            </Button>
-          </div> */}
 
           {/* Mobile menu button */}
           <div className="lg:hidden">
@@ -210,7 +151,7 @@ export default function Navbar() {
           <div className="lg:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 bg-gray-900/95 backdrop-blur-sm rounded-lg mt-2">
               {/* Demos Dropdown for Mobile */}
-              <DropdownMenu>
+              {/* <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
@@ -237,144 +178,68 @@ export default function Navbar() {
                     </Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
-              </DropdownMenu>
-
-              {/* Pages Dropdown for Mobile */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start text-white hover:text-cyan-400 hover:bg-transparent"
-                  >
-                    <span>Pages</span>
-                    <ChevronDown className="h-4 w-4 ml-auto" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-full">
-                  <DropdownMenuItem>
-                    <Link href="/pages/about" onClick={() => setIsOpen(false)}>
-                      About
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Link
-                      href="/pages/services"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      Services
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Link
-                      href="/pages/contact"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      Contact
-                    </Link>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              {/* Projects Dropdown for Mobile */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start text-white hover:text-cyan-400 hover:bg-transparent"
-                  >
-                    <span>Projects</span>
-                    <ChevronDown className="h-4 w-4 ml-auto" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-full">
-                  <DropdownMenuItem>
-                    <Link
-                      href="/projects/project1"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      Project 1
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Link
-                      href="/projects/project2"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      Project 2
-                    </Link>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              {/* Blog Dropdown for Mobile */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start text-white hover:text-cyan-400 hover:bg-transparent"
-                  >
-                    <span>Blog</span>
-                    <ChevronDown className="h-4 w-4 ml-auto" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-full">
-                  <DropdownMenuItem>
-                    <Link href="/blog/latest" onClick={() => setIsOpen(false)}>
-                      Latest Posts
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Link
-                      href="/blog/categories"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      Categories
-                    </Link>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              {/* Blocks Dropdown for Mobile */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start text-white hover:text-cyan-400 hover:bg-transparent"
-                  >
-                    <span>Blocks</span>
-                    <ChevronDown className="h-4 w-4 ml-auto" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-full">
-                  <DropdownMenuItem>
-                    <Link
-                      href="/blocks/headers"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      Headers
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Link
-                      href="/blocks/footers"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      Footers
-                    </Link>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              </DropdownMenu> */}
 
               <Link
-                href="/documentation"
-                className="text-white hover:text-cyan-400 block px-3 py-2 text-base font-medium"
-                onClick={() => setIsOpen(false)}
+                href="/projects"
+                className="block w-full text-white hover:text-cyan-400 px-3 py-2 text-md font-medium"
               >
-                Documentation
+                Projects
               </Link>
 
+              <Link
+                href="/blogs"
+                className="block w-full text-white hover:text-cyan-400 px-3 py-2 text-md font-medium"
+              >
+                Blog
+              </Link>
+              <Link
+                href="/investment"
+                className="block w-full text-white hover:text-cyan-400 px-3 py-2 text-md font-medium"
+              >
+                Apply for Investments
+              </Link>
+
+              <Link
+                href="/about"
+                className="block w-full text-white hover:text-cyan-400 px-3 py-2 text-md font-medium"
+              >
+                About
+              </Link>
+              <Link
+                href="/contact"
+                className="block w-full text-white hover:text-cyan-400 px-3 py-2 text-md font-medium"
+              >
+                Contact
+              </Link>
+
+              {/* Demos Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    // variant="ghost"
+                    className="block w-full pointer flex items-center space-x-1 text-white bg-gray-800"
+                  >
+                    <span>Login</span>
+                    <ChevronDown className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem>
+                    <Link href="/demos/demo1" className="text-md">
+                      As Investor
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link href="/demos/demo2" className="text-md">
+                      As Finance
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
               {/* Mobile Icons */}
-              <div className="flex items-center space-x-4 px-3 pt-4 border-t border-gray-700">
+              {/* <div className="flex items-center space-x-4 px-3 pt-4 border-t border-gray-700">
                 <Button
                   variant="ghost"
                   size="icon"
@@ -389,7 +254,7 @@ export default function Navbar() {
                 >
                   <Search className="h-5 w-5" />
                 </Button>
-              </div>
+              </div> */}
             </div>
           </div>
         )}

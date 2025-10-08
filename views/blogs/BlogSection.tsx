@@ -32,10 +32,10 @@ const feedbacks = [
 
 export default function BlogSection() {
   return (
-    <section className="py-8 sm:py-16 lg:py-20 bg-white-500">
+    <section className="py-8 sm:py-8 lg:py-16 bg-white-500">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-center gap-4 mb-8">
-          <h2 className="text-3xl center sm:text-4xl lg:text-5xl font-bold text-gray-900">
+          <h2 className="mb-6 text-3xl center sm:text-4xl lg:text-5xl font-bold text-gray-900">
             Blogs
           </h2>
         </div>
