@@ -10,7 +10,7 @@ import NewsletterSection from "@/views/newsLetter/NewsLetterSection";
 
 export default function Home() {
   return (
-    <div className="min-h-screen">
+    <div>
       <Navbar />
       <HeroSection />
       {/* <section className="py-12 sm:py-16 lg:py-20 bg-white">
@@ -19,7 +19,7 @@ export default function Home() {
       <FAQSection />
       <FeedbackSection/>
       <BlogSection/>
-      <NewsletterSection/>
+      {/* <NewsletterSection/> */}
       {/* </div>
       </section> */}
       <Footer />
