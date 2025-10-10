@@ -80,7 +80,7 @@ const About = () => {
           We prepare a contract for each project, and the invested money will be
           returned once the project period is complete. For any type of project,
           there is no option for an early withdrawal. Since the funds are
-          actively used in business, it's not possible to recover the invested
+          actively used in business, its not possible to recover the invested
           amount before the project ends.
         </p>
 

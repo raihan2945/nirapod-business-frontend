@@ -1,7 +1,6 @@
 "use client";
 
 import BlogCard from "@/views/blogs/BlogCard";
-import ProjectCard from "@/views/projects/ProjectCard";
 
 const blogs = [
   {
