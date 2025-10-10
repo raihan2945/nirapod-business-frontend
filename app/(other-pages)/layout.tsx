@@ -10,7 +10,7 @@ const Layout = ({ children }: DashboardLayoutProps) => {
   return (
     <div>
       <Navbar variant="fixed" />
-      <div className="mt-23">{children}</div>
+      <div className="mt-20">{children}</div>
       <Footer />
     </div>
   );

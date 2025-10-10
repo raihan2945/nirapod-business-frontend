@@ -48,7 +48,7 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navBackground}`}
     >
       <div className="py-2 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
+        <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href={"/"}>
@@ -59,7 +59,7 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
                     : "/images/logoLight.png"
                 }
                 alt="Team holding frames"
-                className="w-45 h-full object-cover"
+                className="w-36 h-full object-cover"
               />
             </Link>
           </div>
@@ -116,12 +116,12 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem>
-                  <Link href="/demos/demo1" className="text-md">
+                  <Link href="/login/investor" className="text-md">
                     As Investor
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link href="/demos/demo2" className="text-md">
+                  <Link href="/login/admin" className="text-md">
                     As Finance
                   </Link>
                 </DropdownMenuItem>
@@ -226,12 +226,12 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuItem>
-                    <Link href="/demos/demo1" className="text-md">
+                    <Link href="/login/investor" className="text-md">
                       As Investor
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
-                    <Link href="/demos/demo2" className="text-md">
+                    <Link href="/login/admin" className="text-md">
                       As Finance
                     </Link>
                   </DropdownMenuItem>

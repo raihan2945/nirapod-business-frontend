@@ -401,7 +401,7 @@ export default function ApplyForInvestment() {
               <Button
                 type="submit"
                 size="lg"
-                className="cursor-pointer bg-lime-600 hover:bg-lime-700 text-white px-12 py-6 text-lg font-medium rounded-lg transition-colors"
+                className="cursor-pointer bg-[#31ad5c] hover:bg-[#278a4a] text-white px-12 py-6 text-lg font-medium rounded-lg transition-colors"
               >
                 Submit Application
               </Button>
