@@ -1,4 +1,8 @@
-import Image from "next/image";
+'use client'
+import { StyleProvider } from "@ant-design/cssinjs";
+import { ConfigProvider } from "antd";
+// @ts-ignore - side-effect CSS import without type declarations
+import "./globals.css";
 import Navbar from "@/views/navbar/Navbar";
 import HeroSection from "@/views/hero/HeroSection";
 import StatisticsSection from "@/views/statistic/StatisticsSection";
@@ -10,19 +14,28 @@ import NewsletterSection from "@/views/newsLetter/NewsLetterSection";
 
 export default function Home() {
   return (
-    <div>
-      <Navbar />
-      <HeroSection />
-      {/* <section className="py-12 sm:py-16 lg:py-20 bg-white">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8"> */}
-      <StatisticsSection />
-      <FAQSection />
-      <FeedbackSection/>
-      <BlogSection/>
-      {/* <NewsletterSection/> */}
-      {/* </div>
-      </section> */}
-      <Footer />
-    </div>
+    <StyleProvider hashPriority="high">
+      <ConfigProvider
+        theme={{
+          token: {
+            // Optional: Customize AntD theme here
+            colorPrimary: "#31AD5C",
+            borderRadius: 4,
+            colorPrimaryActive:"#31AD5C"
+          },
+        }}
+      >
+        <>
+          <Navbar />
+          <HeroSection />
+          <StatisticsSection />
+          <FAQSection />
+          <FeedbackSection />
+          <BlogSection />
+          <NewsletterSection />
+          <Footer />
+        </>
+      </ConfigProvider>
+    </StyleProvider>
   );
 }
