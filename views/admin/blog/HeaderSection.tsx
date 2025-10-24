@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Select, Input, Button, Modal } from "antd";
-import AddBike from "./form/AddBike";
+import AddBike from "./form/BlogForm";
 import useCheckAccess from "@/utils/checkAccess";
 
 const { Search } = Input;
@@ -17,7 +17,7 @@ interface ComponentProps {
   clickExport?: any;
 }
 
-const BikeHeadSection: React.FC<ComponentProps> = ({
+const BlogHeader: React.FC<ComponentProps> = ({
   query,
   changeQuery,
   clickExport,
@@ -27,7 +27,7 @@ const BikeHeadSection: React.FC<ComponentProps> = ({
 
   return (
     <>
-      <div className="flex justify-between items-center">
+      {/* <div className="flex justify-between items-center">
         <div className="my-2 flex gap-4">
           <div>
             <p className="text-sm mb-1 opacity-70">Bike Type </p>
@@ -95,22 +95,22 @@ const BikeHeadSection: React.FC<ComponentProps> = ({
             <LiaFileExportSolid />
           </Button>
         </div>
-      </div>
+      </div> */}
 
-      <Modal
+      {/* <Modal
         title="Add a new bike"
         centered
         open={isAdd}
         onCancel={() => setIsAdd(false)}
         width={"60%"}
         footer={null}
-        destroyOnClose={true}
-      >
+        destroyOnHidden={true}
+      > */}
         {/* ADD BIKE FORM  */}
-        <AddBike modalCancel={() => setIsAdd(false)} />
-      </Modal>
+        {/* <AddBike modalCancel={() => setIsAdd(false)} /> */}
+      {/* </Modal> */}
     </>
   );
 };
 
-export default BikeHeadSection;
+export default BlogHeader;

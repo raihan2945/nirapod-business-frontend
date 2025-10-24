@@ -1,17 +1,25 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import InputV1 from "@/components/Input/InputV1";
-import { SubmitHandler, useForm } from "react-hook-form";
-import SingleFileUpload from "@/components/Input/SingleFileUpload";
+import { useEffect, useState } from "react";
+import SingleFileUpload from "@/components/SingleFileUpload";
 import { Button } from "antd";
-import SelectInput from "@/components/Input/SelectInput";
-import { useCreateNewBikeMutation, useUpdateBikeByIdMutation } from "@/state/features/blogs/blogsApi";
+// import SelectInput from "@/components/Input/SelectInput";
 import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
-import CheckAccess from "@/utils/checkAccess";
+import { useForm } from "react-hook-form";
 import useCheckAccess from "@/utils/checkAccess";
 import { RootState } from "@/state/store";
 import { useSelector } from "react-redux";
+import {
+  useCreateNewBlogMutation,
+  useUpdateBlogByIdMutation,
+} from "@/state/features/blogs/blogsApi";
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 
 interface SelectTypes {
   value: string;
@@ -27,40 +35,52 @@ type FormValues = {
 interface ComponentProps {
   modalCancel: any;
   formType?: string;
-  info?: any
+  info?: any;
 }
 
-const AddBike: React.FC<ComponentProps> = ({ modalCancel, formType, info }) => {
+const BlogForm: React.FC<ComponentProps> = ({
+  modalCancel,
+  formType,
+  info,
+}) => {
   const user = useSelector((state: RootState) => state?.user?.data);
 
-  const { register, handleSubmit, getValues, setValue, setError, setFocus, formState: { errors } } = useForm<any>();
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    setValue,
+    setError,
+    setFocus,
+    formState: { errors, isSubmitting },
+  } = useForm<any>();
 
-  const { hasAccess } = useCheckAccess()
+  const { hasAccess } = useCheckAccess();
 
-  const { handleResponse } = useAPIResponseHandler()
+  const { handleResponse } = useAPIResponseHandler();
 
   const [image, setImage] = useState<any>();
 
-  const [CreateNew] = useCreateNewBikeMutation();
-  const [UpdateOne] = useUpdateBikeByIdMutation()
+  const [CreateNew] = useCreateNewBlogMutation();
+  const [UpdateOne] = useUpdateBlogByIdMutation();
 
   const onSubmit = async () => {
     const data: any = getValues();
 
-    const submitData: any = {}
+    const submitData: any = {};
 
     Object.keys(data).map((key: string) => {
       if (data[key]) {
-        console.log(data[key])
-        submitData[key] = data[key]
+        console.log(data[key]);
+        submitData[key] = data[key];
       }
     });
 
-    delete submitData.id
-    delete submitData.created_by
-    delete submitData.updated_by
-    delete submitData.createdAt
-    delete submitData.updatedAt
+    delete submitData.id;
+    delete submitData.created_by;
+    delete submitData.updated_by;
+    delete submitData.createdAt;
+    delete submitData.updatedAt;
 
     // console.log("Data is : ", submitData);
 
@@ -76,15 +96,14 @@ const AddBike: React.FC<ComponentProps> = ({ modalCancel, formType, info }) => {
       form.append("photo", image);
     }
 
-
     let res: any;
 
     if (info?.id) {
-      form.append('updated_by', user?.id || '');
-      res = await UpdateOne({ id: info?.id, data: form })
+      form.append("updated_by", user?.id || "");
+      res = await UpdateOne({ id: info?.id, data: form });
     } else {
-      form.append('created_by', user?.id || '');
-      res = await CreateNew({ data: form })
+      form.append("created_by", user?.id || "");
+      res = await CreateNew({ data: form });
     }
 
     const result: any = handleResponse(res);
@@ -99,35 +118,25 @@ const AddBike: React.FC<ComponentProps> = ({ modalCancel, formType, info }) => {
         if (index == 0) {
           setFocus(`${err?.path[0]}`);
         }
-      })
+      });
     }
 
-    // if (refetchDriver) {
-    //   refetchDriver()
-    // }
-    // if (refetchDrivers) {
-    //   refetchDrivers()
-    // }
     if (result?.code == 201) {
-      modalCancel()
+      modalCancel();
     }
     if (result?.code == 200) {
-      modalCancel()
+      modalCancel();
     }
-
   };
 
   useEffect(() => {
-
     if (info) {
       Object.keys(info).map((key: any) => {
         if (info[key]) {
-          setValue(`${key}`, info[key])
+          setValue(`${key}`, info[key]);
         }
-      })
-
+      });
     }
-
   }, [info]);
 
   const carTypes: SelectTypes[] = [
@@ -152,11 +161,52 @@ const AddBike: React.FC<ComponentProps> = ({ modalCancel, formType, info }) => {
     },
   ];
 
-
   return (
     <div className="pt-2">
       <form>
-        <div className="grid gap-3 mb-6 md:grid-cols-2">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <FieldGroup>
+            <Field>
+              <FieldLabel htmlFor="email">Email</FieldLabel>
+              <Input
+                id="email"
+                type="email"
+                placeholder="m@example.com"
+                {...register("email")}
+                aria-invalid={errors.email ? "true" : "false"}
+              />
+              {errors.email && (
+                <FieldDescription className="text-red-500">
+                  {/* {errors?.email?.message} */}
+                </FieldDescription>
+              )}
+            </Field>
+            <Field>
+              <div className="flex items-center">
+                <FieldLabel htmlFor="password">Password</FieldLabel>
+                <a
+                  href="#"
+                  className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                >
+                  Forgot your password?
+                </a>
+              </div>
+              <Input
+                id="password"
+                type="password"
+                {...register("password")}
+                aria-invalid={errors.password ? "true" : "false"}
+              />
+              {errors.password && (
+                <FieldDescription className="text-red-500">
+                  {/* {errors.password.message} */}
+                </FieldDescription>
+              )}
+            </Field>
+          </FieldGroup>
+        </form>
+
+        {/* <div className="grid gap-3 mb-6 md:grid-cols-2">
           <InputV1 name="brand" label="Brand" register={register("brand")} errors={errors} />
           <SelectInput
             label="Bike Type"
@@ -234,7 +284,7 @@ const AddBike: React.FC<ComponentProps> = ({ modalCancel, formType, info }) => {
             errors={errors}
           />
 
-        </div>
+        </div> */}
 
         <div className="mt-2">
           <SingleFileUpload
@@ -245,17 +295,21 @@ const AddBike: React.FC<ComponentProps> = ({ modalCancel, formType, info }) => {
           />
         </div>
       </form>
-      {
-        hasAccess(["bike_management"]) &&
+      {hasAccess(["bike_management"]) && (
         <div className="flex justify-end gap-2">
           <Button onClick={modalCancel}>Cancel</Button>
-          <Button onClick={() => onSubmit()} htmlType="submit" type="primary">
+          <Button
+            disabled={isSubmitting}
+            onClick={() => onSubmit()}
+            htmlType="submit"
+            type="primary"
+          >
             {formType === "edit" ? "Update" : "Create"}
           </Button>
         </div>
-      }
+      )}
     </div>
   );
 };
 
-export default AddBike;
+export default BlogForm;

@@ -11,16 +11,13 @@ import { MdDelete } from "react-icons/md";
 
 // import { bikeData, carData } from "@/lib/data";
 import { RiEditBoxFill } from "react-icons/ri";
-import AddBike from "./form/AddBike";
+import AddBike from "./form/BlogForm";
 import TableSkeleton from "@/components/TableSkeleton";
-import {
-  useDeleteBikeByIdMutation,
-  useGetAllBikesQuery,
-} from "@/state/features/blogs/blogsApi";
 import { generateQueryArray } from "@/utils/query";
 import { baseUrl } from "@/utils/baseUrl";
 import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
 import useCheckAccess from "@/utils/checkAccess";
+import { useDeleteBlogByIdMutation } from "@/state/features/blogs/blogsApi";
 
 interface ComponentProps {
   bikeData?: any;
@@ -33,9 +30,9 @@ const BlogView: React.FC<ComponentProps> = ({ bikeData, isLoading }) => {
   const [isEdit, setIsEdit] = useState<any>(null);
   const [showAlltoment, setShowAlltoment] = useState<any>(null);
 
-  const { handleResponse } = useAPIResponseHandler();
+  // const { handleResponse } = useAPIResponseHandler();
 
-  const [deleteOne] = useDeleteBikeByIdMutation();
+  const [deleteOne] = useDeleteBlogByIdMutation();
 
   interface DataType {
     id: string;
@@ -48,7 +45,7 @@ const BlogView: React.FC<ComponentProps> = ({ bikeData, isLoading }) => {
   const submitDelete = async (id: any) => {
     const res = deleteOne(id);
 
-    handleResponse(res);
+    // handleResponse(res);
   };
 
   const columns: TableProps<DataType>["columns"] = [
@@ -59,9 +56,9 @@ const BlogView: React.FC<ComponentProps> = ({ bikeData, isLoading }) => {
       render: (text) => `#${text}`,
     },
     {
-      title: "Photo",
-      dataIndex: "photo",
-      key: "photo",
+      title: "Cover Photo",
+      dataIndex: "coverPhoto",
+      key: "coverPhoto",
       render: (text) => (
         <div className="relative w-20 h-20 p-1 overflow-hidden rounded-full">
           <Image
@@ -74,36 +71,21 @@ const BlogView: React.FC<ComponentProps> = ({ bikeData, isLoading }) => {
       ),
     },
     {
-      title: "Brand",
-      dataIndex: "brand",
-      key: "brand",
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
       render: (text) => text,
     },
     {
-      title: "Model",
-      dataIndex: "model",
-      key: "model",
-      render: (text) => text,
-    },
-    {
-      title: "Reg No",
-      dataIndex: "reg_number",
-      key: "reg_number",
-    },
-    {
-      title: "Allotment",
-      key: "status",
+      title: "status",
       dataIndex: "status",
-      render: () => <>N/A</>,
-      // render: (_, { status }) => status ? <Tag color="green">Available</Tag> : <Tag color="red">Assigned</Tag>,
+      key: "status",
+      render: (text) => text,
     },
     {
-      title: "Last Updated By",
-      key: "updated_by",
-      dataIndex: "updated_by",
-      render: (updated_by, record: any) => (
-        <Tag>#{updated_by ? updated_by : record?.created_by}</Tag>
-      ),
+      title: "createdAt",
+      dataIndex: "createdAt",
+      key: "createdAt",
     },
     {
       title: "Action",
@@ -154,23 +136,22 @@ const BlogView: React.FC<ComponentProps> = ({ bikeData, isLoading }) => {
         <Table columns={columns} dataSource={bikeData} />
       </div>
 
-      {/* edit bikeform */}
-      <Modal
+      {/* edit blog form */}
+      {/* <Modal
         title="Update a new bike"
         centered
         open={isEdit}
         onCancel={() => setIsEdit(false)}
         width={"60%"}
         footer={null}
-        destroyOnClose={true}
+        destroyOnHidden={true}
       >
-        {/* ADD BIKE FORM  */}
         <AddBike
           formType="edit"
           info={isEdit}
           modalCancel={() => setIsEdit(false)}
         />
-      </Modal>
+      </Modal> */}
     </>
   );
 };
