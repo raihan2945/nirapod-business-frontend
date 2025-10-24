@@ -1,0 +1,26 @@
+"use client";
+
+import { RootState } from "@/state/store";
+import { useSelector } from "react-redux";
+
+const checkAccess = (roles: string[]) => {
+    const userProfile: any = useSelector((state: RootState) => state?.user?.data);
+
+    let finalReturn = false;
+
+    for (let item of userProfile?.roles) {
+
+        if (item == "super_admin") {
+            return (finalReturn = true);
+        } else if (item == "admin") {
+            return (finalReturn = true);
+        } else if (roles.includes(item)) {
+            return (finalReturn = true);
+        }
+
+    }
+
+    return finalReturn;
+};
+
+export default checkAccess;

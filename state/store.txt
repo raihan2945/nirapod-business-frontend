@@ -1,0 +1,52 @@
+import { configureStore } from "@reduxjs/toolkit";
+import { carSlice } from "./slices/carSlice";
+import { fuelSlice } from "./slices/fuelSlice";
+import { tollSlice } from "./slices/tollSlice";
+import { parkingSlice } from "./slices/parkingSlice";
+import { driverSlice } from "./slices/driverSlice";
+import { componentSlice } from "./slices/componentSlice";
+import { maintenanceSlice } from "./slices/maintenanceSlice";
+import { bikeSlice } from "./slices/bikeSlice";
+import { employeeSlice } from "./slices/employeeSlice";
+import { assetSlice } from "./slices/assetSlice";
+import { allotmentSlice } from "./slices/allotmentSlice";
+import { officeSlice } from "./slices/officeSlice";
+import { pettyCashSlice } from "./slices/pettyCashSlice";
+
+export const store = configureStore({
+  reducer: {
+    [carSlice.reducerPath]: carSlice.reducer,
+    [bikeSlice.reducerPath]: bikeSlice.reducer,
+    [fuelSlice.reducerPath]: fuelSlice.reducer,
+    [tollSlice.reducerPath]: tollSlice.reducer,
+    [parkingSlice.reducerPath]: parkingSlice.reducer,
+    [driverSlice.reducerPath]: driverSlice.reducer,
+    [componentSlice.reducerPath]: componentSlice.reducer,
+    [maintenanceSlice.reducerPath]: maintenanceSlice.reducer,
+    [employeeSlice.reducerPath]: employeeSlice.reducer,
+    [assetSlice.reducerPath]: assetSlice.reducer,
+    [allotmentSlice.reducerPath]: allotmentSlice.reducer,
+    [officeSlice.reducerPath]: officeSlice.reducer,
+    [pettyCashSlice.reducerPath]: pettyCashSlice.reducer,
+  },
+
+  middleware: (getDefaultMiddleware) => 
+      getDefaultMiddleware().concat(
+        carSlice.middleware,
+        bikeSlice.middleware,
+        fuelSlice.middleware,
+        tollSlice.middleware,
+        parkingSlice.middleware,
+        driverSlice.middleware,
+        componentSlice.middleware,
+        maintenanceSlice.middleware,
+        employeeSlice.middleware,
+        assetSlice.middleware,
+        allotmentSlice.middleware,
+        officeSlice.middleware,
+        pettyCashSlice.middleware,
+      ),
+});
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

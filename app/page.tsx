@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { StyleProvider } from "@ant-design/cssinjs";
 import { ConfigProvider } from "antd";
 // @ts-ignore - side-effect CSS import without type declarations
@@ -12,7 +12,11 @@ import FeedbackSection from "@/views/feedback/FeedbackSection";
 import BlogSection from "@/views/blogs/BlogSection";
 import NewsletterSection from "@/views/newsLetter/NewsLetterSection";
 
-export default function Home() {
+export default function Home({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <StyleProvider hashPriority="high">
       <ConfigProvider
@@ -21,20 +25,18 @@ export default function Home() {
             // Optional: Customize AntD theme here
             colorPrimary: "#31AD5C",
             borderRadius: 4,
-            colorPrimaryActive:"#31AD5C"
+            colorPrimaryActive: "#31AD5C",
           },
         }}
       >
-        <>
-          <Navbar />
-          <HeroSection />
-          <StatisticsSection />
-          <FAQSection />
-          <FeedbackSection />
-          <BlogSection />
-          <NewsletterSection />
-          <Footer />
-        </>
+        <Navbar />
+        <HeroSection />
+        <StatisticsSection />
+        <FAQSection />
+        <FeedbackSection />
+        <BlogSection />
+        <NewsletterSection />
+        <Footer />
       </ConfigProvider>
     </StyleProvider>
   );

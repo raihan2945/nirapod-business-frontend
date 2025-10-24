@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 // @ts-ignore - side-effect CSS import without type declarations
 import "./globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
+import ReduxProvider from "@/components/ReduxProvider";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -23,7 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${poppins.variable} antialiased`}>
-        <AntdRegistry>{children}</AntdRegistry>
+        <AntdRegistry>
+          <ReduxProvider>{children}</ReduxProvider>
+        </AntdRegistry>
       </body>
     </html>
   );

@@ -27,13 +27,18 @@ const menuItems = [
     icon: <UserOutlined />,
   },
   {
-    key: "3",
-    label: <Link href="/admin/users">Investors</Link>,
+    key: "4",
+    label: <Link href="/admin/investors">Investors</Link>,
     icon: <UserOutlined />,
   },
 ];
 
-const App: React.FC = () => {
+export default function App({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -50,11 +55,13 @@ const App: React.FC = () => {
           console.log(collapsed, type);
         }}
       >
-        <img
-          src={"/images/logoLight.png"}
-          alt="Team holding frames"
-          className="w-36 h-full object-cover"
-        />
+        <div className="p-8">
+          <img
+            src={"/images/logoLight.png"}
+            alt="Team holding frames"
+            //  object-cover"
+          />
+        </div>
         <div className="demo-logo-vertical" />
         <Menu
           theme="dark"
@@ -74,7 +81,7 @@ const App: React.FC = () => {
               borderRadius: borderRadiusLG,
             }}
           >
-            content
+            {children}
           </div>
         </Content>
         <Footer style={{ textAlign: "center" }}>
@@ -83,6 +90,4 @@ const App: React.FC = () => {
       </Layout>
     </Layout>
   );
-};
-
-export default App;
+}

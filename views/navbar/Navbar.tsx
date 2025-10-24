@@ -116,12 +116,12 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem>
-                  <Link href="/login/investor" className="text-md">
+                  <Link href="/login/investor-login" className="text-md">
                     As Investor
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link href="/login/admin" className="text-md">
+                  <Link href="/login/finance-login" className="text-md">
                     As Finance
                   </Link>
                 </DropdownMenuItem>
