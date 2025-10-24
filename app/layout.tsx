@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
-// import "./globals.css";
+// @ts-ignore - side-effect CSS import without type declarations
+import "./globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 
 const poppins = Poppins({

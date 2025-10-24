@@ -2,7 +2,7 @@
 import { StyleProvider } from "@ant-design/cssinjs";
 import { ConfigProvider } from "antd";
 // @ts-ignore - side-effect CSS import without type declarations
-import "./globals.css";
+// import "./globals.css";
 import Navbar from "@/views/navbar/Navbar";
 import HeroSection from "@/views/hero/HeroSection";
 import StatisticsSection from "@/views/statistic/StatisticsSection";
