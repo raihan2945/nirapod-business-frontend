@@ -17,14 +17,15 @@ import { baseUrl } from "@/utils/baseUrl";
 import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
 // import useCheckAccess from "@/utils/checkAccess";
 import { useDeleteBlogByIdMutation } from "@/state/features/blogs/blogsApi";
-import BlogForm from "./form/BlogForm";
+import BlogForm from "./form/UserForm";
+import { useDeleteUserByIdMutation } from "@/state/features/user/userApi";
 
 interface ComponentProps {
   data?: any;
   isLoading?: any;
 }
 
-const BlogView: React.FC<ComponentProps> = ({ data, isLoading }) => {
+const UserView: React.FC<ComponentProps> = ({ data, isLoading }) => {
   // const { hasAccess } = useCheckAccess();
 
   const [isEdit, setIsEdit] = useState<any>(null);
@@ -32,7 +33,7 @@ const BlogView: React.FC<ComponentProps> = ({ data, isLoading }) => {
 
   const { handleResponse } = useAPIResponseHandler();
 
-  const [deleteOne] = useDeleteBlogByIdMutation();
+  const [deleteOne] = useDeleteUserByIdMutation();
 
   interface DataType {
     id: string;
@@ -54,30 +55,32 @@ const BlogView: React.FC<ComponentProps> = ({ data, isLoading }) => {
       dataIndex: "id",
       key: "id",
       render: (text) => `#${text}`,
-      width: 170,
     },
+  
     {
-      title: "Cover Photo",
-      dataIndex: "coverPhoto",
-      key: "coverPhoto",
-      render: (text) => (
-        <div className="relative w-20 h-20 p-1 overflow-hidden rounded">
-          <Image
-            alt="photo"
-            src={`${baseUrl}/uploads/photos/${text}`}
-            fill
-            className="w-full h-auto object-contain"
-          />
-        </div>
-      ),
-    },
-    {
-      title: "Title",
-      dataIndex: "title",
-      key: "title",
+      title: "Full Name",
+      dataIndex: "fullName",
+      key: "fullName",
       render: (text) => text,
     },
-
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+      render: (text) => text,
+    },
+    {
+      title: "Mobile",
+      dataIndex: "mobile",
+      key: "mobile",
+      render: (text) => text,
+    },
+    {
+      title: "Role",
+      dataIndex: "role",
+      key: "role",
+      render: (text) => text,
+    },
     {
       title: "status",
       dataIndex: "status",
@@ -137,12 +140,7 @@ const BlogView: React.FC<ComponentProps> = ({ data, isLoading }) => {
         onCancel={() => setIsEdit(false)}
         footer={null}
         destroyOnHidden={true}
-        className="responsive-modal"
-        styles={{
-          body: {
-            padding: 0,
-          },
-        }}
+        width={"50%"}
       >
         {/* <div className="p-4 sm:p-6 max-h-[80vh] overflow-y-auto"> */}
         <BlogForm
@@ -152,38 +150,8 @@ const BlogView: React.FC<ComponentProps> = ({ data, isLoading }) => {
         />
         {/* </div> */}
       </Modal>
-
-      <style jsx global>{`
-        /* ✅ Responsive modal sizing */
-        .responsive-modal .ant-modal {
-          width: 95% !important;
-          max-width: 900px;
-          top: 2%;
-          margin: 0 auto;
-        }
-
-        @media (max-width: 768px) {
-          .responsive-modal .ant-modal {
-            width: 100% !important;
-            max-width: 95%;
-            margin: 0 8px;
-            top: 0;
-          }
-          .responsive-modal .ant-modal-content {
-            border-radius: 0;
-            height: 100vh;
-            overflow-y: auto;
-          }
-        }
-
-        @media (min-width: 769px) {
-          .responsive-modal .ant-modal {
-            max-width: 700px;
-          }
-        }
-      `}</style>
     </>
   );
 };
 
-export default BlogView;
+export default UserView;

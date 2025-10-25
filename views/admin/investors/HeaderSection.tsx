@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Select, Input, Button, Modal } from "antd";
-import BlogForm from "./form/BlogForm";
+import BlogForm from "./form/InvestorForm";
 import useCheckAccess from "@/utils/checkAccess";
 
 const { Search } = Input;
@@ -17,7 +17,7 @@ interface ComponentProps {
   clickExport?: any;
 }
 
-const BlogHeader: React.FC<ComponentProps> = ({
+const InvestorHeader: React.FC<ComponentProps> = ({
   query,
   changeQuery,
   clickExport,
@@ -27,8 +27,7 @@ const BlogHeader: React.FC<ComponentProps> = ({
 
   return (
     <>
-      <h1 className="text-xl font-bold mb-6">Blogs</h1>
-
+      <h1 className="text-xl font-bold mb-6">Investor Requests</h1>
       <div className="flex justify-between items-center">
         <div className="my-2 flex gap-4">
           {/* <div>
@@ -94,48 +93,13 @@ const BlogHeader: React.FC<ComponentProps> = ({
         onCancel={() => setIsAdd(false)}
         footer={null}
         destroyOnHidden={true}
-        className="responsive-modal"
-        styles={{
-          body: {
-            padding: 0,
-          },
-        }}
+        width={"50%"}
       >
         {/* ADD BIKE FORM  */}
         <BlogForm formType="create" modalCancel={() => setIsAdd(false)} />
       </Modal>
-
-      <style jsx global>{`
-        /* ✅ Responsive modal sizing */
-        .responsive-modal .ant-modal {
-          width: 95% !important;
-          max-width: 900px;
-          top: 2%;
-          margin: 0 auto;
-        }
-
-        @media (max-width: 768px) {
-          .responsive-modal .ant-modal {
-            width: 100% !important;
-            max-width: 95%;
-            margin: 0 8px;
-            top: 0;
-          }
-          .responsive-modal .ant-modal-content {
-            border-radius: 0;
-            height: 100vh;
-            overflow-y: auto;
-          }
-        }
-
-        @media (min-width: 769px) {
-          .responsive-modal .ant-modal {
-            max-width: 700px;
-          }
-        }
-      `}</style>
     </>
   );
 };
 
-export default BlogHeader;
+export default InvestorHeader;

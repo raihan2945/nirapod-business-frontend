@@ -10,6 +10,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useSelector } from "react-redux";
+import { RootState } from "../../state/store";
+import { useGetUserByIdQuery } from "@/state/features/user/userApi";
 
 interface NavbarProps {
   variant?: "transparent" | "fixed";
@@ -18,6 +21,12 @@ interface NavbarProps {
 export default function Navbar({ variant = "transparent" }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+
+  const userId = useSelector((state: RootState) => state.auth?.id);
+  const { data: userData, isLoading, isError } = useGetUserByIdQuery(userId);
+  const userProfile = useSelector((state: RootState) => state?.user?.data);
+
+  console.log("User Profile:", userProfile);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -104,29 +113,40 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
             </Link>
 
             {/* Demos Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  // variant="ghost"
-                  className="pointer flex items-center space-x-1 text-white bg-gray-800"
-                >
-                  <span>Login</span>
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem>
-                  <Link href="/login/investor-login" className="text-md">
-                    As Investor
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link href="/login/finance-login" className="text-md">
-                    As Finance
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+
+            {userProfile && userProfile.role == "admin" ? (
+              <Link href="/admin/projects">
+                <Button style={{cursor:"pointer"}}>Dashboard</Button>
+              </Link>
+            ) : userProfile?.role == "user" ? (
+              <Link href="/user/profile">
+                <Button style={{cursor:"pointer"}}>Profile</Button>
+              </Link>
+            ) : (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    // variant="ghost"
+                    className="pointer flex items-center space-x-1 text-white bg-gray-800"
+                  >
+                    <span>Login</span>
+                    <ChevronDown className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem>
+                    <Link href="/login/investor-login" className="text-md">
+                      As Investor
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link href="/login/finance-login" className="text-md">
+                      As Finance
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -214,29 +234,35 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
               </Link>
 
               {/* Demos Dropdown */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    // variant="ghost"
-                    className="block w-full pointer flex items-center space-x-1 text-white bg-gray-800"
-                  >
-                    <span>Login</span>
-                    <ChevronDown className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem>
-                    <Link href="/login/investor" className="text-md">
-                      As Investor
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Link href="/login/admin" className="text-md">
-                      As Finance
-                    </Link>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              {userProfile && userProfile.role == "admin" ? (
+                <Button>Dashboard</Button>
+              ) : userProfile?.role == "user" ? (
+                <Button>Profile</Button>
+              ) : (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      // variant="ghost"
+                      className="block w-full pointer flex items-center space-x-1 text-white bg-gray-800"
+                    >
+                      <span>Login</span>
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem>
+                      <Link href="/login/investor" className="text-md">
+                        As Investor
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Link href="/login/admin" className="text-md">
+                        As Finance
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
 
               {/* Mobile Icons */}
               {/* <div className="flex items-center space-x-4 px-3 pt-4 border-t border-gray-700">

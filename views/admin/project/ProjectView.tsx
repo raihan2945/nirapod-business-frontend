@@ -17,14 +17,15 @@ import { baseUrl } from "@/utils/baseUrl";
 import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
 // import useCheckAccess from "@/utils/checkAccess";
 import { useDeleteBlogByIdMutation } from "@/state/features/blogs/blogsApi";
-import BlogForm from "./form/BlogForm";
+import BlogForm from "./form/ProjectForm";
+import { useDeleteProjectByIdMutation } from "@/state/features/projects/projectsApi";
 
 interface ComponentProps {
   data?: any;
   isLoading?: any;
 }
 
-const BlogView: React.FC<ComponentProps> = ({ data, isLoading }) => {
+const ProjectView: React.FC<ComponentProps> = ({ data, isLoading }) => {
   // const { hasAccess } = useCheckAccess();
 
   const [isEdit, setIsEdit] = useState<any>(null);
@@ -32,7 +33,7 @@ const BlogView: React.FC<ComponentProps> = ({ data, isLoading }) => {
 
   const { handleResponse } = useAPIResponseHandler();
 
-  const [deleteOne] = useDeleteBlogByIdMutation();
+  const [deleteOne] = useDeleteProjectByIdMutation();
 
   interface DataType {
     id: string;
@@ -77,7 +78,18 @@ const BlogView: React.FC<ComponentProps> = ({ data, isLoading }) => {
       key: "title",
       render: (text) => text,
     },
-
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      render: (text) => text,
+    },
+    {
+      title: "status",
+      dataIndex: "status",
+      key: "status",
+      render: (text) => text,
+    },
     {
       title: "status",
       dataIndex: "status",
@@ -138,52 +150,16 @@ const BlogView: React.FC<ComponentProps> = ({ data, isLoading }) => {
         footer={null}
         destroyOnHidden={true}
         className="responsive-modal"
-        styles={{
-          body: {
-            padding: 0,
-          },
-        }}
+        width={"50%"}
       >
-        {/* <div className="p-4 sm:p-6 max-h-[80vh] overflow-y-auto"> */}
         <BlogForm
           formType="edit"
           info={isEdit}
           modalCancel={() => setIsEdit(false)}
         />
-        {/* </div> */}
       </Modal>
-
-      <style jsx global>{`
-        /* ✅ Responsive modal sizing */
-        .responsive-modal .ant-modal {
-          width: 95% !important;
-          max-width: 900px;
-          top: 2%;
-          margin: 0 auto;
-        }
-
-        @media (max-width: 768px) {
-          .responsive-modal .ant-modal {
-            width: 100% !important;
-            max-width: 95%;
-            margin: 0 8px;
-            top: 0;
-          }
-          .responsive-modal .ant-modal-content {
-            border-radius: 0;
-            height: 100vh;
-            overflow-y: auto;
-          }
-        }
-
-        @media (min-width: 769px) {
-          .responsive-modal .ant-modal {
-            max-width: 700px;
-          }
-        }
-      `}</style>
     </>
   );
 };
 
-export default BlogView;
+export default ProjectView;
