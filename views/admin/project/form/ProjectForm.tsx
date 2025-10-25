@@ -23,6 +23,7 @@ const projectSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
   investmentGoal: decimalSchema.default(0),
+  raised: decimalSchema.default(0),
   minInvestment: decimalSchema.default(0),
   waiting: decimalSchema.default(0),
   murabahaMarkupReturn: decimalSchema.default(0),
@@ -167,20 +168,6 @@ const ProjectForm: React.FC<ComponentProps> = ({
         }
       });
 
-      // formData.append("title", data.title);
-      // formData.append("description", data.description || "");
-      // formData.append("investmentGoal", String(data.investmentGoal));
-      // formData.append("minInvestment", String(data.minInvestment));
-      // formData.append("waiting", String(data.waiting));
-      // formData.append(
-      //   "murabahaMarkupReturn",
-      //   String(data.murabahaMarkupReturn)
-      // );
-      // formData.append("calculatedRoi", String(data.calculatedRoi));
-      // formData.append("repayment", String(data.repayment));
-      // formData.append("projectDuration", String(data.projectDuration));
-      // formData.append("leftDays", String(data.leftDays));
-
       if (data.coverPhoto instanceof File)
         formData.append("photo", data.coverPhoto);
 
@@ -208,64 +195,65 @@ const ProjectForm: React.FC<ComponentProps> = ({
   };
 
   // ✅ Initialize form when editing
-useEffect(() => {
-  if (info) {
-    // Handle cover photo
-    if (info.coverPhoto) {
-      setCoverPhotoPreview(`${baseUrl}/uploads/photos/${info.coverPhoto}`);
-    }
-
-    // Handle roles and other array fields
-    const fields = [
-      "roles",
-      "theBusiness",
-      "theContract",
-      "shariahCompliance",
-      "potentialRisks",
-    ];
-
-    fields.forEach((field) => {
-      if (info[field]) {
-        let parsedData;
-        try {
-          parsedData =
-            typeof info[field] === "string"
-              ? JSON.parse(info[field])
-              : info[field];
-          // Ensure parsedData is an array
-          if (!Array.isArray(parsedData)) {
-            console.warn(`Field ${field} is not an array:`, parsedData);
-            parsedData = [];
-          }
-        } catch (error) {
-          console.error(`Error parsing ${field}:`, error);
-          parsedData = []; // Fallback to empty array
-        }
-        reset((prev) => ({ ...prev, [field]: parsedData }));
-      } else {
-        // If field is undefined, reset to empty array
-        reset((prev) => ({ ...prev, [field]: [] }));
+  useEffect(() => {
+    if (info) {
+      // Handle cover photo
+      if (info.coverPhoto) {
+        setCoverPhotoPreview(`${baseUrl}/uploads/photos/${info.coverPhoto}`);
       }
-    });
 
-    // Set other fields (non-array)
-    reset((prev) => ({
-      ...prev,
-      title: info.title || "",
-      description: info.description || "",
-      investmentGoal: info.investmentGoal || 0,
-      minInvestment: info.minInvestment || 0,
-      waiting: info.waiting || 0,
-      murabahaMarkupReturn: info.murabahaMarkupReturn || 0,
-      calculatedRoi: info.calculatedRoi || 0,
-      repayment: info.repayment || 0,
-      projectDuration: info.projectDuration || 0,
-      leftDays: info.leftDays || 0,
-      coverPhoto: info.coverPhoto || null,
-      photos: info.photos || [],
-    }));
-  }
-}, [info, reset]);
+      // Handle roles and other array fields
+      const fields = [
+        "roles",
+        "theBusiness",
+        "theContract",
+        "shariahCompliance",
+        "potentialRisks",
+      ];
+
+      fields.forEach((field) => {
+        if (info[field]) {
+          let parsedData;
+          try {
+            parsedData =
+              typeof info[field] === "string"
+                ? JSON.parse(info[field])
+                : info[field];
+            // Ensure parsedData is an array
+            if (!Array.isArray(parsedData)) {
+              console.warn(`Field ${field} is not an array:`, parsedData);
+              parsedData = [];
+            }
+          } catch (error) {
+            console.error(`Error parsing ${field}:`, error);
+            parsedData = []; // Fallback to empty array
+          }
+          reset((prev) => ({ ...prev, [field]: parsedData }));
+        } else {
+          // If field is undefined, reset to empty array
+          reset((prev) => ({ ...prev, [field]: [] }));
+        }
+      });
+
+      // Set other fields (non-array)
+      reset((prev) => ({
+        ...prev,
+        title: info.title || "",
+        description: info.description || "",
+        investmentGoal: info.investmentGoal || 0,
+        raised: info.raised || 0,
+        minInvestment: info.minInvestment || 0,
+        waiting: info.waiting || 0,
+        murabahaMarkupReturn: info.murabahaMarkupReturn || 0,
+        calculatedRoi: info.calculatedRoi || 0,
+        repayment: info.repayment || 0,
+        projectDuration: info.projectDuration || 0,
+        leftDays: info.leftDays || 0,
+        coverPhoto: info.coverPhoto || null,
+        photos: info.photos || [],
+      }));
+    }
+  }, [info, reset]);
 
   return (
     <form
@@ -315,6 +303,17 @@ useEffect(() => {
             <p className="text-red-500 text-sm">
               {errors?.description?.message}
             </p>
+          )}
+        </div>
+        <div>
+          <label className="block mb-1 font-medium">Raised</label>
+          <input
+            type="number"
+            {...register("raised")}
+            className="w-full border rounded p-2"
+          />
+          {errors.title && (
+            <p className="text-red-500 text-sm">{errors?.raised?.message}</p>
           )}
         </div>
         <div>

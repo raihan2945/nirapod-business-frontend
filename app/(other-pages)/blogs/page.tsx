@@ -1,6 +1,9 @@
 "use client";
 
+import { useGetAllBlogsQuery } from "@/state/features/blogs/blogsApi";
+import { generateQueryArray } from "@/utils/query";
 import BlogCard from "@/views/blogs/BlogCard";
+import { useState } from "react";
 
 const blogs = [
   {
@@ -24,6 +27,15 @@ const blogs = [
 ];
 
 export default function ProjectsPage() {
+
+   const [query, setQuery] = useState({
+      status: "PUBLISHED",
+    });
+
+  const {data: blogsData} =useGetAllBlogsQuery(generateQueryArray(query));
+
+  console.log("Blogs Data on Blogs Page:", blogsData);
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
@@ -73,7 +85,7 @@ export default function ProjectsPage() {
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-             {blogs.map((item) => (
+             {blogsData?.data?.map((item:any) => (
               <BlogCard key={item.id} data={item} />
             ))}
           </div>

@@ -1,4 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
+import { baseUrl } from "@/utils/baseUrl";
 import React from "react";
 
 const BlogCard = (props: any) => {
@@ -10,7 +11,7 @@ const BlogCard = (props: any) => {
       className="box-border overflow-hidden relative rounded-md "
     >
       <img
-        src={data?.image}
+        src={`${baseUrl}/uploads/photos/${data?.coverPhoto}`}
         alt="Team holding frames"
         className="w-full h-full object-cover absolute z-0"
         // style={{ zIndex: "-50" }}

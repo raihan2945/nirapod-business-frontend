@@ -18,7 +18,7 @@ interface ProjectCardProps {
   project: Project;
 }
 
-export default function ProjectCard({ project }: ProjectCardProps) {
+export default function ProjectCard({project}:{project:any} ) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Active":
@@ -37,8 +37,8 @@ export default function ProjectCard({ project }: ProjectCardProps) {
       {/* Image */}
       <div className="relative h-48 sm:h-56 overflow-hidden">
         <Image
-          src={ "/images/blogs/blog2.jpg"}
-        //   src={project.image || "/images/blogs/blog2.jpg"}
+          src={"/images/blogs/blog2.jpg"}
+          //   src={project.image || "/images/blogs/blog2.jpg"}
           alt={project.title}
           fill
           className="object-cover group-hover:scale-110 transition-transform duration-500"
@@ -88,7 +88,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
               Goal:
             </span>
             <span className="font-semibold text-gray-900">
-              {project.target}
+              {project?.investmentGoal}
             </span>
           </div>
           <div className="flex justify-between items-center text-sm">
@@ -97,7 +97,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
               Raised:
             </span>
             <span className="font-semibold text-green-600">
-              {project.raised}
+              {project?.raised}
             </span>
           </div>
           <div className="flex justify-between items-center text-sm">
@@ -105,38 +105,50 @@ export default function ProjectCard({ project }: ProjectCardProps) {
               {/* <TrendingUp className="h-3.5 w-3.5" /> */}
               Waiting:
             </span>
-            <span className="font-semibold text-green-600">
-            10
-            </span>
+            <span className="font-semibold text-green-600">{project?.waiting || 0}</span>
           </div>
           <div className="flex justify-between items-center text-sm">
             <span className="text-gray-600 flex items-center gap-1.5">
               {/* <TrendingUp className="h-3.5 w-3.5" /> */}
               Repayment:
             </span>
-            <span className="font-semibold text-green-600">
-             6
-            </span>
+            <span className="font-semibold text-green-600">{project?.repayment}</span>
           </div>
           <div className="flex justify-between items-center text-sm">
             <span className="text-gray-600 flex items-center gap-1.5">
               {/* <TrendingUp className="h-3.5 w-3.5" /> */}
               Duration:
             </span>
-            <span className="font-semibold text-green-600">
-             10 Months
-            </span>
+            <span className="font-semibold text-green-600">{project?.projectDuration} Months</span>
           </div>
           <div className="flex justify-between items-center text-sm">
             <span className="text-gray-600 flex items-center gap-1.5">
               {/* <TrendingUp className="h-3.5 w-3.5" /> */}
               Min. Investment:
             </span>
-            <span className="font-semibold text-green-600">
-             5000
-            </span>
+            <span className="font-semibold text-green-600">{project?.minInvestment}</span>
           </div>
-        
+          <div className="flex justify-between items-center text-sm">
+            <span className="text-gray-600 flex items-center gap-1.5">
+              {/* <TrendingUp className="h-3.5 w-3.5" /> */}
+              Murabaha Markup Return (%):
+            </span>
+            <span className="font-semibold text-green-600">{project?.murabahaMarkupReturn}</span>
+          </div>
+          <div className="flex justify-between items-center text-sm">
+            <span className="text-gray-600 flex items-center gap-1.5">
+              {/* <TrendingUp className="h-3.5 w-3.5" /> */}
+             Calculated Annualized ROI (%):
+            </span>
+            <span className="font-semibold text-green-600">{project?.calculatedRoi}</span>
+          </div>
+          <div className="flex justify-between items-center text-sm">
+            <span className="text-gray-600 flex items-center gap-1.5">
+              {/* <TrendingUp className="h-3.5 w-3.5" /> */}
+             Days Left:
+            </span>
+            <span className="font-semibold text-green-600">{project?.leftDays}</span>
+          </div>
         </div>
 
         {/* Footer */}
