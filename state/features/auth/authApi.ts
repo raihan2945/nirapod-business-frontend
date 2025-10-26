@@ -36,12 +36,47 @@ const authApi = apiSlice.injectEndpoints({
           // Handle error
         }
       },
+      invalidatesTags: ["Users"],
+    }),
+    userSignUp: builder.mutation({
+      query: (data: any) => ({
+        url: `/api/v1/auth/user/signup`,
+        method: "POST",
+        body: data,
+      }),
+
+      async onQueryStarted(
+        arg: any,
+        {
+          queryFulfilled,
+          dispatch,
+        }: {
+          queryFulfilled: Promise<{ data: LoginResponse }>;
+          dispatch: (action: any) => void;
+        }
+      ) {
+        try {
+          const result = await queryFulfilled;
+
+          const { data } = result?.data;
+
+          dispatch(
+            userLoggedIn({
+              access_token: data?.access_token,
+              id: data.id,
+            })
+          );
+        } catch (err) {
+          // Handle error
+        }
+      },
+      invalidatesTags: ["Users"],
     }),
     // ... other endpoints
   }),
   overrideExisting: true,
 });
 
-export const { useUserLoginMutation } = authApi;
+export const { useUserLoginMutation, useUserSignUpMutation } = authApi;
 
 export default authApi;

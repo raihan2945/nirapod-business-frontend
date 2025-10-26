@@ -2,17 +2,22 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X, ChevronDown, Info, Search } from "lucide-react";
+import { Menu, X, ChevronDown, Info, Search, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Button as AntButton } from "antd";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../state/store";
+import { AppDispatch } from "@/state/store";
 import { useGetUserByIdQuery } from "@/state/features/user/userApi";
+import { useRouter } from "next/navigation";
+import { userLoggedOut } from "@/state/features/auth/authSlice";
+import { Popconfirm } from "antd";
 
 interface NavbarProps {
   variant?: "transparent" | "fixed";
@@ -22,11 +27,21 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
+  const dispatch: AppDispatch = useDispatch();
+  const router = useRouter();
+
   const userId = useSelector((state: RootState) => state.auth?.id);
   const { data: userData, isLoading, isError } = useGetUserByIdQuery(userId);
   const userProfile = useSelector((state: RootState) => state?.user?.data);
 
   console.log("User Profile:", userProfile);
+
+  const logout = () => {
+    console.log("logged Out!!!");
+    dispatch(userLoggedOut());
+    window.location.reload();
+    router.push("/");
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -116,11 +131,11 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
 
             {userProfile && userProfile.role == "admin" ? (
               <Link href="/admin/projects">
-                <Button style={{cursor:"pointer"}}>Dashboard</Button>
+                <Button style={{ cursor: "pointer" }}>Dashboard</Button>
               </Link>
             ) : userProfile?.role == "user" ? (
               <Link href="/user/profile">
-                <Button style={{cursor:"pointer"}}>Profile</Button>
+                <Button style={{ cursor: "pointer" }}>Profile</Button>
               </Link>
             ) : (
               <DropdownMenu>
@@ -146,6 +161,20 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+            )}
+            {userProfile && (
+              <Popconfirm
+                title="Logout"
+                description="Are you sure to logout?"
+                onConfirm={() => logout()}
+                okText="Yes"
+                cancelText="No"
+                style={{ cursor: "pointer" }}
+              >
+                <AntButton style={{ margin: 0 }}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                </AntButton>
+              </Popconfirm>
             )}
           </div>
 
@@ -201,6 +230,7 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
               </DropdownMenu> */}
 
               <Link
+                onClick={toggleMenu}
                 href="/projects"
                 className="block w-full text-white hover:text-cyan-400 px-3 py-2 text-md font-medium"
               >
@@ -208,12 +238,14 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
               </Link>
 
               <Link
+                onClick={toggleMenu}
                 href="/blogs"
                 className="block w-full text-white hover:text-cyan-400 px-3 py-2 text-md font-medium"
               >
                 Blog
               </Link>
               <Link
+                onClick={toggleMenu}
                 href="/investment"
                 className="block w-full text-white hover:text-cyan-400 px-3 py-2 text-md font-medium"
               >
@@ -221,6 +253,7 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
               </Link>
 
               <Link
+                onClick={toggleMenu}
                 href="/about"
                 className="block w-full text-white hover:text-cyan-400 px-3 py-2 text-md font-medium"
               >
@@ -242,7 +275,7 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
-                      // variant="ghost"
+                      onClick={toggleMenu}
                       className="block w-full pointer flex items-center space-x-1 text-white bg-gray-800"
                     >
                       <span>Login</span>
@@ -251,12 +284,20 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     <DropdownMenuItem>
-                      <Link href="/login/investor" className="text-md">
+                      <Link
+                        onClick={toggleMenu}
+                        href="/login/investor-login"
+                        className="text-md"
+                      >
                         As Investor
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
-                      <Link href="/login/admin" className="text-md">
+                      <Link
+                        onClick={toggleMenu}
+                        href="/login/finance-login"
+                        className="text-md"
+                      >
                         As Finance
                       </Link>
                     </DropdownMenuItem>
@@ -281,6 +322,24 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
                   <Search className="h-5 w-5" />
                 </Button>
               </div> */}
+              <div style={{ padding: "1rem 1rem" }}>
+                {userProfile && (
+                  <Popconfirm
+                    title="Logout"
+                    description="Are you sure to logout?"
+                    onConfirm={() => {
+                      logout(), toggleMenu();
+                    }}
+                    okText="Yes"
+                    cancelText="No"
+                    style={{ cursor: "pointer" }}
+                  >
+                    <AntButton style={{ margin: 0 }}>
+                      <LogOut className="h-4 w-4 mr-2" />
+                    </AntButton>
+                  </Popconfirm>
+                )}
+              </div>
             </div>
           </div>
         )}

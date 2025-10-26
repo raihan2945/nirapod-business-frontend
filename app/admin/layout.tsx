@@ -1,18 +1,20 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import {
   UploadOutlined,
   UserOutlined,
   VideoCameraOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu, theme } from "antd";
+import { Button, Layout, Menu, Popconfirm, theme } from "antd";
 import Link from "next/link";
 import { APIResponseHandlerProvider } from "@/contexts/ApiResponseHandlerContext";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../state/store";
 import { useGetUserByIdQuery } from "@/state/features/user/userApi";
-
+import { AppDispatch } from "@/state/store";
+import { userLoggedOut } from "@/state/features/auth/authSlice";
+import { useRouter } from "next/navigation";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -48,7 +50,26 @@ export default function App({
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
+  const router = useRouter();
 
+  const userId = useSelector((state: RootState) => state?.auth?.id);
+  const { data: userData, isLoading, isError } = useGetUserByIdQuery(userId);
+  const userProfile = useSelector((state: RootState) => state?.user?.data);
+
+  const dispatch: AppDispatch = useDispatch();
+
+  const logout = () => {
+    console.log("logged Out!!!");
+    dispatch(userLoggedOut());
+    window.location.reload();
+    router.push("/");
+  };
+
+  useEffect(() => {
+    if (userProfile?.role !== "admin") {
+      router.push("/");
+    }
+  }, [isLoading, userProfile, router, isError]);
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -81,7 +102,27 @@ export default function App({
           />
         </Sider>
         <Layout>
-          <Header style={{ padding: 0, background: colorBgContainer }} />
+          <Header style={{ padding: 0, background: colorBgContainer }}>
+            <div
+              style={{
+                height: "100%",
+                display: "flex",
+                justifyItems: "center",
+                justifyContent: "flex-end",
+                padding: "10px 20px",
+              }}
+            >
+              <Popconfirm
+                title="Logout"
+                description="Are you sure to logout?"
+                onConfirm={() => logout()}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button style={{ margin: 0 }}>Logout</Button>
+              </Popconfirm>
+            </div>
+          </Header>
           <Content style={{ margin: "24px 16px 0" }}>
             <div
               style={{

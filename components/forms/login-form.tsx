@@ -57,17 +57,24 @@ export function LoginForm({
 
   const router = useRouter();
 
-  const userId = useSelector((state: RootState) => state.auth?.id);
+  const userId = useSelector((state: RootState) => state?.auth?.id);
   const { data: userData, isLoading, isError } = useGetUserByIdQuery(userId);
   const userProfile = useSelector((state: RootState) => state?.user?.data);
 
-  console.log("User Profile:", userProfile);
-
-  useEffect(() => {
-    if (!isLoading && userProfile && !isError) {
-      router.push("/admin");
+useEffect(() => {
+  if (isLoading) return;
+  if (isError) {
+    console.error("Failed to fetch user data");
+    return;
+  }
+  if (userProfile) {
+    if (userProfile.role === "admin") {
+      router.push("/admin/projects");
+    } else if (userProfile.role === "user") {
+      router.push("/user/profile");
     }
-  }, [isLoading, userProfile, router, isError]);
+  }
+}, [isLoading, isError, userProfile, router]);
 
   // Handle form submission
   const onSubmit = async (data: LoginFormData) => {
@@ -76,19 +83,6 @@ export function LoginForm({
     console.log("Login Response:", res);
     handleResponse(res);
   };
-
-  //   if (result?.code == 400 && result?.form_errors) {
-  //   result?.form_errors?.map((err: any, index: number) => {
-  //     setError(`${err?.path[0]}`, {
-  //       type: "manual",
-  //       message: `${err?.path[0].toUpperCase()} is ${err?.message}`,
-  //     });
-
-  //     if (index == 0) {
-  //       setFocus(`${err?.path[0]}`);
-  //     }
-  //   })
-  // }
 
   return (
     <div className={cn("flex flex-col gap-6", className)}>
