@@ -16,11 +16,11 @@ RUN npm run build
 FROM base AS runner
 WORKDIR /app
 ENV NODE_ENV=production
-ENV PORT=4001
+ENV PORT=4002
 RUN addgroup -S nodejs && adduser -S nextjs -u 1001
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
 USER nextjs
-EXPOSE 4001
+EXPOSE 4002
 CMD ["node", "server.js"]
