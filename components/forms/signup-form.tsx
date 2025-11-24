@@ -16,13 +16,6 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,9 +24,6 @@ import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
 import { useUserSignUpMutation } from "@/state/features/auth/authApi";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
-// Define phone regex (replace with your specific regex if needed)
-// const phoneRegex = /^\+?1?\d{10}$/;
 
 // Define the validation schema with Zod
 const signupSchema = z

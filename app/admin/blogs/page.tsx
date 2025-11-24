@@ -17,7 +17,7 @@ const Blogs = () => {
     setQuery((prev: any) => ({ ...prev, [key]: value }));
   };
 
-  return (
+  return (     
     <div>
       <BlogHeader changeQuery={changeQuery} query={query} />
       <BlogView data={data?.data} isLoading={isLoading} />

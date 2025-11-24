@@ -34,7 +34,7 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
   const { data: userData, isLoading, isError } = useGetUserByIdQuery(userId);
   const userProfile = useSelector((state: RootState) => state?.user?.data);
 
-  console.log("User Profile:", userProfile);
+  // console.log("User Profile:", userProfile);
 
   const logout = () => {
     console.log("logged Out!!!");

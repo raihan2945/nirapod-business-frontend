@@ -1,0 +1,43 @@
+# .github/workflows/docker-deploy.yml
+name: Build & Push Next.js Docker Image
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write          # Required for pushing to GHCR
+      contents: read
+
+    steps:
+      # 1. Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Log in to GitHub Container Registry
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # 3. Build and push Docker image (same simple style you love)
+      - name: Build and push Next.js Docker image
+        run: |
+          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/nirapod-business-frontend:latest
+          
+          docker build -t $IMAGE_NAME .
+          
+          # Only push on push events (not on PRs)
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            docker push $IMAGE_NAME
+            echo "Pushed $IMAGE_NAME"
+          else
+            echo "Pull request detected. Skipping push."
+          fi

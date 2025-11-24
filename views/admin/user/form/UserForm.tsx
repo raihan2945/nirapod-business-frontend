@@ -315,7 +315,7 @@ const UserForm: React.FC<ComponentProps> = ({ formType, info, modalCancel }) => 
       /> */}
 
       {/* 📸 Photo */}
-      <div>
+      {/* <div>
         <label className="block mb-1 font-medium">Profile Photo</label>
         <input type="file" accept="image/*" onChange={handlePhotoChange} />
         {photoPreview && (
@@ -325,7 +325,7 @@ const UserForm: React.FC<ComponentProps> = ({ formType, info, modalCancel }) => 
             className="mt-2 w-40 h-40 object-cover rounded-lg border"
           />
         )}
-      </div>
+      </div> */}
 
       {/* ✅ Submit */}
       <button

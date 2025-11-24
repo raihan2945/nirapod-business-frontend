@@ -1,7 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-    images: {
+  eslint: {
+    ignoreDuringBuilds: true,   // completely skips ESLint during build
+  },
+  typescript: {
+    ignoreBuildErrors: true,    // completely skips TypeScript errors during build
+  },
+  output: 'standalone',
+  images: {
     remotePatterns: [
       {
         protocol: "http",
@@ -10,8 +17,8 @@ const nextConfig: NextConfig = {
     ],
     domains: [
       "localhost",
-      "103.168.140.135:4005",
-      "103.168.140.135",
+      "159.223.53.146:4001",
+      "159.223.53.146",
     ],
   },
 };

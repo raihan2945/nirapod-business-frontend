@@ -13,7 +13,7 @@ import { RiEditBoxFill } from "react-icons/ri";
 import TableSkeleton from "@/components/TableSkeleton";
 import { baseUrl } from "@/utils/baseUrl";
 import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
-import BlogForm from "./form/InvestorForm";
+import InvestorForm from "./form/InvestorForm";
 import { useDeleteInvestorByIdMutation } from "@/state/features/investors/investorApi";
 
 interface ComponentProps {
@@ -132,7 +132,7 @@ const InvestorView: React.FC<ComponentProps> = ({ data, isLoading }) => {
         width={"50%"}
       >
         {/* <div className="p-4 sm:p-6 max-h-[80vh] overflow-y-auto"> */}
-        <BlogForm
+        <InvestorForm
           formType="edit"
           info={isEdit}
           modalCancel={() => setIsEdit(false)}

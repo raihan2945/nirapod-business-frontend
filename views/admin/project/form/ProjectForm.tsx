@@ -258,10 +258,10 @@ const ProjectForm: React.FC<ComponentProps> = ({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="max-w-2xl mx-auto p-6 border rounded-lg shadow-md bg-white space-y-4"
+      className="max-w-4xl mx-auto p-6 bg-white space-y-4"
     >
       <h2 className="text-xl font-semibold text-gray-700">
-        {formType === "edit" ? "Update" : "Create"} Project Investment
+        {formType === "edit" ? "Update" : "Create"} Project
       </h2>
 
       {/* 🧾 Title */}

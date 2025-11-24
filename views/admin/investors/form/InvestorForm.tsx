@@ -143,7 +143,7 @@ const InvestorForm: React.FC<ComponentProps> = ({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="max-w-2xl mx-auto p-6 border rounded-lg shadow-md bg-white space-y-4"
+      className="max-w-4xl mx-auto p-6 rounded-lg bg-white space-y-4"
     >
       <h2 className="text-xl font-semibold text-gray-700">
         {formType === "edit" ? "Update" : "Create"} Investor Profile
