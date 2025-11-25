@@ -347,7 +347,7 @@ export default function ProjectDetailsPage({
               collapsible
               className="bg-white rounded-lg shadow"
             >
-              {shariahCompliance?.map((item: any, index: number) => (
+              {potentialRisks?.map((item: any, index: number) => (
                 <AccordionItem key={index} value={`business-item-${index}`}>
                   <AccordionTrigger className="px-6 py-4 hover:bg-gray-50">
                     {item?.title}
