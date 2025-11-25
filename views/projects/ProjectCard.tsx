@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Users, TrendingUp, Target } from "lucide-react";
+import { baseUrl } from "@/utils/baseUrl";
 
 interface Project {
   id: number;
@@ -37,7 +38,7 @@ export default function ProjectCard({project}:{project:any} ) {
       {/* Image */}
       <div className="relative h-48 sm:h-56 overflow-hidden">
         <Image
-          src={"/images/blogs/blog2.jpg"}
+          src={`${baseUrl}/uploads/photos/${project?.coverPhoto}`}
           //   src={project.image || "/images/blogs/blog2.jpg"}
           alt={project.title}
           fill
