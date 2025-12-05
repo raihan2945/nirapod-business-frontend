@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Select, Input, Button, Modal } from "antd";
-import BlogForm from "./form/BlogForm";
+// import BlogForm from "./form/BlogForm";
 import useCheckAccess from "@/utils/checkAccess";
 
 const { Search } = Input;
@@ -17,7 +17,7 @@ interface ComponentProps {
   clickExport?: any;
 }
 
-const BlogHeader: React.FC<ComponentProps> = ({
+const ProjectInvestmentHeader: React.FC<ComponentProps> = ({
   query,
   changeQuery,
   clickExport,
@@ -88,7 +88,7 @@ const BlogHeader: React.FC<ComponentProps> = ({
         </div>
       </div>
 
-      <Modal
+      {/* <Modal
         centered
         open={isAdd}
         onCancel={() => setIsAdd(false)}
@@ -101,9 +101,8 @@ const BlogHeader: React.FC<ComponentProps> = ({
           },
         }}
       >
-        {/* ADD BIKE FORM  */}
         <BlogForm formType="create" modalCancel={() => setIsAdd(false)} />
-      </Modal>
+      </Modal> */}
 
       <style jsx global>{`
         /* ✅ Responsive modal sizing */
@@ -138,4 +137,4 @@ const BlogHeader: React.FC<ComponentProps> = ({
   );
 };
 
-export default BlogHeader;
+export default ProjectInvestmentHeader;

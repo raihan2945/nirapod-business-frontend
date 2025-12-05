@@ -5,6 +5,7 @@ import {
   UploadOutlined,
   UserOutlined,
   VideoCameraOutlined,
+  ProjectOutlined 
 } from "@ant-design/icons";
 import { Button, Layout, Menu, Popconfirm, theme } from "antd";
 import Link from "next/link";
@@ -20,9 +21,14 @@ const { Header, Content, Footer, Sider } = Layout;
 
 const menuItems = [
   {
-    key: "1",
+    key: "0",
     label: <Link href="/admin/projects">Projects</Link>,
     icon: <UploadOutlined />,
+  },
+  {
+    key: "1",
+    label: <Link href="/admin/project-investments">Project Investments</Link>,
+    icon: <ProjectOutlined />,
   },
   {
     key: "2",

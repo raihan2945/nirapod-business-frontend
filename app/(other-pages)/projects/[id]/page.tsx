@@ -11,6 +11,11 @@ import {
 } from "@/components/ui/accordion";
 import { useGetSingleProjectByIdQuery } from "@/state/features/projects/projectsApi";
 import { baseUrl } from "@/utils/baseUrl";
+import { Modal } from "antd";
+import InvestmentForm from "@/views/projects/form/InvestmentForm";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../state/store";
+import { useGetUserByIdQuery } from "@/state/features/user/userApi";
 
 export default function ProjectDetailsPage({
   params,
@@ -26,32 +31,16 @@ export default function ProjectDetailsPage({
   const [theContract, setTheContract] = useState<any>([]);
   const [potentialRisks, setPotentialRisks] = useState<any>([]);
 
-  // Sample project data - replace with actual data fetching
-  //   const project = {
-  //     id: params.id,
-  //     name: "Green View Agro",
-  //     coverImage:
-  //       "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-x5HICDBZ0pdggr1q7ZZN3dJEF0Dhc7.png",
-  //     images: [
-  //       "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-x5HICDBZ0pdggr1q7ZZN3dJEF0Dhc7.png",
-  //       "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/modern-apartment-building-EkaX0F3zODpNT33sVZ2qupCNn2aKOt.png",
-  //       "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/modern-office-building-6PCbo63rgIim4GcjSsaUghiIjq5p7w.png",
-  //     ],
-  //     investmentGoal: 2700000,
-  //     minInvestment: 5000,
-  //     raised: 2712500,
-  //     waiting: 93000,
-  //     murabahMarkup: 18.0,
-  //     annualizedROI: 18.0,
-  //     repayment: 6,
-  //     duration: "12 months",
-  //     daysLeft: 6,
-  //   };
+  const [isCreate, setIsCreate] = useState<any>(null);
 
   const { data } = useGetSingleProjectByIdQuery(params.id);
 
-  console.log("Roles Data:", theBusiness);
-  console.log("Single Project:", project);
+    const userId = useSelector((state: RootState) => state.auth?.id);
+    const { data: userData, isLoading, isError } = useGetUserByIdQuery(userId);
+    const userProfile = useSelector((state: RootState) => state?.user?.data);
+
+  console.log("userProfile Data:", userProfile);
+  // console.log("Single Project:", project);
 
   const nextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % project?.images?.length);
@@ -98,27 +87,28 @@ export default function ProjectDetailsPage({
   }, [project]);
 
   return (
-    <div>
-      {/* Breadcrumb */}
-      <div className="pt-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="flex items-center gap-2 text-sm text-gray-600 mb-8">
-          <a href="/" className="hover:text-gray-900">
-            Home
-          </a>
-          <span>/</span>
-          <a href="/projects" className="hover:text-gray-900">
-            Projects
-          </a>
-          <span>/</span>
-          <span className="text-gray-900 font-medium">{project?.title}</span>
+    <>
+      <div>
+        {/* Breadcrumb */}
+        <div className="pt-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+          <div className="flex items-center gap-2 text-sm text-gray-600 mb-8">
+            <a href="/" className="hover:text-gray-900">
+              Home
+            </a>
+            <span>/</span>
+            <a href="/projects" className="hover:text-gray-900">
+              Projects
+            </a>
+            <span>/</span>
+            <span className="text-gray-900 font-medium">{project?.title}</span>
+          </div>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-          {/* Image Carousel */}
-          {/* <div className="lg:col-span-2">
+        {/* Main Content */}
+        <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pb-16">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+            {/* Image Carousel */}
+            {/* <div className="lg:col-span-2">
             <div className="relative bg-gray-200 rounded-lg overflow-hidden aspect-video">
               <img
                 src={`${baseUrl}/uploads/projects/${project?.images?.coverPhoto}`}
@@ -142,110 +132,116 @@ export default function ProjectDetailsPage({
             </div>
           </div> */}
 
-          {/* //fixed Image */}
-          <div className="lg:col-span-2">
-            <img
-              src={`${baseUrl}/uploads/photos/${project?.coverPhoto}`}
-              alt={`${project?.title} - Image ${currentImageIndex + 1}`}
-              className="w-full h-full object-cover"
-            />
-          </div>
+            {/* //fixed Image */}
+            <div className="lg:col-span-2">
+              <img
+                src={`${baseUrl}/uploads/photos/${project?.coverPhoto}`}
+                alt={`${project?.title} - Image ${currentImageIndex + 1}`}
+                className="w-full h-full object-cover"
+              />
+            </div>
 
-          {/* Project Info Card */}
-          <div className="bg-white rounded-lg shadow-lg p-6 h-fit">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
-              {project?.title}
-            </h2>
+            {/* Project Info Card */}
+            <div className="bg-white rounded-lg shadow-lg p-6 h-fit">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                {project?.title}
+              </h2>
 
-            <div className="space-y-4">
-              <div className="flex justify-between items-center pb-4 border-b">
-                <span className="text-gray-600">Investment Goal:</span>
-                <span className="font-semibold text-gray-900">
-                  {project?.investmentGoal?.toLocaleString()} BDT
-                </span>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center pb-4 border-b">
+                  <span className="text-gray-600">Investment Goal:</span>
+                  <span className="font-semibold text-gray-900">
+                    {project?.investmentGoal?.toLocaleString()} BDT
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center pb-4 border-b">
+                  <span className="text-gray-600">Min. Investment:</span>
+                  <span className="font-semibold text-gray-900">
+                    {project?.minInvestment?.toLocaleString()} BDT
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center pb-4 border-b">
+                  <span className="text-gray-600">Raised:</span>
+                  <span className="font-semibold text-gray-900">
+                    {project?.raised?.toLocaleString()} BDT
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center pb-4 border-b">
+                  <span className="text-gray-600">Waiting:</span>
+                  <span className="font-semibold text-gray-900">
+                    {project?.waiting?.toLocaleString()} BDT
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center pb-4 border-b">
+                  <span className="text-gray-600">
+                    Murabaha Markup Return (%):
+                  </span>
+                  <span className="font-semibold text-gray-900">
+                    {project?.murabahMarkup?.toFixed(2)}
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center pb-4 border-b">
+                  <span className="text-gray-600">
+                    Calculated Annualized ROI (%):
+                  </span>
+                  <span className="font-semibold text-gray-900">
+                    {project?.annualizedROI?.toFixed(2)}
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center pb-4 border-b">
+                  <span className="text-gray-600">Repayment:</span>
+                  <span className="font-semibold text-gray-900">
+                    {project?.repayment}
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center pb-4 border-b">
+                  <span className="text-gray-600">Project Duration:</span>
+                  <span className="font-semibold text-gray-900">
+                    {project?.duration}
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center pb-4">
+                  <span className="text-gray-600">Days Left:</span>
+                  <span className="font-semibold text-gray-900">
+                    {project?.daysLeft} Days
+                  </span>
+                </div>
+                {
+                  userProfile?.role !== "user" && (
+                    <p className="text-red-600 font-medium mb-0">
+                      Please login to invest in this project.
+                    </p>
+                  ) 
+                }
+                <Button disabled={userProfile?.role !== "user"} onClick={()=>setIsCreate(true)} className="w-full cursor-pointer bg-gray-900 hover:bg-gray-800 text-white mt-6">
+                  Invest Now
+                </Button>
               </div>
-
-              <div className="flex justify-between items-center pb-4 border-b">
-                <span className="text-gray-600">Min. Investment:</span>
-                <span className="font-semibold text-gray-900">
-                  {project?.minInvestment?.toLocaleString()} BDT
-                </span>
-              </div>
-
-              <div className="flex justify-between items-center pb-4 border-b">
-                <span className="text-gray-600">Raised:</span>
-                <span className="font-semibold text-gray-900">
-                  {project?.raised?.toLocaleString()} BDT
-                </span>
-              </div>
-
-              <div className="flex justify-between items-center pb-4 border-b">
-                <span className="text-gray-600">Waiting:</span>
-                <span className="font-semibold text-gray-900">
-                  {project?.waiting?.toLocaleString()} BDT
-                </span>
-              </div>
-
-              <div className="flex justify-between items-center pb-4 border-b">
-                <span className="text-gray-600">
-                  Murabaha Markup Return (%):
-                </span>
-                <span className="font-semibold text-gray-900">
-                  {project?.murabahMarkup?.toFixed(2)}
-                </span>
-              </div>
-
-              <div className="flex justify-between items-center pb-4 border-b">
-                <span className="text-gray-600">
-                  Calculated Annualized ROI (%):
-                </span>
-                <span className="font-semibold text-gray-900">
-                  {project?.annualizedROI?.toFixed(2)}
-                </span>
-              </div>
-
-              <div className="flex justify-between items-center pb-4 border-b">
-                <span className="text-gray-600">Repayment:</span>
-                <span className="font-semibold text-gray-900">
-                  {project?.repayment}
-                </span>
-              </div>
-
-              <div className="flex justify-between items-center pb-4 border-b">
-                <span className="text-gray-600">Project Duration:</span>
-                <span className="font-semibold text-gray-900">
-                  {project?.duration}
-                </span>
-              </div>
-
-              <div className="flex justify-between items-center pb-4">
-                <span className="text-gray-600">Days Left:</span>
-                <span className="font-semibold text-gray-900">
-                  {project?.daysLeft} Days
-                </span>
-              </div>
-
-              <Button className="w-full bg-gray-900 hover:bg-gray-800 text-white mt-6">
-                Invest Now
-              </Button>
             </div>
           </div>
-        </div>
 
-        {/* Roles Section */}
-        <div className="mb-12">
-          <h3 className="text-2xl font-bold text-red-600 mb-4">
-            Roles of Halal Investment in this Project
-          </h3>
-          <ul className="space-y-3 text-gray-700">
-            {Array.isArray(roles) &&
-              roles?.map((item: any, index: number) => (
-                <li key={index} className="flex gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>{item?.description}</span>
-                </li>
-              ))}
-            {/* <li className="flex gap-3">
+          {/* Roles Section */}
+          <div className="mb-12">
+            <h3 className="text-2xl font-bold text-red-600 mb-4">
+              Roles of Nirapod Business in this Project
+            </h3>
+            <ul className="space-y-3 text-gray-700">
+              {Array.isArray(roles) &&
+                roles?.map((item: any, index: number) => (
+                  <li key={index} className="flex gap-3">
+                    <span className="text-red-600 font-bold">•</span>
+                    <span>{item?.description}</span>
+                  </li>
+                ))}
+              {/* <li className="flex gap-3">
               <span className="text-red-600 font-bold">•</span>
               <span>
                 Halal Investment acts as the representative for investors. In a
@@ -254,32 +250,32 @@ export default function ProjectDetailsPage({
                 the full amount.
               </span>
             </li> */}
-          </ul>
-        </div>
+            </ul>
+          </div>
 
-        {/* Accordion Sections */}
-        <div className="space-y-8">
-          {/* The Business */}
-          <div>
-            <h3 className="text-2xl font-bold text-red-600 mb-4">
-              The Business
-            </h3>
-            <Accordion
-              type="single"
-              collapsible
-              className="bg-white rounded-lg shadow"
-            >
-              {theBusiness?.map((item: any, index: number) => (
-                <AccordionItem key={index} value={`business-item-${index}`}>
-                  <AccordionTrigger className="px-6 py-4 hover:bg-gray-50">
-                    {item?.title}
-                  </AccordionTrigger>
-                  <AccordionContent className="px-6 py-4 text-gray-700">
-                    {item?.description}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-              {/* <AccordionItem value="intro-business">
+          {/* Accordion Sections */}
+          <div className="space-y-8">
+            {/* The Business */}
+            <div>
+              <h3 className="text-2xl font-bold text-red-600 mb-4">
+                The Business
+              </h3>
+              <Accordion
+                type="single"
+                collapsible
+                className="bg-white rounded-lg shadow"
+              >
+                {theBusiness?.map((item: any, index: number) => (
+                  <AccordionItem key={index} value={`business-item-${index}`}>
+                    <AccordionTrigger className="px-6 py-4 hover:bg-gray-50">
+                      {item?.title}
+                    </AccordionTrigger>
+                    <AccordionContent className="px-6 py-4 text-gray-700">
+                      {item?.description}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+                {/* <AccordionItem value="intro-business">
                 <AccordionTrigger className="px-6 py-4 hover:bg-gray-50">
                   Introduction to the Business
                 </AccordionTrigger>
@@ -288,79 +284,108 @@ export default function ProjectDetailsPage({
                   section. Add your actual content here.
                 </AccordionContent>
               </AccordionItem> */}
-            </Accordion>
-          </div>
+              </Accordion>
+            </div>
 
-          {/* The Contract */}
-          <div>
-            <h3 className="text-2xl font-bold text-red-600 mb-4">
-              The Contract
-            </h3>
-            <Accordion
-              type="single"
-              collapsible
-              className="bg-white rounded-lg shadow"
-            >
-              {theContract?.map((item: any, index: number) => (
-                <AccordionItem key={index} value={`business-item-${index}`}>
-                  <AccordionTrigger className="px-6 py-4 hover:bg-gray-50">
-                    {item?.title}
-                  </AccordionTrigger>
-                  <AccordionContent className="px-6 py-4 text-gray-700">
-                    {item?.description}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </div>
+            {/* The Contract */}
+            <div>
+              <h3 className="text-2xl font-bold text-red-600 mb-4">
+                The Contract
+              </h3>
+              <Accordion
+                type="single"
+                collapsible
+                className="bg-white rounded-lg shadow"
+              >
+                {theContract?.map((item: any, index: number) => (
+                  <AccordionItem key={index} value={`business-item-${index}`}>
+                    <AccordionTrigger className="px-6 py-4 hover:bg-gray-50">
+                      {item?.title}
+                    </AccordionTrigger>
+                    <AccordionContent className="px-6 py-4 text-gray-700">
+                      {item?.description}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
 
-          {/* Shariah Compliance */}
-          <div>
-            <h3 className="text-2xl font-bold text-red-600 mb-4">
-              Shariah Compliance
-            </h3>
-            <Accordion
-              type="single"
-              collapsible
-              className="bg-white rounded-lg shadow"
-            >
-              {shariahCompliance?.map((item: any, index: number) => (
-                <AccordionItem key={index} value={`business-item-${index}`}>
-                  <AccordionTrigger className="px-6 py-4 hover:bg-gray-50">
-                    {item?.title}
-                  </AccordionTrigger>
-                  <AccordionContent className="px-6 py-4 text-gray-700">
-                    {item?.description}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </div>
+            {/* Shariah Compliance */}
+            <div>
+              <h3 className="text-2xl font-bold text-red-600 mb-4">
+                Shariah Compliance
+              </h3>
+              <Accordion
+                type="single"
+                collapsible
+                className="bg-white rounded-lg shadow"
+              >
+                {shariahCompliance?.map((item: any, index: number) => (
+                  <AccordionItem key={index} value={`business-item-${index}`}>
+                    <AccordionTrigger className="px-6 py-4 hover:bg-gray-50">
+                      {item?.title}
+                    </AccordionTrigger>
+                    <AccordionContent className="px-6 py-4 text-gray-700">
+                      {item?.description}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
 
-          {/* Potential Risks */}
-          <div>
-            <h3 className="text-2xl font-bold text-red-600 mb-4">
-              Potential Risks
-            </h3>
-            <Accordion
-              type="single"
-              collapsible
-              className="bg-white rounded-lg shadow"
-            >
-              {potentialRisks?.map((item: any, index: number) => (
-                <AccordionItem key={index} value={`business-item-${index}`}>
-                  <AccordionTrigger className="px-6 py-4 hover:bg-gray-50">
-                    {item?.title}
-                  </AccordionTrigger>
-                  <AccordionContent className="px-6 py-4 text-gray-700">
-                    {item?.description}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
+            {/* Potential Risks */}
+            <div>
+              <h3 className="text-2xl font-bold text-red-600 mb-4">
+                Potential Risks
+              </h3>
+              <Accordion
+                type="single"
+                collapsible
+                className="bg-white rounded-lg shadow"
+              >
+                {potentialRisks?.map((item: any, index: number) => (
+                  <AccordionItem key={index} value={`business-item-${index}`}>
+                    <AccordionTrigger className="px-6 py-4 hover:bg-gray-50">
+                      {item?.title}
+                    </AccordionTrigger>
+                    <AccordionContent className="px-6 py-4 text-gray-700">
+                      {item?.description}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* ---- */}
+
+      {/* edit blog form */}
+      <Modal
+        centered
+        open={isCreate}
+        onCancel={() => setIsCreate(false)}
+        footer={null}
+        destroyOnHidden={true}
+        className="responsive-modal"
+        width={"30%"}
+        styles={{
+          body: {
+            padding: 0,
+          },
+        }}
+      >
+        {/* <div className="p-4 sm:p-6 max-h-[80vh] overflow-y-auto"> */}
+        <InvestmentForm
+          formType="create"
+          // info={isEdit}
+          modalCancel={() => setIsCreate(false)}
+          projectId={project?.id}
+          userId={userProfile?.id!}
+        />
+        {/* </div> */}
+      </Modal>
+    </>
   );
 }
