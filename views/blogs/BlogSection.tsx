@@ -8,6 +8,10 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import BlogCard from "./BlogCard";
+import { useGetAllBlogsQuery } from "@/state/features/blogs/blogsApi";
+import { generateQueryArray } from "@/utils/query";
+
+
 
 const feedbacks = [
   {
@@ -31,6 +35,17 @@ const feedbacks = [
 ];
 
 export default function BlogSection() {
+
+  const query = {
+  search: null,
+  status: null,
+};
+
+const { data: blogsData } = useGetAllBlogsQuery(generateQueryArray(query));
+
+// // Optional: helpful log
+console.log("Blogs Data on Blogs Page:", blogsData);
+
   return (
     <section className="py-8 sm:py-8 lg:py-16 bg-white-500">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -47,7 +62,7 @@ export default function BlogSection() {
           className="w-full"
         >
           <CarouselContent>
-            {feedbacks.map((item, index) => (
+            {blogsData?.data?.map((item:any, index:number) => (
               <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/2">
                 <BlogCard index={index} data={item} />
               </CarouselItem>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Table, Tag, Space, Button, Popconfirm, Modal } from "antd";
+import { Table, Tag, Space, Button, Popconfirm, Modal, Divider } from "antd";
 import type { TableProps } from "antd";
 import Image from "next/image";
 
@@ -17,6 +17,7 @@ import { baseUrl } from "@/utils/baseUrl";
 import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
 // import useCheckAccess from "@/utils/checkAccess";
 import { useDeleteBlogByIdMutation } from "@/state/features/blogs/blogsApi";
+import InvestmentView from "./InvestmentView";
 // import BlogForm from "./form/BlogForm";
 
 interface ComponentProps {
@@ -137,6 +138,8 @@ const ProjectInvestmentView: React.FC<ComponentProps> = ({ data, isLoading }) =>
 
   if (isLoading) return <TableSkeleton />;
 
+  console.log("Investment Data:", data);
+
   return (
     <>
       <div className="mt-5 bg-white px-4 py-4 rounded-sm shadow-sm">
@@ -151,19 +154,16 @@ const ProjectInvestmentView: React.FC<ComponentProps> = ({ data, isLoading }) =>
         footer={null}
         destroyOnHidden={true}
         className="responsive-modal"
+        width={"50%"}
         styles={{
           body: {
             padding: 0,
           },
         }}
       >
-        {/* <div className="p-4 sm:p-6 max-h-[80vh] overflow-y-auto"> */}
-        {/* <BlogForm
-          formType="edit"
-          info={isEdit}
-          modalCancel={() => setIsEdit(false)}
-        /> */}
-        {/* </div> */}
+       <div>
+       <InvestmentView investment={isEdit}/>
+       </div>
       </Modal>
 
       <style jsx global>{`

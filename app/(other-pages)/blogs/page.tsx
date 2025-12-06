@@ -24,8 +24,6 @@ export default function BlogsPage() {
 
   const { data: blogsData } = useGetAllBlogsQuery(generateQueryArray(query));
 
-  // Optional: helpful log
-  console.log("Blogs Data on Blogs Page:", blogsData);
 
   return (
     <div className="min-h-screen bg-gray-50">

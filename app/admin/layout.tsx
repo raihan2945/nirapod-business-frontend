@@ -103,7 +103,7 @@ export default function App({
           <Menu
             theme="dark"
             mode="inline"
-            defaultSelectedKeys={["1"]}
+            defaultSelectedKeys={["0"]}
             items={menuItems}
           />
         </Sider>
