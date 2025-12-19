@@ -19,7 +19,62 @@ interface ProjectCardProps {
   project: Project;
 }
 
-export default function ProjectCard({project}:{project:any} ) {
+function numberToBanglaTk(value: number) {
+  if (value === null || value === undefined) return "";
+
+  // Convert to string
+  const [integerPart, decimalPart] = value.toString().split(".");
+
+  // Add Bangladeshi commas (3,2,2...)
+  let lastThree = integerPart.slice(-3);
+  let rest = integerPart.slice(0, -3);
+
+  if (rest !== "") {
+    rest = rest.replace(/\B(?=(\d{2})+(?!\d))/g, ",");
+    lastThree = rest + "," + lastThree;
+  }
+
+  // English → Bangla digits
+  const engToBn: any = {
+    0: "০",
+    1: "১",
+    2: "২",
+    3: "৩",
+    4: "৪",
+    5: "৫",
+    6: "৬",
+    7: "৭",
+    8: "৮",
+    9: "৯",
+  };
+
+  const toBangla = (str: any) => str.replace(/\d/g, (d: any) => engToBn[d]);
+
+  return decimalPart
+    ? `${toBangla(lastThree)}.${toBangla(decimalPart)}`
+    : toBangla(lastThree);
+}
+
+function englishToBanglaNumber(value: number) {
+  if (value === null || value === undefined) return "";
+
+  const engToBn: any = {
+    0: "০",
+    1: "১",
+    2: "২",
+    3: "৩",
+    4: "৪",
+    5: "৫",
+    6: "৬",
+    7: "৭",
+    8: "৮",
+    9: "৯",
+  };
+
+  return value.toString().replace(/\d/g, (digit) => engToBn[digit]);
+}
+
+export default function ProjectCard({ project }: { project: any }) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Active":
@@ -89,7 +144,7 @@ export default function ProjectCard({project}:{project:any} ) {
               Goal:
             </span>
             <span className="font-semibold text-gray-900">
-              {project?.investmentGoal}
+              {numberToBanglaTk(Number(project?.investmentGoal || 0))} ৳
             </span>
           </div>
           <div className="flex justify-between items-center text-sm">
@@ -98,7 +153,7 @@ export default function ProjectCard({project}:{project:any} ) {
               Raised:
             </span>
             <span className="font-semibold text-green-600">
-              {project?.raised}
+              {numberToBanglaTk(Number(project?.raised || 0))} ৳
             </span>
           </div>
           <div className="flex justify-between items-center text-sm">
@@ -106,49 +161,64 @@ export default function ProjectCard({project}:{project:any} ) {
               {/* <TrendingUp className="h-3.5 w-3.5" /> */}
               Waiting:
             </span>
-            <span className="font-semibold text-green-600">{project?.waiting || 0}</span>
+            <span className="font-semibold text-green-600">
+              {" "}
+              {numberToBanglaTk(Number(project?.waiting || 0))} ৳
+            </span>
           </div>
           <div className="flex justify-between items-center text-sm">
             <span className="text-gray-600 flex items-center gap-1.5">
               {/* <TrendingUp className="h-3.5 w-3.5" /> */}
               Repayment:
             </span>
-            <span className="font-semibold text-green-600">{project?.repayment}</span>
+            <span className="font-semibold text-green-600">
+             {englishToBanglaNumber(Number(project?.repayment || 0))}
+            </span>
           </div>
           <div className="flex justify-between items-center text-sm">
             <span className="text-gray-600 flex items-center gap-1.5">
               {/* <TrendingUp className="h-3.5 w-3.5" /> */}
               Duration:
             </span>
-            <span className="font-semibold text-green-600">{project?.projectDuration} Months</span>
+            <span className="font-semibold text-green-600">
+               {englishToBanglaNumber(Number(project?.projectDuration || 0))} মাস
+            </span>
           </div>
           <div className="flex justify-between items-center text-sm">
             <span className="text-gray-600 flex items-center gap-1.5">
               {/* <TrendingUp className="h-3.5 w-3.5" /> */}
               Min. Investment:
             </span>
-            <span className="font-semibold text-green-600">{project?.minInvestment}</span>
+            <span className="font-semibold text-green-600">
+              {numberToBanglaTk(Number(project?.minInvestment || 0))} ৳
+            </span>
           </div>
           <div className="flex justify-between items-center text-sm">
             <span className="text-gray-600 flex items-center gap-1.5">
               {/* <TrendingUp className="h-3.5 w-3.5" /> */}
               Murabaha Markup Return (%):
             </span>
-            <span className="font-semibold text-green-600">{project?.murabahaMarkupReturn}</span>
+            <span className="font-semibold text-green-600">
+               {englishToBanglaNumber(Number(project?.murabahaMarkupReturn || 0))}
+            </span>
           </div>
           <div className="flex justify-between items-center text-sm">
             <span className="text-gray-600 flex items-center gap-1.5">
               {/* <TrendingUp className="h-3.5 w-3.5" /> */}
-             Calculated Annualized ROI (%):
+              Calculated Annualized ROI (%):
             </span>
-            <span className="font-semibold text-green-600">{project?.calculatedRoi}</span>
+            <span className="font-semibold text-green-600">
+               {englishToBanglaNumber(Number(project?.calculatedRoi || 0))}
+            </span>
           </div>
           <div className="flex justify-between items-center text-sm">
             <span className="text-gray-600 flex items-center gap-1.5">
               {/* <TrendingUp className="h-3.5 w-3.5" /> */}
-             Days Left:
+              Days Left:
             </span>
-            <span className="font-semibold text-green-600">{project?.leftDays}</span>
+            <span className="font-semibold text-green-600">
+               {englishToBanglaNumber(Number(project?.daysLeft || 0))} দিন 
+            </span>
           </div>
         </div>
 

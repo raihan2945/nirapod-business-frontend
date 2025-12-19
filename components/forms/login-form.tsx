@@ -114,12 +114,12 @@ useEffect(() => {
               <Field>
                 <div className="flex items-center">
                   <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <a
+                  {/* <a
                     href="#"
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                   >
                     Forgot your password?
-                  </a>
+                  </a> */}
                 </div>
                 <Input
                   id="password"
@@ -143,8 +143,8 @@ useEffect(() => {
                 </Button>
                 {role === "investor" && (
                   <Link href="/investor-signup">
-                    <FieldDescription className="text-center">
-                      Don&apos;t have an account? <a href="#">Sign up</a>
+                    <FieldDescription className="text-center mt-2">
+                      Don&apos;t have an investor account? <a href="#"><strong>Sign up</strong></a>
                     </FieldDescription>
                   </Link>
                 )}

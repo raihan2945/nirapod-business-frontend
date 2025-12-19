@@ -16,12 +16,69 @@ import InvestmentForm from "@/views/projects/form/InvestmentForm";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../state/store";
 import { useGetUserByIdQuery } from "@/state/features/user/userApi";
+import { useRouter } from "next/navigation";
+
+function numberToBanglaTk(value: number) {
+  if (value === null || value === undefined) return "";
+
+  // Convert to string
+  const [integerPart, decimalPart] = value.toString().split(".");
+
+  // Add Bangladeshi commas (3,2,2...)
+  let lastThree = integerPart.slice(-3);
+  let rest = integerPart.slice(0, -3);
+
+  if (rest !== "") {
+    rest = rest.replace(/\B(?=(\d{2})+(?!\d))/g, ",");
+    lastThree = rest + "," + lastThree;
+  }
+
+  // English → Bangla digits
+  const engToBn: any = {
+    0: "০",
+    1: "১",
+    2: "২",
+    3: "৩",
+    4: "৪",
+    5: "৫",
+    6: "৬",
+    7: "৭",
+    8: "৮",
+    9: "৯",
+  };
+
+  const toBangla = (str: any) => str.replace(/\d/g, (d: any) => engToBn[d]);
+
+  return decimalPart
+    ? `${toBangla(lastThree)}.${toBangla(decimalPart)}`
+    : toBangla(lastThree);
+}
+
+function englishToBanglaNumber(value: number) {
+  if (value === null || value === undefined) return "";
+
+  const engToBn: any = {
+    0: "০",
+    1: "১",
+    2: "২",
+    3: "৩",
+    4: "৪",
+    5: "৫",
+    6: "৬",
+    7: "৭",
+    8: "৮",
+    9: "৯",
+  };
+
+  return value.toString().replace(/\d/g, (digit) => engToBn[digit]);
+}
 
 export default function ProjectDetailsPage({
   params,
 }: {
   params: { id: string };
 }) {
+  const router = useRouter();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const [project, setProject] = useState<any>(null);
@@ -35,9 +92,10 @@ export default function ProjectDetailsPage({
 
   const { data } = useGetSingleProjectByIdQuery(params.id);
 
-    const userId = useSelector((state: RootState) => state.auth?.id);
-    const { data: userData, isLoading, isError } = useGetUserByIdQuery(userId);
-    const userProfile = useSelector((state: RootState) => state?.user?.data);
+  const userId = useSelector((state: RootState) => state.auth?.id);
+  const { data: userData, isLoading, isError } = useGetUserByIdQuery(userId);
+
+  const userProfile = useSelector((state: RootState) => state?.user?.data);
 
   console.log("userProfile Data:", userProfile);
   // console.log("Single Project:", project);
@@ -50,6 +108,10 @@ export default function ProjectDetailsPage({
     setCurrentImageIndex(
       (prev) => (prev - 1 + project?.images.length) % project?.images?.length
     );
+  };
+
+  const handleNavigate = () => {
+    router.push("/login/login-user"); // Navigate and add to history
   };
 
   useEffect(() => {
@@ -85,6 +147,8 @@ export default function ProjectDetailsPage({
       setTheContract([]);
     }
   }, [project]);
+
+  console.log("theBusiness is : ", theBusiness);
 
   return (
     <>
@@ -151,28 +215,28 @@ export default function ProjectDetailsPage({
                 <div className="flex justify-between items-center pb-4 border-b">
                   <span className="text-gray-600">Investment Goal:</span>
                   <span className="font-semibold text-gray-900">
-                    {project?.investmentGoal?.toLocaleString()} BDT
+                    {numberToBanglaTk(Number(project?.investmentGoal || 0))} ৳
                   </span>
                 </div>
 
                 <div className="flex justify-between items-center pb-4 border-b">
                   <span className="text-gray-600">Min. Investment:</span>
                   <span className="font-semibold text-gray-900">
-                    {project?.minInvestment?.toLocaleString()} BDT
+                    {numberToBanglaTk(Number(project?.minInvestment || 0))} ৳
                   </span>
                 </div>
 
                 <div className="flex justify-between items-center pb-4 border-b">
                   <span className="text-gray-600">Raised:</span>
                   <span className="font-semibold text-gray-900">
-                    {project?.raised?.toLocaleString()} BDT
+                    {numberToBanglaTk(Number(project?.raised || 0))} ৳
                   </span>
                 </div>
 
                 <div className="flex justify-between items-center pb-4 border-b">
                   <span className="text-gray-600">Waiting:</span>
                   <span className="font-semibold text-gray-900">
-                    {project?.waiting?.toLocaleString()} BDT
+                    {numberToBanglaTk(Number(project?.waiting || 0))} ৳
                   </span>
                 </div>
 
@@ -181,7 +245,9 @@ export default function ProjectDetailsPage({
                     Murabaha Markup Return (%):
                   </span>
                   <span className="font-semibold text-gray-900">
-                    {project?.murabahMarkup?.toFixed(2)}
+                    {englishToBanglaNumber(
+                      Number(project?.murabahaMarkupReturn || 0)
+                    )}
                   </span>
                 </div>
 
@@ -190,38 +256,49 @@ export default function ProjectDetailsPage({
                     Calculated Annualized ROI (%):
                   </span>
                   <span className="font-semibold text-gray-900">
-                    {project?.annualizedROI?.toFixed(2)}
+                    {englishToBanglaNumber(Number(project?.calculatedRoi || 0))}
                   </span>
                 </div>
 
                 <div className="flex justify-between items-center pb-4 border-b">
                   <span className="text-gray-600">Repayment:</span>
                   <span className="font-semibold text-gray-900">
-                    {project?.repayment}
+                    {englishToBanglaNumber(Number(project?.repayment || 0))}
                   </span>
                 </div>
 
                 <div className="flex justify-between items-center pb-4 border-b">
                   <span className="text-gray-600">Project Duration:</span>
                   <span className="font-semibold text-gray-900">
-                    {project?.duration}
+                    {englishToBanglaNumber(
+                      Number(project?.projectDuration || 0)
+                    )}{" "}
+                    মাস
                   </span>
                 </div>
 
                 <div className="flex justify-between items-center pb-4">
                   <span className="text-gray-600">Days Left:</span>
                   <span className="font-semibold text-gray-900">
-                    {project?.daysLeft} Days
+                    {englishToBanglaNumber(Number(project?.daysLeft || 0))} দিন
                   </span>
                 </div>
-                {
-                  userProfile?.role !== "user" && (
-                    <p className="text-red-600 font-medium mb-0">
-                      Please login to invest in this project.
-                    </p>
-                  ) 
-                }
-                <Button disabled={userProfile?.role !== "user"} onClick={()=>setIsCreate(true)} className="w-full cursor-pointer bg-gray-900 hover:bg-gray-800 text-white mt-6">
+                {userProfile?.role !== "user" && (
+                  <p className="text-red-600 font-medium mb-0">
+                    Please login as investor to invest in this project.
+                  </p>
+                )}
+                <Button
+                  // disabled={userProfile?.role !== "user"}
+                  onClick={() => {
+                    if (userProfile?.role !== "user") {
+                      handleNavigate();
+                    } else {
+                      setIsCreate(true);
+                    }
+                  }}
+                  className="w-full cursor-pointer bg-gray-900 hover:bg-gray-800 text-white mt-6"
+                >
                   Invest Now
                 </Button>
               </div>
@@ -238,7 +315,7 @@ export default function ProjectDetailsPage({
                 roles?.map((item: any, index: number) => (
                   <li key={index} className="flex gap-3">
                     <span className="text-red-600 font-bold">•</span>
-                    <span>{item?.description}</span>
+                    <span> <p style={{whiteSpace:"pre-line",  textAlign: "justify"}}>{item?.description}</p></span>
                   </li>
                 ))}
               {/* <li className="flex gap-3">
@@ -271,7 +348,9 @@ export default function ProjectDetailsPage({
                       {item?.title}
                     </AccordionTrigger>
                     <AccordionContent className="px-6 py-4 text-gray-700">
-                      {item?.description}
+                      <p style={{ whiteSpace: "pre-line", textAlign: "justify" }}>
+                        {item?.description}
+                      </p>
                     </AccordionContent>
                   </AccordionItem>
                 ))}
@@ -303,7 +382,9 @@ export default function ProjectDetailsPage({
                       {item?.title}
                     </AccordionTrigger>
                     <AccordionContent className="px-6 py-4 text-gray-700">
-                      {item?.description}
+                      <p style={{ whiteSpace: "pre-line",  textAlign: "justify" }}>
+                        {item?.description}
+                      </p>
                     </AccordionContent>
                   </AccordionItem>
                 ))}
@@ -326,7 +407,9 @@ export default function ProjectDetailsPage({
                       {item?.title}
                     </AccordionTrigger>
                     <AccordionContent className="px-6 py-4 text-gray-700">
-                      {item?.description}
+                      <p style={{ whiteSpace: "pre-line",  textAlign: "justify" }}>
+                        {item?.description}
+                      </p>
                     </AccordionContent>
                   </AccordionItem>
                 ))}
@@ -349,7 +432,7 @@ export default function ProjectDetailsPage({
                       {item?.title}
                     </AccordionTrigger>
                     <AccordionContent className="px-6 py-4 text-gray-700">
-                      {item?.description}
+                       <p style={{whiteSpace:"pre-line",  textAlign: "justify"}}>{item?.description}</p>
                     </AccordionContent>
                   </AccordionItem>
                 ))}

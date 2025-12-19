@@ -296,6 +296,7 @@ const ProjectForm: React.FC<ComponentProps> = ({
           <label className="block mb-1 font-medium">Investment Goal</label>
           <input
             type="number"
+            step="0.01"
             {...register("investmentGoal")}
             className="w-full border rounded p-2"
           />
@@ -309,6 +310,7 @@ const ProjectForm: React.FC<ComponentProps> = ({
           <label className="block mb-1 font-medium">Raised</label>
           <input
             type="number"
+            step="0.01"
             {...register("raised")}
             className="w-full border rounded p-2"
           />
@@ -320,6 +322,7 @@ const ProjectForm: React.FC<ComponentProps> = ({
           <label className="block mb-1 font-medium">Min Investment</label>
           <input
             type="number"
+            step="0.01"
             {...register("minInvestment")}
             className="w-full border rounded p-2"
           />
@@ -333,6 +336,7 @@ const ProjectForm: React.FC<ComponentProps> = ({
           <label className="block mb-1 font-medium">Waiting</label>
           <input
             type="number"
+            step="0.01"
             {...register("waiting")}
             className="w-full border rounded p-2"
           />
@@ -346,6 +350,7 @@ const ProjectForm: React.FC<ComponentProps> = ({
           </label>
           <input
             type="number"
+            step="0.01"
             {...register("murabahaMarkupReturn")}
             className="w-full border rounded p-2"
           />
@@ -358,6 +363,7 @@ const ProjectForm: React.FC<ComponentProps> = ({
         <div>
           <label className="block mb-1 font-medium">Calculated ROI</label>
           <input
+            step="0.01"
             type="number"
             {...register("calculatedRoi")}
             className="w-full border rounded p-2"
@@ -372,6 +378,7 @@ const ProjectForm: React.FC<ComponentProps> = ({
           <label className="block mb-1 font-medium">Repayment</label>
           <input
             type="number"
+            step="0.01"
             {...register("repayment")}
             className="w-full border rounded p-2"
           />
@@ -380,7 +387,7 @@ const ProjectForm: React.FC<ComponentProps> = ({
           )}
         </div>
         <div>
-          <label className="block mb-1 font-medium">Project Duration</label>
+          <label className="block mb-1 font-medium">Project Duration (Month)</label>
           <input
             type="number"
             {...register("projectDuration")}
@@ -393,7 +400,7 @@ const ProjectForm: React.FC<ComponentProps> = ({
           )}
         </div>
         <div>
-          <label className="block mb-1 font-medium">Left Days</label>
+          <label className="block mb-1 font-medium">Left Days (Day)</label>
           <input
             type="number"
             {...register("leftDays")}

@@ -138,29 +138,33 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
                 <Button style={{ cursor: "pointer" }}>Profile</Button>
               </Link>
             ) : (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    // variant="ghost"
-                    className="pointer flex items-center space-x-1 text-white bg-gray-800"
-                  >
-                    <span>Login</span>
-                    <ChevronDown className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem>
-                    <Link href="/login/investor-login" className="text-md">
-                      As Investor
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Link href="/login/finance-login" className="text-md">
-                      As Finance
-                    </Link>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <Link href="/login/login-user">
+                <Button style={{ cursor: "pointer" }}>Login</Button>
+              </Link>
+             
+              // <DropdownMenu>
+              //   <DropdownMenuTrigger asChild>
+              //     <Button
+              //       // variant="ghost"
+              //       className="pointer flex items-center space-x-1 text-white bg-gray-800"
+              //     >
+              //       <span>Login</span>
+              //       <ChevronDown className="h-4 w-4" />
+              //     </Button>
+              //   </DropdownMenuTrigger>
+              //   <DropdownMenuContent>
+              //     <DropdownMenuItem>
+              //       <Link href="/login/investor-login" className="text-md">
+              //         As Investor
+              //       </Link>
+              //     </DropdownMenuItem>
+              //     <DropdownMenuItem>
+              //       <Link href="/login/finance-login" className="text-md">
+              //         As Finance
+              //       </Link>
+              //     </DropdownMenuItem>
+              //   </DropdownMenuContent>
+              // </DropdownMenu>
             )}
             {userProfile && (
               <Popconfirm
