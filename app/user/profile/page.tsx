@@ -18,6 +18,8 @@ import { Upload, Mail, Phone, MapPin, Lock, User, Shield } from "lucide-react";
 import { useSelector } from "react-redux";
 import { useGetUserByIdQuery } from "@/state/features/user/userApi";
 import { RootState } from "../../../state/store";
+import { Tabs } from "antd";
+import InvestorInvestments from "@/views/investor/InvestorInvestments";
 
 const phoneRegex = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/;
 
@@ -110,7 +112,7 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Main Content */}
-      <main className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+      <main className="pt-16 pb-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
@@ -121,161 +123,127 @@ export default function ProfilePage() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {/* <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <User className="h-5 w-5" />
-                Profile Photo
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-col sm:flex-row gap-6 items-start">
-                <div className="flex-shrink-0">
-                  <div className="w-32 h-32 rounded-lg bg-gray-200 flex items-center justify-center overflow-hidden">
-                    {photoPreview ? (
-                      <img
-                        src={photoPreview || "/placeholder.svg"}
-                        alt="Profile"
-                        className="w-full h-full object-cover"
+        <Tabs defaultActiveKey="1" size="large">
+          <Tabs.TabPane tab="Profile" key="1">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              {/* Personal Information */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Personal Information</CardTitle>
+                  <CardDescription>
+                    Update your basic profile details
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Full Name *
+                      </label>
+                      <input
+                        {...register("fullName")}
+                        type="text"
+                        placeholder="Enter your full name"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                       />
-                    ) : (
-                      <User className="h-16 w-16 text-gray-400" />
+                      {errors.fullName && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.fullName.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Mobile Number *
+                      </label>
+                      <div className="flex items-center">
+                        <Phone className="h-5 w-5 text-gray-400 absolute ml-3" />
+                        <input
+                          {...register("mobile")}
+                          type="tel"
+                          placeholder="+8801600355311"
+                          className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                        />
+                      </div>
+                      {errors.mobile && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.mobile.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Email Address
+                      </label>
+                      <div className="flex items-center">
+                        <Mail className="h-5 w-5 text-gray-400 absolute ml-3" />
+                        <input
+                          {...register("email")}
+                          type="email"
+                          placeholder="john@example.com"
+                          className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                        />
+                      </div>
+                      {errors.email && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.email.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Address
+                      </label>
+                      <div className="flex items-center">
+                        <MapPin className="h-5 w-5 text-gray-400 absolute ml-3" />
+                        <input
+                          {...register("address")}
+                          type="text"
+                          placeholder="Enter your address"
+                          className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Security */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Lock className="h-5 w-5" />
+                    Security
+                  </CardTitle>
+                  <CardDescription>
+                    Manage your password and security settings
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Password *
+                    </label>
+                    <input
+                      {...register("password")}
+                      type="password"
+                      placeholder="Enter your password"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                    />
+                    {errors.password && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.password.message}
+                      </p>
                     )}
                   </div>
-                </div>
-                <div className="flex-1">
-                  <label className="flex items-center justify-center w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-gray-400 transition">
-                    <div className="flex flex-col items-center">
-                      <Upload className="h-6 w-6 text-gray-400 mb-2" />
-                      <span className="text-sm font-medium text-gray-700">Click to upload photo</span>
-                      <span className="text-xs text-gray-500">PNG, JPG up to 5MB</span>
-                    </div>
-                    <input type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" />
-                  </label>
-                </div>
-              </div>
-            </CardContent>
-          </Card> */}
+                </CardContent>
+              </Card>
 
-          {/* Personal Information */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Personal Information</CardTitle>
-              <CardDescription>
-                Update your basic profile details
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Full Name *
-                  </label>
-                  <input
-                    {...register("fullName")}
-                    type="text"
-                    placeholder="Enter your full name"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                  />
-                  {errors.fullName && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.fullName.message}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Mobile Number *
-                  </label>
-                  <div className="flex items-center">
-                    <Phone className="h-5 w-5 text-gray-400 absolute ml-3" />
-                    <input
-                      {...register("mobile")}
-                      type="tel"
-                      placeholder="+8801600355311"
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                    />
-                  </div>
-                  {errors.mobile && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.mobile.message}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Email Address
-                  </label>
-                  <div className="flex items-center">
-                    <Mail className="h-5 w-5 text-gray-400 absolute ml-3" />
-                    <input
-                      {...register("email")}
-                      type="email"
-                      placeholder="john@example.com"
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                    />
-                  </div>
-                  {errors.email && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.email.message}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Address
-                  </label>
-                  <div className="flex items-center">
-                    <MapPin className="h-5 w-5 text-gray-400 absolute ml-3" />
-                    <input
-                      {...register("address")}
-                      type="text"
-                      placeholder="Enter your address"
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                    />
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Security */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Lock className="h-5 w-5" />
-                Security
-              </CardTitle>
-              <CardDescription>
-                Manage your password and security settings
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Password *
-                </label>
-                <input
-                  {...register("password")}
-                  type="password"
-                  placeholder="Enter your password"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                />
-                {errors.password && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.password.message}
-                  </p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Role & Permissions */}
-          {/* <Card>
+              {/* Role & Permissions */}
+              {/* <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Shield className="h-5 w-5" />
@@ -351,20 +319,25 @@ export default function ProfilePage() {
             </CardContent>
           </Card> */}
 
-          {/* Action Buttons */}
-          <div className="flex gap-4 justify-end">
-            <Button variant="outline" type="button">
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              disabled={isLoading}
-              className="bg-blue-600 hover:bg-blue-700"
-            >
-              {isLoading ? "Saving..." : "Save Changes"}
-            </Button>
-          </div>
-        </form>
+              {/* Action Buttons */}
+              <div className="flex gap-4 justify-end">
+                <Button variant="outline" type="button">
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="bg-blue-600 hover:bg-blue-700"
+                >
+                  {isLoading ? "Saving..." : "Save Changes"}
+                </Button>
+              </div>
+            </form>
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Submitted Investments" key="2">
+            <InvestorInvestments userId={userId!} />
+          </Tabs.TabPane>
+        </Tabs>
       </main>
     </div>
   );
