@@ -308,7 +308,7 @@ export default function ProjectDetailsPage({
           {/* Roles Section */}
           <div className="mb-12">
             <h3 className="text-2xl font-bold text-red-600 mb-4">
-              Roles of Nirapod Business in this Project
+              Roles of Nirapod Business
             </h3>
             <ul className="space-y-3 text-gray-700">
               {Array.isArray(roles) &&
