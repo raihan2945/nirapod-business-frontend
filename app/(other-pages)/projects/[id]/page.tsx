@@ -285,7 +285,7 @@ export default function ProjectDetailsPage({
                 </div>
                 {userProfile?.role !== "user" && (
                   <p className="text-red-600 font-medium mb-0">
-                    Please login as investor to invest in this project.
+                    Log in as an investor
                   </p>
                 )}
                 <Button
