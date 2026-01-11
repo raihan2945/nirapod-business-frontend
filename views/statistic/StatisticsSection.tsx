@@ -94,9 +94,9 @@ export default function StatisticsSection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12 lg:gap-16">
-          <StatItem value={484653400} label="Financed" prefix="BDT" suffix=" +" />
-          <StatItem value={4066} label="Investments" suffix=" +" hasComma={false} />
-          <StatItem value={243241777} label="Repayment Completed" prefix="BDT" suffix=" +" />
+          <StatItem value={1445600} label="Financed" prefix="BDT" suffix=" +" />
+          <StatItem value={15} label="Investments" suffix=" +" hasComma={false} />
+          <StatItem value={300500} label="Repayment Completed" prefix="BDT" suffix=" +" />
         </div>
       </div>
     </section>

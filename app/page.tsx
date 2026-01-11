@@ -32,9 +32,9 @@ export default function Home({
       >
         <Navbar />
         <HeroSection />
-        <StatisticsSection />
         <ProjectSection />
-        <FAQSection />
+        <StatisticsSection />
+        {/* <FAQSection /> */}
         <FeedbackSection />
         <BlogSection />
         <NewsletterSection />

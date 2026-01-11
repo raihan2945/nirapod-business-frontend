@@ -7,7 +7,7 @@ const HeroSection = () => {
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <img
-          src="/images/herobg2.jpeg"
+          src="/images/herobg3.jpeg"
           alt="Team holding frames"
           className="w-full h-full object-cover"
         />
@@ -19,7 +19,7 @@ const HeroSection = () => {
         <h1 className="text-4xl uppercase sm:text-5xl md:text-6xl lg:text-8xl font-bold text-white mb-8 leading-tight">
           Nirapod Business
         </h1>
-        <p className="text-white text-sm sm:text-base font-medium tracking-wider mb-4 uppercase">
+        <p className="text-white text-xl sm:text-base font-medium tracking-wider mb-4 uppercase">
           Together we learn more
         </p>
 
