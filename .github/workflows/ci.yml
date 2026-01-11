@@ -1,5 +1,4 @@
-# .github/workflows/docker-deploy.yml
-name: Build & Push Next.js Docker Image
+name: Build & Deploy Next.js Docker Image
 
 on:
   push:
@@ -8,36 +7,61 @@ on:
     branches: [ main, master ]
 
 jobs:
-  build-and-push:
+  build:
     runs-on: ubuntu-latest
     permissions:
-      packages: write          # Required for pushing to GHCR
+      packages: write
       contents: read
 
     steps:
-      # 1. Checkout code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Log in to GitHub Container Registry
-      - name: Log in to GHCR
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # 3. Build and push Docker image (same simple style you love)
-      - name: Build and push Next.js Docker image
+      - name: Build and push image
         run: |
-          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/nirapod-business-frontend:latest
-          
-          docker build -t $IMAGE_NAME .
-          
-          # Only push on push events (not on PRs)
+          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/nirapod-business-frontend
+
+          docker build -t $IMAGE_NAME:latest .
+
+          # Only push on branch push (not PR)
           if [ "${{ github.event_name }}" != "pull_request" ]; then
-            docker push $IMAGE_NAME
-            echo "Pushed $IMAGE_NAME"
+            docker push $IMAGE_NAME:latest
+            echo "Image pushed: $IMAGE_NAME:latest"
           else
-            echo "Pull request detected. Skipping push."
+            echo "PR detected → build only, no push"
           fi
+
+  deploy:
+    needs: build
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to production server
+        uses: appleboy/ssh-action@v1.0.3  # more stable version
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: 22
+          script: |
+            set -e  # stop on any error
+
+            cd /opt/nirapod-business-frontend   # ← CHANGE THIS to your REAL path!
+
+            echo "Current directory: $(pwd)"
+            ls -la
+
+            docker compose pull nirapod_frontend
+            docker compose up -d --remove-orphans
+
+            docker image prune -f
+
+            echo "Deployment finished at $(date)"
