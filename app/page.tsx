@@ -35,7 +35,7 @@ export default function Home({
         <ProjectSection />
         <StatisticsSection />
         {/* <FAQSection /> */}
-        <FeedbackSection />
+        {/* <FeedbackSection /> */}
         <BlogSection />
         <NewsletterSection />
         <Footer />
