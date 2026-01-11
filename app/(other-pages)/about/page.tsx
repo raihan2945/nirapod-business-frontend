@@ -10,18 +10,30 @@ const About = () => {
           </h2>
         </div>
 
-        <p className="text-lg font-bold">Hi, I am Abu Bakar Siddique!</p>
-        <p className="mt-2 text-lg">
-          In the year 2022, in some conversation in Facebook with someone, I was
-          challenged that it is not possible to make money in halal way. As
-          people usually put their money in bank and get interest. But this is
-          really challenge to replace this source of income in halal way. That
-          is the trigger point of starting our platform. We communicate with the
-          business option who are trying to run their business in halal way. And
-          made some commitment and then spread the offer among mass people who
-          are willing to invest in halal way and was astonished by observing the
-          response. This was the inspiration to start a platform like halal
-          investment. Since then the platform is running in facebook .
+        <p className="mt-2 text-lg text-justify">
+          বর্তমান বাজারে আমাদের খরচের পরিমাণ এত বেশি যে, আমরা সবাই হিমশিম
+          খাচ্ছি। আমরা যে যেই প্রফেশনেই আছি আমাদের উপার্জিত অর্থের বাইরে সবাই
+          চাই কিছুটা বাড়তি আয় করতে। তবে আমাদের কাছে যে পুঁজি থাকে তা দিয়ে নিজেরা
+          এককভাবে কিছু করতে পারি না। আবার পুঁজি থাকলেও আমাদের আইডিয়া ও সময় থাকে
+          না বাড়তি কিছু করার। এই চিন্তাভাবনা থেকে ই আমরা মূলত একটি প্ল্যাটফর্ম
+          দাঁড় করানোর কথা চিন্তা করি। যেখানে সম্মিলিত বিনিয়োগের মাধ্যমে ব্যবসা
+          পরিচালনা করা হবে। ব্যবসা পরিচালনা করবে আমাদের দক্ষ টিম। যার নেতৃত্বে
+          থাকবো আমরা ঢাকা বিশ্ববিদ্যালয়ের কয়েকজন সাবেক শিক্ষার্থী। আমাদের বিচার
+          বিশ্লেষন ও অভিজ্ঞতার আলোকে আমরা নানা প্রজেক্ট গ্রহণ ও পরিচালনা করবো।
+          বিভিন্ন প্রজেক্টের প্রফিট থেকে ঘোষণা অনুযায়ী প্রফিট শেয়ারিং করবো।
+          প্রত্যেক বিনিয়োগকারী ও শেয়ার হোল্ডার সময় মতো তাদের প্রফিট ও মূল অর্থ
+          পেয়ে যাবেন। আমাদের ব্যবসায়িক অভিজ্ঞতার ভিত্তিতে শতভাগ বিচার বিশ্লেষন
+          থাকবে যেন কোন প্রজেক্টে লস না হয়। কোন প্রজেক্ট লস হলে সেটা আমরা আমাদের
+          অন্যান্য প্রজেক্ট থেকে ভর্তুকি দিয়ে চেষ্টা করবো যেন বিনিয়োগকারীদের কোন
+          লস না হয় ও তাদের মূলধন ক্ষতিগ্রস্ত না হয়। এই প্ল্যাটফর্মের মূল
+          উদ্যোক্তা হিসেবে রয়েছি আমরা দুজন, জনাব হাবিবুর রহমান জুয়েল, বি.এ
+          অনার্স, এম.এ ঢাকা বিশ্ববিদ্যালয় ও জনাব সাইফুল্লাহ, বি এস এস, এম এস এস
+          ঢাকা বিশ্ববিদ্যালয়। এ ছাড়া প্রতিটি প্রজেক্টের ক্ষেত্রে আমাদের একটি
+          বিনিয়োগ বোর্ড থাকবে। যেখানে আলোচনার মাধ্যমে আমরা সিদ্ধান্ত গ্রহণ করবো।
+          বিনিয়োগকারীদের মধ্য থেকেও প্রয়োজন বোধ করলে কয়েকজনকে আমরা সেই বোর্ড
+          মেম্বার হিসেবে রাখবো। আমরা আমাদের কোন প্রজেক্টে কোন ধরনের ব্যাংক লোন
+          গ্রহণ করবো না বলে প্রতিজ্ঞাবদ্ধ হয়েছি। প্রফিট শেয়ারিং এর ভিত্তিতে
+          ব্যক্তিগত বিনিয়োগের মাধ্যমেই আমরা আমাদের প্রজেক্টগুলা পরিচালনা করবো।
         </p>
       </div>
 
@@ -32,40 +44,34 @@ const About = () => {
           </h2>
         </div>
 
-        <ul className="list-disc pl-5 text-lg leading-loose">
-          <li>We do invest money to halal business only.</li>
-          <li>
-            We expect investor will invest their hard earned halal money in our
-            project.
-          </li>
-          <li>
-            No bank loan money will be accepted on our invested project, we
-            forbid people to do such thing and we will instantly return the
-            money once we get any such prooflly we take two month to six month
-            time to Liquid the money as per project deed.
-          </li>
-          <li>
-            Sometimes payment may be delayed due to any unavoidable situation.
-            So investor should have patience in this situation.
-          </li>
-          <li>
-            Business is matter of profit and loss. Sometimes they will make
-            money, sometimes they may loose money. Sometimes business will make
-            more money, sometimes they may make less money, in every situation
-            investors should be co operative with us.
-          </li>
-          <li>
-            Our platform do not operate any business, but we help people to make
-            money by investing in halal way. We minimize the risk of investment,
-            but we share each and every risk details in our project proposal, we
-            believe every one is aware of those risk event.
-          </li>
-          <li>
-            We are not liable for any kind of loss or less profit as we are not
-            involve in business direct even we do not take extra money if more
-            money made from business.
-          </li>
-        </ul>
+        <p className="leading-10  text-lg">
+          1. বিনিয়োগকারীদের বিনিয়োগের বিপরীতে দেয়া হবে একটি চুক্তিনামা ও মানি
+          রিসিপ্ট।
+          <br />
+          2. বিনিয়োগকারীরা তাদের বিনিয়োগ নির্দিষ্ট প্রজেক্টের ব্যাংক একাউন্টে
+          অথবা সরাসরি অফিসে এসে দিতে পারবেন।
+          <br />
+          3. যে কোন লেনদেনের ক্ষেত্রে অথরাইজড পারসনের স্বাক্ষরসহ মানি রিসিপ্ট
+          গ্রহণ করবেন।
+          <br />
+          4. একটি প্রজেক্টে বিনিয়োগ করার পর নির্দিষ্ট সাইকেল বা সময় পূরণ হবার
+          পূর্বে কেউ তার বিনিয়োগ ফেরত চাইতে পারবেন না।
+          <br />
+          5. প্রফিট নির্দিষ্ট ব্যাংক একান্টে পাঠানো হবে।
+          <br />
+          6. প্রফিট নিয়ে কোন ধরনের বাকবিতণ্ডা জড়ানো যাবে না।
+          <br />
+          7. পরিচালনা পর্ষদের সিদ্ধান্তই চূড়ান্ত বলে গণ্য হবে।
+          <br />
+          8. প্রজেক্টের ইন্টার্নাল বিষয় বা পরিচালনার বিষয়ে কোন ধরনের হস্তক্ষেপ
+          করা যাবে না।
+          <br />
+          9. প্রত্যেক বিনিয়োগকারীর একজন নমিনির তথ্য দিতে হবে যেন তার অবর্তমানে
+          তার কাছে লেনদেন বুঝিয়ে দেয়া যায়।
+          <br />
+          10. কোন ধরনের সমস্যা তৈরী হলে তা উভয় পক্ষ বসে সুন্দরভাবে আলোচনা করে
+          সমাধান করতে হবে।
+        </p>
       </div>
 
       <div className="mt-12 container mx-auto px-4 sm:px-6 lg:px-8">
@@ -75,25 +81,12 @@ const About = () => {
           </h2>
         </div>
 
-        <p className="text-lg font-bold">Investment Terms</p>
         <p className="mt-2 text-lg">
-          We prepare a contract for each project, and the invested money will be
-          returned once the project period is complete. For any type of project,
-          there is no option for an early withdrawal. Since the funds are
-          actively used in business, its not possible to recover the invested
-          amount before the project ends.
-        </p>
-
-        <p className="text-lg font-bold mt-4">Disclaimer of Liability</p>
-        <p className="mt-2 text-lg">
-          Halal Investment is not liable for the funds raised for this project
-          through their platform. They act only as an intermediary, connecting
-          potential investors with trustworthy businesses that have been
-          carefully screened and assessed for risk. While Halal Investment
-          strives to ensure the credibility of listed businesses, it does not
-          guarantee any specific performance, returns, or outcomes. Investors
-          are encouraged to conduct their own research and seek independent
-          financial advice before making any investment decisions.
+          আমরা প্রতিটি প্রকল্পের জন্য একটি নিদিষ্ট চুক্তি ও সময় নির্ধারণ করি এবং
+          প্রকল্প শেষ হওয়ার পরে বিনিয়োগকৃত অর্থ বিনিয়োগকারীদের ফেরত দিয়ে থাকি।
+          প্রকল্পের মাঝপথে বিনিয়োগকৃত অর্থ প্রত্যাহারের কোন বিকল্প নেই। যেহেতু
+          বিনিয়োগকৃত অর্থ ব্যবসায় ব্যবহৃত হয়, তাই প্রকল্প শেষ হওয়ার আগে
+          বিনিয়োগকৃত অর্থ পুনরুদ্ধার করা সম্ভব নয়।
         </p>
       </div>
 
@@ -104,57 +97,58 @@ const About = () => {
           </h2>
         </div>
 
-        <p className="text-lg font-bold">1. Information We Collect:</p>
+        <p className="text-lg font-bold">১. আমরা যে তথ্য সংগ্রহ করি:</p>
         <p className="mt-2 text-lg">
-          We may collect personal information, including but not limited to your
-          name, contact details, and relevant professional information.
-          Additionally, non-personal information such as device information and
-          usage statistics may be gathered to enhance user experience.
+          আমরা ব্যক্তিগত তথ্য সংগ্রহ করতে পারি, যার মধ্যে আপনার নাম, যোগাযোগের
+          বিবরণ এবং প্রাসঙ্গিক পেশাদার তথ্য অন্তর্ভুক্ত। অতিরিক্তভাবে,
+          ব্যবহারকারীর অভিজ্ঞতা উন্নত করার জন্য ডিভাইসের তথ্য এবং ব্যবহারের
+          পরিসংখ্যানের মতো অ-ব্যক্তিগত তথ্য সংগ্রহ করা যেতে পারে।
         </p>
 
-        <p className="text-lg font-bold mt-4">3. Data Security:</p>
+        <p className="text-lg font-bold mt-4">২. তথ্য সুরক্ষা:</p>
         <p className="mt-2 text-lg">
-          We prioritize the security of your information. Industry-standard
-          encryption and security measures are implemented to protect against
-          unauthorized access, disclosure, or alteration of your personal data.
+          আমরা আপনার তথ্যের সুরক্ষাকে অগ্রাধিকার দিই। আপনার ব্যক্তিগত তথ্যের
+          অননুমোদিত অ্যাক্সেস, প্রকাশ বা পরিবর্তন থেকে রক্ষা করার জন্য
+          ইনডাস্ট্রি স্ট্যান্ডার্স এনক্রিপশন এবং সুরক্ষা ব্যবস্থা বাস্তবায়ন করা
+          হয়।
         </p>
 
-        <p className="text-lg font-bold mt-4">4. Sharing of Information:</p>
+        <p className="text-lg font-bold mt-4">৩. তথ্য ভাগাভাগি:</p>
         <p className="mt-2 text-lg">
-          Your personal information is treated as confidential. We do not sell,
-          trade, or rent your data to third parties. However, we may share
-          information with trusted service providers to enhance our services or
-          as required by law.
+          আপনার ব্যক্তিগত তথ্য গোপনীয় হিসাবে বিবেচিত হয়। আমরা তৃতীয় পক্ষের
+          কাছে আপনার ডেটা বিক্রি, বাণিজ্য বা ভাড়া করি না। তবে, আমাদের পরিষেবা
+          উন্নত করার জন্য বা আইন অনুসারে আমরা বিশ্বস্ত পরিষেবা প্রদানকারীদের
+          সাথে তথ্য ভাগাভাগি করতে পারি।
         </p>
 
-        <p className="text-lg font-bold mt-4">5. Third-Party Links:</p>
+        <p className="text-lg font-bold mt-4">৪. তৃতীয় পক্ষের লিঙ্ক:</p>
         <p className="mt-2 text-lg">
-          Our app may contain links to third-party websites. Please note that we
-          are not responsible for the privacy practices or content of these
-          sites. We encourage you to review their privacy policies before
-          providing any personal information
+          আমাদের অ্যাপে তৃতীয় পক্ষের ওয়েবসাইটের লিঙ্ক থাকতে পারে। দয়া করে মনে
+          রাখবেন যে আমরা এই সাইটগুলির গোপনীয়তা অনুশীলন বা বিষয়বস্তুর জন্য
+          দায়ী নই। আমরা আপনাকে কোনও ব্যক্তিগত তথ্য প্রদান করার আগে তাদের
+          গোপনীয়তা নীতি পর্যালোচনা করার জন্য উৎসাহিত করি
         </p>
 
-        <p className="text-lg font-bold mt-4">6. User Control:</p>
+        <p className="text-lg font-bold mt-4">৫. ব্যবহারকারী নিয়ন্ত্রণ:</p>
         <p className="mt-2 text-lg">
-          You have the right to access, correct, or delete your personal
-          information. You can manage your preferences within the app settings.
-          If you encounter any issues, contact our support team for assistance.
+          আপনার ব্যক্তিগত তথ্য অ্যাক্সেস, সংশোধন বা মুছে ফেলার অধিকার আপনার আছে।
+          অ্যাপ সেটিংসের মধ্যে আপনার পছন্দগুলি পরিচালনা করতে পারেন। যদি আপনার
+          কোনও সমস্যার সম্মুখীন হন, তাহলে সহায়তার জন্য আমাদের সহায়তা দলের সাথে
+          যোগাযোগ করুন।
         </p>
-
-        <p className="text-lg font-bold mt-4">7. Changes to Privacy Policy:</p>
+        <p className="text-lg font-bold mt-4">৬. গোপনীয়তা নীতিতে পরিবর্তন:</p>
         <p className="mt-2 text-lg">
-          We reserve the right to update our Privacy Policy. Any changes will be
-          communicated through the app or our website. Continued use of the app
-          implies acceptance of these changes.
+          আপনার ব্যক্তিগত তথ্য অ্যাক্সেস, সংশোধন বা মুছে ফেলার অধিকার আপনার আছে।
+          অ্যাপ সেটিংসের মধ্যে আপনার পছন্দগুলি পরিচালনা করতে পারেন। যদি আপনার
+          কোনও সমস্যার সম্মুখীন হন, তাহলে সহায়তার জন্য আমাদের সহায়তা দলের সাথে
+          যোগাযোগ করুন।
         </p>
-        <p className="text-lg font-bold mt-4">8. Contact Information:</p>
+        <p className="text-lg font-bold mt-4">৭. যোগাযোগের তথ্য:</p>
         <p className="mt-2 text-lg">
-          For any privacy-related concerns or questions, please contact us at
-          <strong>halal.invest.bd@gmail.com</strong> By using Halal Invest, you
-          agree to the terms outlined in this Privacy Policy.
-          <br />
-          <strong>This policy is effective as of 2024-01-24.</strong>
+          গোপনীয়তা-সম্পর্কিত যেকোনো উদ্বেগ বা প্রশ্নের জন্য, অনুগ্রহ করে আমাদের
+          সাথে যোগাযোগ করুন <strong><a href="mailto:nirapadbusiness@gmail.com">nirapadbusiness@gmail.com</a></strong>. নিরাপদ বিজনেস ব্যবহার
+          করে, আপনি এই গোপনীয়তা নীতিতে বর্ণিত শর্তাবলীতে সম্মত হন। এই নীতিটি
+          ২০২৬-০১-০১ তারিখ থেকে কার্যকর।
         </p>
       </div>
     </section>

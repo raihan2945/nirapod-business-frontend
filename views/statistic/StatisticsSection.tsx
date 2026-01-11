@@ -89,7 +89,7 @@ export default function StatisticsSection() {
             <span className="w-5 h-5 rounded-full bg-gray-900 flex items-center justify-center text-white text-xs">
               ✓
             </span>
-            Halal Investment numbers
+            Nirapod Business Investment numbers
           </p>
         </div>
 

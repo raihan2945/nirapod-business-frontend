@@ -26,9 +26,9 @@ export default function ContactPage() {
                 Our Location
               </h2>
               <p className="text-base md:text-lg text-gray-800 leading-relaxed">
-                1st Floor, A-1/4, Road: N/S, Block-A,
+                Utopia Symphony (6th Floor), House-08, Road-02, Block-J
                 <br />
-                Banasree Landmark: Near Baitul Atik Masjid, Dhaka, Bangladesh
+                Baridhara, Dhaka-1212, Bangladesh
               </p>
             </div>
           </div>
@@ -48,10 +48,16 @@ export default function ContactPage() {
                 Phone Number
               </h2>
               <a
-                href="tel:+8801600355311"
+                href="tel:+8801923508508"
                 className="text-base md:text-lg text-blue-700 hover:text-blue-800 transition-colors"
               >
-                +8801600355311
+                +8801923508508, 
+              </a>
+              <a
+                href="tel:+8801818646587"
+                className="ml-2 text-base md:text-lg text-blue-700 hover:text-blue-800 transition-colors"
+              >
+                 +8801818646587
               </a>
             </div>
           </div>
@@ -71,10 +77,10 @@ export default function ContactPage() {
                 Email Address
               </h2>
               <a
-                href="mailto:halal.invest.bd@gmail.com"
+                href="mailto:nirapadbusiness@gmail.com"
                 className="text-base md:text-lg text-blue-700 hover:text-blue-800 transition-colors break-all"
               >
-                halal.invest.bd@gmail.com
+                nirapadbusiness@gmail.com
               </a>
             </div>
           </div>

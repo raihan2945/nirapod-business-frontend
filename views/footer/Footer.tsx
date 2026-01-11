@@ -131,7 +131,7 @@ export default function Footer() {
             <div>
               <h3 className="font-semibold text-gray-900 mb-4">Follow Us On</h3>
               <Link
-                href="https://facebook.com"
+                href="https://www.facebook.com/NirapadBusiness?_rdc=1&_rdr#"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-emerald-700 hover:text-white transition-colors"
