@@ -24,7 +24,6 @@ export default function BlogsPage() {
 
   const { data: blogsData } = useGetAllBlogsQuery(generateQueryArray(query));
 
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
@@ -35,8 +34,9 @@ export default function BlogsPage() {
               Blogs
             </h1>
             <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
-              Explore our diverse portfolio of Halal investment opportunities
-              across real estate, technology, and infrastructure sectors.
+              Explore our diverse portfolio of Nirapod Business opportunities
+              across Condominium Project, Land Sharing, Travel and
+              infrastructure sectors.
             </p>
           </div>
         </div>
@@ -52,6 +52,6 @@ export default function BlogsPage() {
           </div>
         </div>
       </section>
-    </div> 
-);
+    </div>
+  );
 }
