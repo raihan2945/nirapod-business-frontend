@@ -116,10 +116,10 @@ export default function BlogDetailsPage({
             />
           </div>
 
-          <h1 className="text-5xl font-bold mb-4">{project?.title}</h1>
-          <p className="text-gray-700 text-lg mb-8">{project?.description}</p>  
+          <h1 className="text-5xl font-bold mb-4 text-justify" style={{ whiteSpace: "pre-line", textAlign: "justify" }}>{project?.title}</h1>
+          <p className="text-gray-700 text-lg mb-8 text-justify" style={{ whiteSpace: "pre-line", textAlign: "justify" }}>{project?.description}</p>  
           <hr className="my-8" />
-          <p className="text-gray-700 text-lg mb-8">{project?.content}</p>
+          <p className="text-gray-700 text-lg mb-8 text-justify" style={{ whiteSpace: "pre-line", textAlign: "justify" }}>{project?.content}</p>
         </div>
       </div>
     </>

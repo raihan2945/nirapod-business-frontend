@@ -16,7 +16,7 @@ export default function Footer() {
               />
             </div>
             <p className="text-gray-700 font-mono text-sm max-w-xs">
-             Together we learn more
+              Together we learn more
             </p>
           </div>
 
@@ -26,15 +26,7 @@ export default function Footer() {
             <ul className="space-y-3">
               <li>
                 <Link
-                  href="/running-projects"
-                  className="text-gray-700 hover:text-emerald-700 transition-colors text-sm"
-                >
-                  Running Projects
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/all-projects"
+                  href="/projects"
                   className="text-gray-700 hover:text-emerald-700 transition-colors text-sm"
                 >
                   All Projects
@@ -50,7 +42,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/apply"
+                  href="/investment"
                   className="text-gray-700 hover:text-emerald-700 transition-colors text-sm"
                 >
                   Apply for Investment
@@ -65,7 +57,7 @@ export default function Footer() {
             <ul className="space-y-3">
               <li>
                 <Link
-                  href="/about"
+                  href="/about/#about"
                   className="text-gray-700 hover:text-emerald-700 transition-colors text-sm"
                 >
                   About Halal Invest
@@ -73,7 +65,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/terms"
+                  href="/about/#terms"
                   className="text-gray-700 hover:text-emerald-700 transition-colors text-sm"
                 >
                   Terms and Conditions
@@ -81,7 +73,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/refunds"
+                  href="/about/#refunds"
                   className="text-gray-700 hover:text-emerald-700 transition-colors text-sm"
                 >
                   Refunds and Returns
@@ -89,18 +81,10 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/privacy"
+                  href="/about/#privacy"
                   className="text-gray-700 hover:text-emerald-700 transition-colors text-sm"
                 >
                   Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/account-deletion"
-                  className="text-gray-700 hover:text-emerald-700 transition-colors text-sm"
-                >
-                  Account Deletion Information
                 </Link>
               </li>
             </ul>

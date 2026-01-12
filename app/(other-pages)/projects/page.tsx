@@ -82,7 +82,7 @@ const projects = [
 
 export default function ProjectsPage() {
   const [query, setQuery] = useState({
-    status: null
+    status: null,
   });
 
   const { data } = useGetAllProjectsQuery(generateQueryArray(query));
@@ -99,8 +99,9 @@ export default function ProjectsPage() {
               Investment <span className="text-lime-500">Projects</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
-              Explore our diverse portfolio of Halal investment opportunities
-              across real estate, technology, and infrastructure sectors.
+              Explore our diverse portfolio of Nirapod Business opportunities
+              across Condominium Project, Land Sharing, Travel and
+              infrastructure sectors.
             </p>
           </div>
         </div>
@@ -138,7 +139,7 @@ export default function ProjectsPage() {
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 md:gap-8">
-            {data?.data?.map((project:any) => (
+            {data?.data?.map((project: any) => (
               <ProjectCard key={project.id} project={project} />
             ))}
           </div>

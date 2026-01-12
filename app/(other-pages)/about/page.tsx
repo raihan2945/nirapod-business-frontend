@@ -3,7 +3,7 @@ import React from "react";
 const About = () => {
   return (
     <section className="py-12 sm:py-16 lg:py-20">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div id="about" className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-center gap-4 mb-6">
           <h2 className="text-2xl center sm:text-4xl lg:text-5xl font-bold">
             About Us
@@ -37,7 +37,7 @@ const About = () => {
         </p>
       </div>
 
-      <div className="mt-12 container mx-auto px-4 sm:px-6 lg:px-8">
+      <div id="terms" className="mt-12 container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-center gap-4 mb-6">
           <h2 className="text-2xl center sm:text-4xl lg:text-5xl font-bold">
             Terms and Conditions
@@ -74,7 +74,7 @@ const About = () => {
         </p>
       </div>
 
-      <div className="mt-12 container mx-auto px-4 sm:px-6 lg:px-8">
+      <div id="refunds" className="mt-12 container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-center gap-4 mb-6">
           <h2 className="text-2xl center sm:text-4xl lg:text-5xl font-bold">
             Refunds and Returns
@@ -86,11 +86,12 @@ const About = () => {
           প্রকল্প শেষ হওয়ার পরে বিনিয়োগকৃত অর্থ বিনিয়োগকারীদের ফেরত দিয়ে থাকি।
           প্রকল্পের মাঝপথে বিনিয়োগকৃত অর্থ প্রত্যাহারের কোন বিকল্প নেই। যেহেতু
           বিনিয়োগকৃত অর্থ ব্যবসায় ব্যবহৃত হয়, তাই প্রকল্প শেষ হওয়ার আগে
-          বিনিয়োগকৃত অর্থ পুনরুদ্ধার করা সম্ভব নয়।
+          বিনিয়োগকৃত অর্থ পুনরুদ্ধার করা সম্ভব নয়। যদি কারো জরুরি প্রয়োজন পড়ে
+          তাহলে মিনিমাম তিন মাস আগে লিখিত ভাবে জানাতে হবে।
         </p>
       </div>
 
-      <div className="mt-12 container mx-auto px-4 sm:px-6 lg:px-8">
+      <div id="privacy" className="mt-12 container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-center gap-4 mb-6">
           <h2 className="text-2xl center sm:text-4xl lg:text-5xl font-bold">
             Privacy Policy
@@ -146,9 +147,14 @@ const About = () => {
         <p className="text-lg font-bold mt-4">৭. যোগাযোগের তথ্য:</p>
         <p className="mt-2 text-lg">
           গোপনীয়তা-সম্পর্কিত যেকোনো উদ্বেগ বা প্রশ্নের জন্য, অনুগ্রহ করে আমাদের
-          সাথে যোগাযোগ করুন <strong><a href="mailto:nirapadbusiness@gmail.com">nirapadbusiness@gmail.com</a></strong>. নিরাপদ বিজনেস ব্যবহার
-          করে, আপনি এই গোপনীয়তা নীতিতে বর্ণিত শর্তাবলীতে সম্মত হন। এই নীতিটি
-          ২০২৬-০১-০১ তারিখ থেকে কার্যকর।
+          সাথে যোগাযোগ করুন{" "}
+          <strong>
+            <a href="mailto:nirapadbusiness@gmail.com">
+              nirapadbusiness@gmail.com
+            </a>
+          </strong>
+          . নিরাপদ বিজনেস ব্যবহার করে, আপনি এই গোপনীয়তা নীতিতে বর্ণিত
+          শর্তাবলীতে সম্মত হন। এই নীতিটি ২০২৬-০১-০১ তারিখ থেকে কার্যকর।
         </p>
       </div>
     </section>
