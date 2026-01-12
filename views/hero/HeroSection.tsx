@@ -17,7 +17,7 @@ const HeroSection = () => {
       {/* Hero Content */}
       <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
         <h1 className="text-4xl uppercase sm:text-5xl md:text-6xl lg:text-8xl font-bold text-white mb-8 leading-tight">
-          Nirapod Business
+          Nirapad Business
         </h1>
         <p className="text-white text-xl sm:text-base font-medium tracking-wider mb-4 uppercase">
           Together we learn more

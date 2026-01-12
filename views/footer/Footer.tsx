@@ -60,7 +60,7 @@ export default function Footer() {
                   href="/about/#about"
                   className="text-gray-700 hover:text-emerald-700 transition-colors text-sm"
                 >
-                  About Halal Invest
+                  About Us
                 </Link>
               </li>
               <li>
