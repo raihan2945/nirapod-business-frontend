@@ -125,7 +125,7 @@ const InvestmentForm: React.FC<ComponentProps> = ({
   }, [info, reset]);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="w-auto mx-auto p-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="w-auto mx-auto">
       <h2 className="text-xl font-semibold text-gray-700 mb-3">
         {"Make Project Investment"}
       </h2>

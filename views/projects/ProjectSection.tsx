@@ -6,6 +6,7 @@ import { useGetAllProjectsQuery } from "@/state/features/projects/projectsApi";
 const ProjectSection = () => {
   const [query, setQuery] = useState({
     status: null,
+    sort: "asc",
   });
 
   const { data } = useGetAllProjectsQuery(generateQueryArray(query));
@@ -19,7 +20,7 @@ const ProjectSection = () => {
           </h2>
         </div>
         <section className="py-16">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
             {data?.data?.map((project: any) => (
               <ProjectCard key={project.id} project={project} />
             ))}

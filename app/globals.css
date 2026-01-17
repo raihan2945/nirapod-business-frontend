@@ -124,3 +124,30 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Optional - helps on very large screens & prevents it from becoming comically wide */
+.responsive-ant-modal {
+  max-width: 90vw !important;
+}
+
+@media (min-width: 640px) {
+  /* sm */
+  .responsive-ant-modal {
+    max-width: 90vw !important;
+    padding: 10px 0px !important;
+  }
+}
+
+@media (min-width: 768px) {
+  /* md */
+  .responsive-ant-modal {
+    max-width: 720px !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* lg */
+  .responsive-ant-modal {
+    max-width: 800px !important;
+  }
+}

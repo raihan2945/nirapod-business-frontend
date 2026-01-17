@@ -287,7 +287,7 @@ export function SignupForm({
                     "Sign Up"
                   )}
                 </Button>
-                <Link href="/login">
+                <Link href="/login/login-user">
                   <FieldDescription className="text-center">
                     Already have an account?{" "}
                     <span className="underline">Login</span>

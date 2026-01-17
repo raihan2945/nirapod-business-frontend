@@ -17,6 +17,7 @@ const nextConfig: NextConfig = {
     ],
     domains: [
       "localhost",
+      "localhost:4001",
       "159.223.53.146:4001",
       "159.223.53.146",
       "api.nirapadbusiness.com",

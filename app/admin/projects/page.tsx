@@ -9,6 +9,7 @@ const Projects = () => {
   const [query, setQuery] = useState({
     search: null,
     status: null,
+    sort: "asc",
   });
 
   const { data, isLoading } = useGetAllProjectsQuery(generateQueryArray(query));

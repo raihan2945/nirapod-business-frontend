@@ -103,10 +103,10 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
               Blog
             </Link>
             <Link
-              href="/investment"
+              href="/investor-signup"
               className="text-white hover:text-cyan-400 px-3 py-2 text-md font-medium"
             >
-              Apply for Investments
+              Apply for Investment
             </Link>
             {/* <Link
               href="/faq"

@@ -315,7 +315,14 @@ export default function ProjectDetailsPage({
                 roles?.map((item: any, index: number) => (
                   <li key={index} className="flex gap-3">
                     <span className="text-red-600 font-bold">•</span>
-                    <span> <p style={{whiteSpace:"pre-line",  textAlign: "justify"}}>{item?.description}</p></span>
+                    <span>
+                      {" "}
+                      <p
+                        style={{ whiteSpace: "pre-line", textAlign: "justify" }}
+                      >
+                        {item?.description}
+                      </p>
+                    </span>
                   </li>
                 ))}
               {/* <li className="flex gap-3">
@@ -348,7 +355,9 @@ export default function ProjectDetailsPage({
                       {item?.title}
                     </AccordionTrigger>
                     <AccordionContent className="px-6 py-4 text-gray-700">
-                      <p style={{ whiteSpace: "pre-line", textAlign: "justify" }}>
+                      <p
+                        style={{ whiteSpace: "pre-line", textAlign: "justify" }}
+                      >
                         {item?.description}
                       </p>
                     </AccordionContent>
@@ -382,7 +391,9 @@ export default function ProjectDetailsPage({
                       {item?.title}
                     </AccordionTrigger>
                     <AccordionContent className="px-6 py-4 text-gray-700">
-                      <p style={{ whiteSpace: "pre-line",  textAlign: "justify" }}>
+                      <p
+                        style={{ whiteSpace: "pre-line", textAlign: "justify" }}
+                      >
                         {item?.description}
                       </p>
                     </AccordionContent>
@@ -407,7 +418,9 @@ export default function ProjectDetailsPage({
                       {item?.title}
                     </AccordionTrigger>
                     <AccordionContent className="px-6 py-4 text-gray-700">
-                      <p style={{ whiteSpace: "pre-line",  textAlign: "justify" }}>
+                      <p
+                        style={{ whiteSpace: "pre-line", textAlign: "justify" }}
+                      >
                         {item?.description}
                       </p>
                     </AccordionContent>
@@ -432,7 +445,11 @@ export default function ProjectDetailsPage({
                       {item?.title}
                     </AccordionTrigger>
                     <AccordionContent className="px-6 py-4 text-gray-700">
-                       <p style={{whiteSpace:"pre-line",  textAlign: "justify"}}>{item?.description}</p>
+                      <p
+                        style={{ whiteSpace: "pre-line", textAlign: "justify" }}
+                      >
+                        {item?.description}
+                      </p>
                     </AccordionContent>
                   </AccordionItem>
                 ))}
@@ -451,13 +468,13 @@ export default function ProjectDetailsPage({
         onCancel={() => setIsCreate(false)}
         footer={null}
         destroyOnHidden={true}
-        className="responsive-modal"
-        width={"30%"}
+        width="90vw"
+        // width={700}
         styles={{
-          body: {
-            padding: 0,
-          },
+          body: { padding: 0 },
         }}
+        // Optional: add this class for extra control
+        className="responsive-ant-modal"
       >
         {/* <div className="p-4 sm:p-6 max-h-[80vh] overflow-y-auto"> */}
         <InvestmentForm
