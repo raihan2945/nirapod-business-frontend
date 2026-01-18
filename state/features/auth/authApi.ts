@@ -4,7 +4,7 @@ import { userLoggedIn, User } from "./authSlice";
 import { LoginResponse } from "./types";
 
 const authApi = apiSlice.injectEndpoints({
-  endpoints: (builder: any) => ({
+  endpoints: (builder) => ({
     userLogin: builder.mutation({
       query: (data: any) => ({
         url: `/api/v1/auth/user/login`,
@@ -19,7 +19,7 @@ const authApi = apiSlice.injectEndpoints({
         }: {
           queryFulfilled: Promise<{ data: LoginResponse }>;
           dispatch: (action: any) => void;
-        }
+        },
       ) {
         try {
           const result = await queryFulfilled;
@@ -30,7 +30,7 @@ const authApi = apiSlice.injectEndpoints({
             userLoggedIn({
               access_token: data?.access_token,
               id: data.id,
-            })
+            }),
           );
         } catch (err) {
           // Handle error
@@ -53,7 +53,7 @@ const authApi = apiSlice.injectEndpoints({
         }: {
           queryFulfilled: Promise<{ data: LoginResponse }>;
           dispatch: (action: any) => void;
-        }
+        },
       ) {
         try {
           const result = await queryFulfilled;
@@ -64,7 +64,7 @@ const authApi = apiSlice.injectEndpoints({
             userLoggedIn({
               access_token: data?.access_token,
               id: data.id,
-            })
+            }),
           );
         } catch (err) {
           // Handle error
@@ -72,11 +72,65 @@ const authApi = apiSlice.injectEndpoints({
       },
       invalidatesTags: ["Users"],
     }),
-    // ... other endpoints
+
+    sendOtp: builder.mutation<any, { data: any }>({
+      query: ({ data }: { data: any }) => ({
+        url: `/api/v1/auth/send-otp`,
+        method: "POST",
+        body: data,
+        headers: {
+          authorization: `Bearer ${data?.token || ""}`,
+        },
+      }),
+      invalidatesTags: ["Users"],
+    }),
+
+    verifyOtp: builder.mutation<any, { data: any }>({
+      query: ({ data }: { data: any }) => ({
+        url: `/api/v1/auth/verify-otp`,
+        method: "POST",
+        body: data,
+        headers: {
+          authorization: `Bearer ${data?.token || ""}`,
+        },
+      }),
+      invalidatesTags: ["Users"],
+    }),
+
+    updateForgotPassword: builder.mutation<any, { data: any }>({
+      query: ({ data }: { data: any }) => ({
+        url: `/api/v1/auth/update-forgot-password`,
+        method: "PATCH",
+        body: data,
+        headers: {
+          authorization: `Bearer ${data?.token || ""}`,
+        },
+      }),
+      invalidatesTags: ["Users"],
+    }),
+
+    updatePassword: builder.mutation<any, { data: any }>({
+      query: ({ data }: { data: any }) => ({
+        url: `/api/v1/auth/update-password`,
+        method: "PATCH",
+        body: data,
+        headers: {
+          authorization: `Bearer ${data?.token || ""}`,
+        },
+      }),
+      invalidatesTags: ["Users"],
+    }),
   }),
   overrideExisting: true,
 });
 
-export const { useUserLoginMutation, useUserSignUpMutation } = authApi;
+export const {
+  useUserLoginMutation,
+  useUserSignUpMutation,
+  useSendOtpMutation,
+  useVerifyOtpMutation,
+  useUpdateForgotPasswordMutation,
+  useUpdatePasswordMutation,
+} = authApi;
 
 export default authApi;

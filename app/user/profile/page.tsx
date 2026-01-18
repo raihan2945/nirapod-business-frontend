@@ -16,10 +16,14 @@ import {
 } from "@/components/ui/card";
 import { Upload, Mail, Phone, MapPin, Lock, User, Shield } from "lucide-react";
 import { useSelector } from "react-redux";
-import { useGetUserByIdQuery } from "@/state/features/user/userApi";
+import {
+  useGetUserByIdQuery,
+  useUpdateUserMutation,
+} from "@/state/features/user/userApi";
 import { RootState } from "../../../state/store";
 import { Tabs } from "antd";
 import InvestorInvestments from "@/views/investor/InvestorInvestments";
+import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
 
 const phoneRegex = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/;
 
@@ -29,7 +33,7 @@ const profileSchema = z.object({
   email: z.union([z.literal(""), z.string().email("Invalid email")]),
   photo: z.string().optional().nullable(),
   address: z.string().optional().nullable(),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  password: z.string().optional(),
   role: z.enum(["user", "investor", "admin"]).default("user"),
   permissions: z.array(z.string()).optional(),
   status: z.enum(["ACTIVE", "INACTIVE"]).optional(),
@@ -40,6 +44,9 @@ type ProfileFormData = z.infer<typeof profileSchema>;
 export default function ProfilePage() {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { handleResponse } = useAPIResponseHandler();
+
+  const [UpdateProfile] = useUpdateUserMutation();
 
   const userId = useSelector((state: RootState) => state.auth?.id);
   const {
@@ -48,8 +55,6 @@ export default function ProfilePage() {
     isError,
   } = useGetUserByIdQuery(userId);
   const userProfile: any = useSelector((state: RootState) => state?.user?.data);
-
-  console.log("User Profile Data:", userProfile);
 
   const {
     register,
@@ -88,10 +93,12 @@ export default function ProfilePage() {
   const onSubmit = async (data: ProfileFormData) => {
     setIsLoading(true);
     try {
-      console.log("Profile data:", data);
+      if (!data?.password) {
+        delete data.password;
+      }
       // API call would go here
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      alert("Profile updated successfully!");
+      const res = await UpdateProfile({ id: userId, data });
+      handleResponse(res);
     } catch (error) {
       console.error("Error updating profile:", error);
     } finally {

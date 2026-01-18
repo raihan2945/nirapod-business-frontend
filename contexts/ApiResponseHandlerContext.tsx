@@ -85,6 +85,17 @@ export const APIResponseHandlerProvider: React.FC<{ children: ReactNode }> = ({
             returnRes["code"] = 201
             success(`${res?.data?.message}`)
         }
+        
+        if (res?.data?.statusCode == 200) {
+            returnRes["code"] = 200
+            success(`${res?.data?.message}`)
+        }
+        if (res?.data?.statusCode == 201) {
+            returnRes["code"] = 201
+            success(`${res?.data?.message}`)
+        }
+
+        
 
         return returnRes
     };

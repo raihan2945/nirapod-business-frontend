@@ -30,8 +30,6 @@ const Layout = ({ children }: DashboardLayoutProps) => {
       window.location.reload();
       router.push("/");
     };
-
-    console.log("user profile is : ", userProfile)
   
     useEffect(() => {
       if (userProfile?.role !== "user") {

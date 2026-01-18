@@ -88,8 +88,6 @@ export default function ProjectsPage() {
 
   const { data } = useGetAllProjectsQuery(generateQueryArray(query));
 
-  console.log("Blogs Data on Blogs Page:", data);
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}

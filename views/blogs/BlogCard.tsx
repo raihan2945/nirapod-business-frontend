@@ -6,8 +6,6 @@ import React from "react";
 const BlogCard = (props: any) => {
   const { index, data } = props;
 
-  console.log("Blog Card Data:", data);
-
   return (
     <Link href={`/blogs/${data?.id}`}>
       <div
@@ -34,7 +32,7 @@ const BlogCard = (props: any) => {
             <p className="font-bold text-md text-white text-3xl">
               {data?.title}
             </p>
-            <p className="text-white">{data?.description}</p>
+            <p className="mt-2 opacity-80 text-white w-full line-clamp-2">{data?.description}</p>
           </div>
         </div>
       </div>
