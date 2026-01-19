@@ -28,6 +28,8 @@ const projectSchema = z.object({
   waiting: decimalSchema.default(0),
   murabahaMarkupReturn: decimalSchema.default(0),
   calculatedRoi: decimalSchema.default(0),
+  musharakaMarkupReturn: z.string().optional(),
+  expectedRoi: z.string().optional(),
   repayment: z.coerce.number().int().default(0),
   projectDuration: z.coerce.number().int().default(0),
   leftDays: z.coerce.number().int().default(0),
@@ -397,6 +399,38 @@ const ProjectForm: React.FC<ComponentProps> = ({
             <p className="text-red-500 text-sm">{errors?.waiting?.message}</p>
           )}
         </div>
+
+        <div>
+          <label className="block mb-1 font-medium">
+            Musharakah Muarkup Return
+          </label>
+          <input
+            type="text"
+            step="0.01"
+            {...register("musharakaMarkupReturn")}
+            className="w-full border rounded p-2"
+          />
+          {errors?.murabahaMarkupReturn && (
+            <p className="text-red-500 text-sm">
+              {errors?.murabahaMarkupReturn?.message}
+            </p>
+          )}
+        </div>
+        <div>
+          <label className="block mb-1 font-medium">Expected ROI</label>
+          <input
+            step="0.01"
+            type="text"
+            {...register("expectedRoi")}
+            className="w-full border rounded p-2"
+          />
+          {errors?.calculatedRoi && (
+            <p className="text-red-500 text-sm">
+              {errors?.calculatedRoi?.message}
+            </p>
+          )}
+        </div>
+        
         <div>
           <label className="block mb-1 font-medium">
             Murabaha Markup Return
@@ -427,6 +461,7 @@ const ProjectForm: React.FC<ComponentProps> = ({
             </p>
           )}
         </div>
+
         <div>
           <label className="block mb-1 font-medium">Repayment</label>
           <input

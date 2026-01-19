@@ -106,7 +106,7 @@ export default function ProjectDetailsPage({
 
   const prevImage = () => {
     setCurrentImageIndex(
-      (prev) => (prev - 1 + project?.images.length) % project?.images?.length
+      (prev) => (prev - 1 + project?.images.length) % project?.images?.length,
     );
   };
 
@@ -240,26 +240,49 @@ export default function ProjectDetailsPage({
                   </span>
                 </div>
 
-                <div className="flex justify-between items-center pb-4 border-b">
-                  <span className="text-gray-600">
-                    Murabaha Markup Return (%):
-                  </span>
-                  <span className="font-semibold text-gray-900">
-                    {englishToBanglaNumber(
-                      Number(project?.murabahaMarkupReturn || 0)
-                    )}
-                  </span>
-                </div>
+                {project?.musharakaMarkupReturn ? (
+                  <div className="flex justify-between items-center pb-4 border-b">
+                    <span className="text-gray-600">
+                      Musharakah Markup Return (%):
+                    </span>
+                    <span className="font-semibold text-gray-900">
+                      {project?.musharakaMarkupReturn}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex justify-between items-center pb-4 border-b">
+                    <span className="text-gray-600">
+                      Murabaha Markup Return (%):
+                    </span>
+                    <span className="font-semibold text-gray-900">
+                      {englishToBanglaNumber(
+                        Number(project?.murabahaMarkupReturn || 0),
+                      )}
+                    </span>
+                  </div>
+                )}
 
-                <div className="flex justify-between items-center pb-4 border-b">
-                  <span className="text-gray-600">
-                    Calculated Annualized ROI (%):
-                  </span>
-                  <span className="font-semibold text-gray-900">
-                    {englishToBanglaNumber(Number(project?.calculatedRoi || 0))}
-                  </span>
-                </div>
-
+                {project?.expectedRoi ? (
+                  <div className="flex justify-between items-center pb-4 border-b">
+                    <span className="text-gray-600">
+                      Expected Annualized ROI (%):
+                    </span>
+                    <span className="font-semibold text-gray-900">
+                      {project?.expectedRoi}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex justify-between items-center pb-4 border-b">
+                    <span className="text-gray-600">
+                      Calculated Annualized ROI (%):
+                    </span>
+                    <span className="font-semibold text-gray-900">
+                      {englishToBanglaNumber(
+                        Number(project?.calculatedRoi || 0),
+                      )}
+                    </span>
+                  </div>
+                )}
                 <div className="flex justify-between items-center pb-4 border-b">
                   <span className="text-gray-600">Repayment:</span>
                   <span className="font-semibold text-gray-900">
@@ -271,7 +294,7 @@ export default function ProjectDetailsPage({
                   <span className="text-gray-600">Project Duration:</span>
                   <span className="font-semibold text-gray-900">
                     {englishToBanglaNumber(
-                      Number(project?.projectDuration || 0)
+                      Number(project?.projectDuration || 0),
                     )}{" "}
                     মাস
                   </span>

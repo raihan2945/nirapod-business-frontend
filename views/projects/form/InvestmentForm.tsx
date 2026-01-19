@@ -132,7 +132,7 @@ const InvestmentForm: React.FC<ComponentProps> = ({
 
       <Card style={{ marginBottom: "1rem" }}>
         <p className="text-lg">
-          <strong>Account No :</strong> 7862147000053636
+          <strong>Account No :</strong> N/A
         </p>
         <p className="text-lg">
           <strong>Account Name :</strong> Amanah Fintech Limited

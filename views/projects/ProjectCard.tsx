@@ -103,7 +103,7 @@ export default function ProjectCard({ project }: { project: any }) {
         <div className="absolute top-4 right-4">
           <span
             className={`${getStatusColor(
-              project.status
+              project.status,
             )} text-white px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg`}
           >
             {project.status}
@@ -172,7 +172,7 @@ export default function ProjectCard({ project }: { project: any }) {
               Repayment:
             </span>
             <span className="font-semibold text-green-600">
-             {englishToBanglaNumber(Number(project?.repayment || 0))}
+              {englishToBanglaNumber(Number(project?.repayment || 0))}
             </span>
           </div>
           <div className="flex justify-between items-center text-sm">
@@ -181,7 +181,7 @@ export default function ProjectCard({ project }: { project: any }) {
               Duration:
             </span>
             <span className="font-semibold text-green-600">
-               {englishToBanglaNumber(Number(project?.projectDuration || 0))} মাস
+              {englishToBanglaNumber(Number(project?.projectDuration || 0))} মাস
             </span>
           </div>
           <div className="flex justify-between items-center text-sm">
@@ -193,31 +193,54 @@ export default function ProjectCard({ project }: { project: any }) {
               {numberToBanglaTk(Number(project?.minInvestment || 0))} ৳
             </span>
           </div>
-          <div className="flex justify-between items-center text-sm">
-            <span className="text-gray-600 flex items-center gap-1.5">
-              {/* <TrendingUp className="h-3.5 w-3.5" /> */}
-              Murabaha Markup Return (%):
-            </span>
-            <span className="font-semibold text-green-600">
-               {englishToBanglaNumber(Number(project?.murabahaMarkupReturn || 0))}
-            </span>
-          </div>
-          <div className="flex justify-between items-center text-sm">
-            <span className="text-gray-600 flex items-center gap-1.5">
-              {/* <TrendingUp className="h-3.5 w-3.5" /> */}
-              Calculated Annualized ROI (%):
-            </span>
-            <span className="font-semibold text-green-600">
-               {englishToBanglaNumber(Number(project?.calculatedRoi || 0))}
-            </span>
-          </div>
+          {project?.musharakaMarkupReturn ? (
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-gray-600 flex items-center gap-1.5 flex-2">
+                Musharakah Markup Return (%):
+              </span>
+              <span className="font-semibold text-green-600 flex-1 text-end">
+                {project?.musharakaMarkupReturn}
+              </span>
+            </div>
+          ) : (
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-gray-600 flex items-center gap-1.5">
+                Murabaha Markup Return (%):
+              </span>
+              <span className="font-semibold text-green-600">
+                {englishToBanglaNumber(
+                  Number(project?.murabahaMarkupReturn || 0),
+                )}
+              </span>
+            </div>
+          )}
+          {project?.expectedRoi ? (
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-gray-600 flex items-center gap-1.5">
+                Expected Annualized ROI (%):
+              </span>
+              <span className="font-semibold text-green-600">
+                {project?.expectedRoi}
+              </span>
+            </div>
+          ) : (
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-gray-600 flex items-center gap-1.5">
+                Calculated Annualized ROI (%):
+              </span>
+              <span className="font-semibold text-green-600">
+                {englishToBanglaNumber(Number(project?.calculatedRoi || 0))}
+              </span>
+            </div>
+          )}
+
           <div className="flex justify-between items-center text-sm">
             <span className="text-gray-600 flex items-center gap-1.5">
               {/* <TrendingUp className="h-3.5 w-3.5" /> */}
               Days Left:
             </span>
             <span className="font-semibold text-green-600">
-               {englishToBanglaNumber(Number(project?.daysLeft || 0))} দিন 
+              {englishToBanglaNumber(Number(project?.daysLeft || 0))} দিন
             </span>
           </div>
         </div>
