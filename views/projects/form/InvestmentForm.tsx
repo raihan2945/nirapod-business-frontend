@@ -135,13 +135,13 @@ const InvestmentForm: React.FC<ComponentProps> = ({
           <strong>Account No :</strong> N/A
         </p>
         <p className="text-lg">
-          <strong>Account Name :</strong> Amanah Fintech Limited
+          <strong>Account Name :</strong> 
         </p>
         <p className="text-lg">
-          <strong>Bank Name :</strong> United Commercial Bank PLC (UCB)
+          <strong>Bank Name :</strong> 
         </p>
         <p className="text-lg">
-          <strong>Branch :</strong> UCB Taqwa Islamic Banking Branch
+          <strong>Branch :</strong> 
         </p>
         <p className="text-lg">
           <strong></strong>
