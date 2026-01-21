@@ -15,6 +15,7 @@ import Image from "next/image";
 import { baseUrl } from "@/utils/baseUrl";
 import { RiEditBoxFill } from "react-icons/ri";
 import InvestmentView from "../admin/project/InvestmentView";
+import { format } from "date-fns";
 
 const InvestorInvestments = ({ userId }: { userId: string }) => {
   const [query, setQuery] = useState({
@@ -22,8 +23,10 @@ const InvestorInvestments = ({ userId }: { userId: string }) => {
   });
 
   const { data, isLoading } = useGetAllProjectInvestmentsQuery(
-    generateQueryArray(query)
+    generateQueryArray(query),
   );
+
+  console.log("data", data);
 
   const [isEdit, setIsEdit] = useState<any>(null);
 
@@ -38,10 +41,9 @@ const InvestorInvestments = ({ userId }: { userId: string }) => {
   const columns: TableProps<DataType>["columns"] = [
     {
       title: "Id",
-      dataIndex: "id",
-      key: "id",
+      dataIndex: "serial",
+      key: "serial",
       render: (text) => `#${text}`,
-      width: 170,
     },
     {
       title: "Proof",
@@ -50,13 +52,19 @@ const InvestorInvestments = ({ userId }: { userId: string }) => {
       render: (text) => (
         <div className="relative w-20 h-20 p-1 overflow-hidden rounded">
           <Image
-            alt="photo"
+            alt="N/A"
             src={`${baseUrl}/uploads/photos/${text}`}
             fill
             className="w-full h-auto object-contain"
           />
         </div>
       ),
+    },
+    {
+      title: "Project",
+      dataIndex: "project",
+      key: "serial",
+      render: (text, data: any) => data?.Project?.title,
     },
     {
       title: "Amount",
@@ -73,12 +81,6 @@ const InvestorInvestments = ({ userId }: { userId: string }) => {
     },
 
     {
-      title: "Payment Date",
-      dataIndex: "paymentDate",
-      key: "paymentDate",
-      render: (text) => text,
-    },
-    {
       title: "Transaction Id",
       dataIndex: "transactionId",
       key: "transactionId",
@@ -89,13 +91,22 @@ const InvestorInvestments = ({ userId }: { userId: string }) => {
       dataIndex: "status",
       key: "status",
       render: (text) => (
-        <Tag color={text ? "success" : "error"}>{text ? "Active" : "Inactive"}</Tag>
+        <Tag color={text ? "success" : "error"}>
+          {text ? "Active" : "Inactive"}
+        </Tag>
       ),
+    },
+    {
+      title: "Payment Date",
+      dataIndex: "paymentDate",
+      key: "paymentDate",
+      render: (text) => format(new Date(text), "dd-MM-yyyy"),
     },
     {
       title: "createdAt",
       dataIndex: "createdAt",
       key: "createdAt",
+      render: (text) => format(new Date(text), "dd-MM-yyyy"),
     },
     {
       title: "Action",

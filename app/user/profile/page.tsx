@@ -106,6 +106,8 @@ export default function ProfilePage() {
     }
   };
 
+  console.log("User Profile Data:", userProfile);
+
   useEffect(() => {
     if (userProfile) {
       setValue("fullName", userProfile.fullName || "");
