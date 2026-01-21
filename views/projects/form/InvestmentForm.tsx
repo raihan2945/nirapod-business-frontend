@@ -36,10 +36,10 @@ const InvestmentForm: React.FC<ComponentProps> = ({
   info,
   modalCancel,
   projectId,
-  userId
+  userId,
 }) => {
   const [coverPhotoPreview, setCoverPhotoPreview] = useState<string | null>(
-    null
+    null,
   );
   const { handleResponse } = useAPIResponseHandler();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -77,12 +77,12 @@ const InvestmentForm: React.FC<ComponentProps> = ({
     try {
       const formData = new FormData();
       formData.append("projectId", projectId);
-      formData.append("userId",userId);
+      formData.append("userId", userId);
       formData.append("amount", data.amount.toString());
       formData.append("paymentMethod", data.paymentMethod || "");
       formData.append(
         "paymentDate",
-        data.paymentDate ? data.paymentDate.toISOString() : ""
+        data.paymentDate ? data.paymentDate.toISOString() : "",
       );
       formData.append("transactionId", data.transactionId || "");
       formData.append("comments", data.comments || "");
@@ -135,13 +135,13 @@ const InvestmentForm: React.FC<ComponentProps> = ({
           <strong>Account No :</strong> N/A
         </p>
         <p className="text-lg">
-          <strong>Account Name :</strong> 
+          <strong>Account Name :</strong>
         </p>
         <p className="text-lg">
-          <strong>Bank Name :</strong> 
+          <strong>Bank Name :</strong>
         </p>
         <p className="text-lg">
-          <strong>Branch :</strong> 
+          <strong>Branch :</strong>
         </p>
         <p className="text-lg">
           <strong></strong>
@@ -156,7 +156,7 @@ const InvestmentForm: React.FC<ComponentProps> = ({
             type="number"
             {...register("amount")}
             className="w-full border rounded p-2"
-            placeholder="Enter blog title"
+            placeholder="TK"
           />
           {errors.amount && (
             <p className="text-red-500 text-sm">{errors.amount.message}</p>
@@ -165,11 +165,19 @@ const InvestmentForm: React.FC<ComponentProps> = ({
 
         <div className="mt-2">
           <label className="block mb-1 font-medium">Payment Method</label>
-          <input
+          <select
+            className="w-full border rounded p-2"
+            defaultValue="Bank"
+            {...register("paymentMethod")}
+          >
+            <option value="Bank">Bank</option>
+            <option value="Cash">Cash</option>
+          </select>
+          {/* <input
             {...register("paymentMethod")}
             className="w-full border rounded p-2"
-            placeholder="Enter blog title"
-          />
+            placeholder="Bank/Bkash"
+          /> */}
           {errors.paymentMethod && (
             <p className="text-red-500 text-sm">
               {errors.paymentMethod.message}
@@ -206,7 +214,7 @@ const InvestmentForm: React.FC<ComponentProps> = ({
 
         {/* Content */}
         <div className="mt-2">
-          <label className="block mb-1 font-medium">Comments</label>
+          <label className="block mb-1 font-medium">Remarks</label>
           <textarea
             {...register("comments")}
             className="w-full border rounded p-2"
@@ -235,7 +243,7 @@ const InvestmentForm: React.FC<ComponentProps> = ({
       <button
         type="submit"
         disabled={isSubmitting}
-        className="mt-3 w-full cursor-pointer bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+        className="mt-3 w-full cursor-pointer bg-green-700 text-white py-2 rounded hover:bg-blue-700"
       >
         Send
       </button>

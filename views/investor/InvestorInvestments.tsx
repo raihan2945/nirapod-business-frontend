@@ -134,7 +134,7 @@ const InvestorInvestments = ({ userId }: { userId: string }) => {
 
   return (
     <div>
-      <Table columns={columns} dataSource={data?.data} />
+      <Table size="small" columns={columns} dataSource={data?.data} />
 
       {/* edit blog form */}
       <Modal

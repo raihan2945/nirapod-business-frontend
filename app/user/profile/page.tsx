@@ -119,7 +119,7 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Main Content */}
-      <main className="pt-16 pb-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+      <main className="pt-16 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
@@ -130,8 +130,12 @@ export default function ProfilePage() {
           </p>
         </div>
 
-        <Tabs defaultActiveKey="1" size="large">
-          <Tabs.TabPane tab="Profile" key="1">
+        <Tabs tabPosition="top" defaultActiveKey="1" size="large">
+          <Tabs.TabPane tab="Submitted Investments" key="1">
+            <InvestorInvestments userId={userId!} />
+          </Tabs.TabPane>
+
+          <Tabs.TabPane tab="Profile" key="2">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               {/* Personal Information */}
               <Card>
@@ -249,83 +253,6 @@ export default function ProfilePage() {
                 </CardContent>
               </Card>
 
-              {/* Role & Permissions */}
-              {/* <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Shield className="h-5 w-5" />
-                Role & Permissions
-              </CardTitle>
-              <CardDescription>Manage your account role and access level</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Role</label>
-                  <select
-                    {...register("role")}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                  >
-                    <option value="user">User</option>
-                    <option value="investor">Investor</option>
-                    <option value="admin">Admin</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                  <select
-                    {...register("status")}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                  >
-                    <option value="ACTIVE">Active</option>
-                    <option value="INACTIVE">Inactive</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">Permissions</label>
-                <div className="space-y-2">
-                  {role === "admin" && (
-                    <>
-                      <div className="flex items-center">
-                        <input type="checkbox" id="admin-all" defaultChecked className="rounded" />
-                        <label htmlFor="admin-all" className="ml-2 text-sm text-gray-700">
-                          Full Admin Access
-                        </label>
-                      </div>
-                    </>
-                  )}
-                  {role === "investor" && (
-                    <>
-                      <div className="flex items-center">
-                        <input type="checkbox" id="invest-read" defaultChecked className="rounded" />
-                        <label htmlFor="invest-read" className="ml-2 text-sm text-gray-700">
-                          View Projects
-                        </label>
-                      </div>
-                      <div className="flex items-center">
-                        <input type="checkbox" id="invest-write" defaultChecked className="rounded" />
-                        <label htmlFor="invest-write" className="ml-2 text-sm text-gray-700">
-                          Make Investments
-                        </label>
-                      </div>
-                    </>
-                  )}
-                  {role === "user" && (
-                    <div className="flex items-center">
-                      <input type="checkbox" id="user-read" defaultChecked className="rounded" />
-                      <label htmlFor="user-read" className="ml-2 text-sm text-gray-700">
-                        View Public Content
-                      </label>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </CardContent>
-          </Card> */}
-
               {/* Action Buttons */}
               <div className="flex gap-4 justify-end">
                 <Button variant="outline" type="button">
@@ -341,9 +268,7 @@ export default function ProfilePage() {
               </div>
             </form>
           </Tabs.TabPane>
-          <Tabs.TabPane tab="Submitted Investments" key="2">
-            <InvestorInvestments userId={userId!} />
-          </Tabs.TabPane>
+          
         </Tabs>
       </main>
     </div>

@@ -64,8 +64,8 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
     variant === "fixed"
       ? "bg-[#31ad5c] shadow-lg"
       : isScrolled
-      ? "bg-[#31ad5c] shadow-lg"
-      : "bg-transparent";
+        ? "bg-[#31ad5c] shadow-lg"
+        : "bg-transparent";
 
   return (
     <nav
@@ -141,7 +141,7 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
               <Link href="/login/login-user">
                 <Button style={{ cursor: "pointer" }}>Login</Button>
               </Link>
-             
+
               // <DropdownMenu>
               //   <DropdownMenuTrigger asChild>
               //     <Button
@@ -272,41 +272,25 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
 
               {/* Demos Dropdown */}
               {userProfile && userProfile.role == "admin" ? (
-                <Button>Dashboard</Button>
+                <Link
+                  className="block w-full text-white hover:text-cyan-400 px-3 py-2 text-md font-medium"
+                  onClick={toggleMenu}
+                  href="/admin/projects"
+                >
+                  Dashboard
+                </Link>
               ) : userProfile?.role == "user" ? (
-                <Button>Profile</Button>
+                <Link
+                  className="block w-full text-white hover:text-cyan-400 px-3 py-2 text-md font-medium"
+                  onClick={toggleMenu}
+                  href="/user/profile"
+                >
+                  Profile
+                </Link>
               ) : (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      onClick={toggleMenu}
-                      className="block w-full pointer flex items-center space-x-1 text-white bg-gray-800"
-                    >
-                      <span>Login</span>
-                      <ChevronDown className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem>
-                      <Link
-                        onClick={toggleMenu}
-                        href="/login/investor-login"
-                        className="text-md"
-                      >
-                        As Investor
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Link
-                        onClick={toggleMenu}
-                        href="/login/finance-login"
-                        className="text-md"
-                      >
-                        As Finance
-                      </Link>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <Link onClick={toggleMenu} href="/login/login-user">
+                  <Button style={{ cursor: "pointer" }}>Login</Button>
+                </Link>
               )}
 
               {/* Mobile Icons */}
@@ -332,7 +316,7 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
                     title="Logout"
                     description="Are you sure to logout?"
                     onConfirm={() => {
-                      logout(), toggleMenu();
+                      (logout(), toggleMenu());
                     }}
                     okText="Yes"
                     cancelText="No"
