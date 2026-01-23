@@ -17,11 +17,15 @@ import { RiEditBoxFill } from "react-icons/ri";
 import InvestmentView from "../admin/project/InvestmentView";
 import { format } from "date-fns";
 import CounterView from "./CounterView";
+import InvestmentForm from "../projects/form/InvestmentForm";
 
 const InvestorInvestments = ({ userId }: { userId: string }) => {
   const [query, setQuery] = useState({
     userId: userId,
   });
+
+  const [isCreate, setIsCreate] = useState<any>(null);
+  
 
   const { data, isLoading } = useGetAllProjectInvestmentsQuery(
     generateQueryArray(query),
@@ -144,7 +148,7 @@ const InvestorInvestments = ({ userId }: { userId: string }) => {
     <div>
       <CounterView userId={userId} />
       <div className="flex justify-end  pb-3">
-        <Button type="primary" style={{ backgroundColor: "green" }}>
+        <Button onClick={()=>setIsCreate(true)} type="primary" style={{ backgroundColor: "green" }}>
           Make Investment
         </Button>
       </div>
@@ -173,6 +177,31 @@ const InvestorInvestments = ({ userId }: { userId: string }) => {
         <div>
           <InvestmentView investment={isEdit} />
         </div>
+      </Modal>
+
+      {/* edit blog form */}
+      <Modal
+        centered
+        open={isCreate}
+        onCancel={() => setIsCreate(false)}
+        footer={null}
+        destroyOnHidden={true}
+        width="90vw"
+        // width={700}
+        styles={{
+          body: { padding: 0 },
+        }}
+        // Optional: add this class for extra control
+        className="responsive-ant-modal"
+      >
+        {/* <div className="p-4 sm:p-6 max-h-[80vh] overflow-y-auto"> */}
+        <InvestmentForm
+          formType="create"
+          // info={isEdit}
+          modalCancel={() => setIsCreate(false)}
+          userId={userId}
+        />
+        {/* </div> */}
       </Modal>
 
       <style jsx global>{`

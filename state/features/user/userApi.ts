@@ -48,6 +48,17 @@ const userApi = apiSlice.injectEndpoints({
       providesTags: ["Users"],
     }),
 
+    getUserCountsById: builder.query<any, any>({
+      query: (id) => ({
+        url: `/api/v1/users/counts/${id}`,
+        method: "GET",
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }),
+      providesTags: ["Users", "ProjectInvestments"],
+    }),
+
     createNewUser: builder.mutation<any, any>({
       query: ({ data }) => ({
         url: `/api/v1/users`,
@@ -92,5 +103,6 @@ export const {
   useGetAllUsersQuery,
   useCreateNewUserMutation,
   useDeleteUserByIdMutation,
+  useGetUserCountsByIdQuery
 } = userApi;
 export default userApi;

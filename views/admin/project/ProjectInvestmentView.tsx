@@ -18,6 +18,7 @@ import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
 // import useCheckAccess from "@/utils/checkAccess";
 import { useDeleteBlogByIdMutation } from "@/state/features/blogs/blogsApi";
 import InvestmentView from "./InvestmentView";
+import InvestmentHeader from "./InvestmentHeader";
 // import BlogForm from "./form/BlogForm";
 
 interface ComponentProps {
@@ -25,7 +26,10 @@ interface ComponentProps {
   isLoading?: any;
 }
 
-const ProjectInvestmentView: React.FC<ComponentProps> = ({ data, isLoading }) => {
+const ProjectInvestmentView: React.FC<ComponentProps> = ({
+  data,
+  isLoading,
+}) => {
   // const { hasAccess } = useCheckAccess();
 
   const [isEdit, setIsEdit] = useState<any>(null);
@@ -99,6 +103,20 @@ const ProjectInvestmentView: React.FC<ComponentProps> = ({ data, isLoading }) =>
       render: (text) => text,
     },
     {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (text) => (
+        <Tag
+          color={
+            text === "APPROVED" ? "green" : text === "REJECTED" ? "red" : "blue"
+          }
+        >
+          {text}
+        </Tag>
+      ),
+    },
+    {
       title: "createdAt",
       dataIndex: "createdAt",
       key: "createdAt",
@@ -119,7 +137,7 @@ const ProjectInvestmentView: React.FC<ComponentProps> = ({ data, isLoading }) =>
           </Button>
           {/* )} */}
 
-          <Popconfirm
+          {/* <Popconfirm
             title="Delete the task"
             description="Are you sure to delete this task?"
             onConfirm={() => submitDelete(record?.id)}
@@ -130,7 +148,7 @@ const ProjectInvestmentView: React.FC<ComponentProps> = ({ data, isLoading }) =>
             <Button style={{ border: "none", padding: "5px" }}>
               <MdDelete color="red" size={20} />
             </Button>
-          </Popconfirm>
+          </Popconfirm> */}
         </Space>
       ),
     },
@@ -138,7 +156,6 @@ const ProjectInvestmentView: React.FC<ComponentProps> = ({ data, isLoading }) =>
 
   if (isLoading) return <TableSkeleton />;
 
-  console.log("Investment Data:", data);
 
   return (
     <>
@@ -161,9 +178,9 @@ const ProjectInvestmentView: React.FC<ComponentProps> = ({ data, isLoading }) =>
           },
         }}
       >
-       <div>
-       <InvestmentView investment={isEdit}/>
-       </div>
+        <div>
+          <InvestmentView investment={isEdit} setIsEdit={setIsEdit} />
+        </div>
       </Modal>
 
       <style jsx global>{`

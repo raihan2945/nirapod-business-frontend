@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Select, Input, Button, Modal } from "antd";
+import { Select, Input, Button, Modal, Radio, RadioChangeEvent } from "antd";
 // import BlogForm from "./form/BlogForm";
 import useCheckAccess from "@/utils/checkAccess";
 
@@ -45,23 +45,7 @@ const ProjectInvestmentHeader: React.FC<ComponentProps> = ({
               ]}
             />
           </div> */}
-          <div>
-            <p className="text-sm mb-1 opacity-70">Status </p>
-            <Select
-              className="w-100"
-              defaultValue={""}
-              style={{ width: 120 }}
-              onChange={(value) => {
-                changeQuery({ key: "status", value: value });
-              }}
-              options={[
-                { value: "", label: "All" },
-                { value: "DRAFT", label: "DRAFT" },
-                { value: "PUBLISHED", label: "PUBLISHED" },
-              ]}
-            />
-          </div>
-          <div>
+          {/* <div>
             <p className="text-sm mb-1 opacity-70">Search</p>
             <Search
               enterButton
@@ -73,10 +57,27 @@ const ProjectInvestmentHeader: React.FC<ComponentProps> = ({
                 width: 200,
               }}
             />
-          </div>
+          </div> */}
         </div>
         <div className="flex items-center gap-4">
-          <Button
+          <div>
+            <p className="text-sm mb-1 opacity-70">Status </p>
+            <Radio.Group
+              options={[
+                { value: "", label: "All" },
+                { value: "PENDING", label: "PENDING" },
+                { value: "APPROVED", label: "APPROVED" },
+                { value: "REJECTED", label: "REJECTED" },
+              ]}
+              onChange={({ target: { value } }: RadioChangeEvent) =>
+                changeQuery({ key: "status", value: value })
+              }
+              value={query["status"]}
+              optionType="button"
+              buttonStyle="solid"
+            />
+          </div>
+          {/* <Button
             style={{ display: "flex", alignItems: "center", gap: "2px" }}
             type="primary"
             onClick={() => {
@@ -84,7 +85,7 @@ const ProjectInvestmentHeader: React.FC<ComponentProps> = ({
             }}
           >
             <MdAdd size={20} /> Create New
-          </Button>
+          </Button> */}
         </div>
       </div>
 

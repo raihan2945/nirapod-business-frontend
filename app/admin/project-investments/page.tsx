@@ -9,8 +9,10 @@ import { useGetAllProjectInvestmentsQuery } from "@/state/features/projects/proj
 const Blogs = () => {
   const [query, setQuery] = useState({
     search: null,
-    status: null,
+    status: "",
   });
+
+  console.log("query", query);
 
   const { data, isLoading } = useGetAllProjectInvestmentsQuery(generateQueryArray(query));
 

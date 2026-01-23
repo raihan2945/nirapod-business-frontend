@@ -10,11 +10,15 @@ import {
   CheckCircle,
   XCircle,
 } from "lucide-react";
+import { useGetUserCountsByIdQuery } from "@/state/features/user/userApi";
 
 const CounterView = ({ userId }: { userId: string }) => {
+
+  const {data, isLoading} = useGetUserCountsByIdQuery(userId);
+
   return (
     <div>
-      <div className="p-8">
+      <div className="pt-2">
         {/* <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
           <DollarSign className="w-7 h-7 text-green-600" />
           Investment Summary
@@ -26,13 +30,13 @@ const CounterView = ({ userId }: { userId: string }) => {
               Total Projects
             </p>
             <p className="text-4xl font-bold text-green-800 mt-2">
-              02
+              {data?.data?.totalProjects || 0}
             </p>
           </div>
           <div className="bg-gradient-to-br from-blue-50 to-indigo-100 p-6 rounded-xl border border-blue-200">
             <p className="text-sm font-medium text-blue-700">Total Invested Amount</p>
             <p className="text-2xl font-bold text-blue-800 mt-2">
-              ৳5000
+              ৳{data?.data?.totalInvestedAmount || 0}
             </p>
           </div>
           <div className="bg-gradient-to-br from-purple-50 to-violet-100 p-6 rounded-xl border border-purple-200">
@@ -40,7 +44,7 @@ const CounterView = ({ userId }: { userId: string }) => {
               Pendings
             </p>
             <p className="text-lg font-bold text-purple-800 mt-2 break-all">
-              0
+              {data?.data?.totalPendingInvestments || 0}
             </p>
           </div>
         </div>

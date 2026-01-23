@@ -1,4 +1,4 @@
-import React from "react";
+import React, { use } from "react";
 import {
   Clock,
   User,
@@ -11,8 +11,40 @@ import {
   XCircle,
 } from "lucide-react";
 import { baseUrl } from "@/utils/baseUrl";
+import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
+import { Button, message, Popconfirm } from "antd";
+import { useUpdateProjectInvestmentByIdMutation } from "@/state/features/projects/projectInvestmentApi";
 
-const InvestmentView = ({ investment }: { investment: any }) => {
+const InvestmentView = ({
+  investment,
+  setIsEdit,
+}: {
+  investment: any;
+  setIsEdit?: any;
+}) => {
+  const { handleResponse } = useAPIResponseHandler();
+
+  const [UpdateInvestment] = useUpdateProjectInvestmentByIdMutation();
+
+  const submitUpdate = async (status: string) => {
+    try {
+      const updatedData = { status };
+      const res = await UpdateInvestment({
+        id: investment.id,
+        data: updatedData,
+      }).unwrap();
+      console.log("Update Response:", res);
+      handleResponse(res);
+
+      if (res?.statusCode === 200) {
+        setIsEdit(null);
+      }
+    } catch (error) {
+      console.error("Failed to update investment status:", error);
+      // Optionally, you can add an error notification here
+    }
+  };
+
   return (
     <div>
       <div className="min-h-screen bg-gray-50 py-8 px-4">
@@ -23,10 +55,12 @@ const InvestmentView = ({ investment }: { investment: any }) => {
               <h1 className="text-3xl font-bold text-gray-900">
                 Investment Details
               </h1>
-              {/* <span className={`px-5 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 border ${getStatusColor(investment.status)}`}>
+              <span
+                className={`px-5 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 border`}
+              >
                 <Clock className="w-4 h-4" />
-                {investment.status}
-              </span> */}
+                {investment?.status}
+              </span>
             </div>
 
             {/* Project Info */}
@@ -55,7 +89,7 @@ const InvestmentView = ({ investment }: { investment: any }) => {
                       <p className="font-semibold text-indigo-600">
                         ৳
                         {Number(
-                          investment?.Project?.investmentGoal
+                          investment?.Project?.investmentGoal,
                         ).toLocaleString()}
                       </p>
                     </div>
@@ -64,7 +98,7 @@ const InvestmentView = ({ investment }: { investment: any }) => {
                       <p className="font-semibold text-indigo-600">
                         ৳
                         {Number(
-                          investment?.Project?.minInvestment
+                          investment?.Project?.minInvestment,
                         ).toLocaleString()}
                       </p>
                     </div>
@@ -218,18 +252,34 @@ const InvestmentView = ({ investment }: { investment: any }) => {
           </div>
 
           {/* Action Buttons */}
-          {/* {investment.status === "PENDING" && (
+          {setIsEdit && investment.status === "PENDING" && (
             <div className="flex justify-end gap-4 pb-10">
-              <button className="px-8 py-4 bg-red-600 text-white font-medium rounded-xl hover:bg-red-700 transition flex items-center gap-3 shadow-lg">
-                <XCircle className="w-5 h-5" />
-                Reject Investment
-              </button>
-              <button className="px-8 py-4 bg-green-600 text-white font-medium rounded-xl hover:bg-green-700 transition flex items-center gap-3 shadow-lg">
-                <CheckCircle className="w-5 h-5" />
-                Approve Investment
-              </button>
+              <Popconfirm
+                title="Delete the Investment"
+                description="Are you sure to reject this investment?"
+                onConfirm={() => submitUpdate("REJECTED")}
+                okText="Yes"
+                cancelText="No"
+              >
+                <button className="cursor-pointer px-8 py-4 bg-red-600 text-white font-medium rounded-xl hover:bg-red-700 transition flex items-center gap-3 shadow-lg">
+                  <XCircle className="w-5 h-5" />
+                  Reject
+                </button>
+              </Popconfirm>
+              <Popconfirm
+                title="Approve the Investment"
+                description="Are you sure to approve this investment?"
+                onConfirm={() => submitUpdate("APPROVED")}
+                okText="Yes"
+                cancelText="No"
+              >
+                <button className="cursor-pointer px-8 py-4 bg-green-600 text-white font-medium rounded-xl hover:bg-green-700 transition flex items-center gap-3 shadow-lg">
+                  <CheckCircle className="w-5 h-5" />
+                  Approve
+                </button>
+              </Popconfirm>
             </div>
-          )} */}
+          )}
         </div>
       </div>
     </div>

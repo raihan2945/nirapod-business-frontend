@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,6 +10,8 @@ import { baseUrl } from "@/utils/baseUrl";
 import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
 import { Card } from "antd";
 import { useCreateNewProjectInvestmentMutation } from "@/state/features/projects/projectInvestmentApi";
+import { useGetAllProjectsQuery } from "@/state/features/projects/projectsApi";
+import { generateQueryArray } from "@/utils/query";
 
 // ✅ Zod schema for validation
 const blogFormSchema = z.object({
@@ -19,6 +21,7 @@ const blogFormSchema = z.object({
   transactionId: z.string().optional(),
   comments: z.string().optional(),
   proof1: z.any().optional(),
+  projectId: z.string().optional(),
 });
 
 type BlogFormData = z.infer<typeof blogFormSchema>;
@@ -27,7 +30,7 @@ interface ComponentProps {
   modalCancel: () => void;
   formType?: "create" | "edit";
   info?: any;
-  projectId: string;
+  projectId?: string;
   userId: string;
 }
 
@@ -45,13 +48,19 @@ const InvestmentForm: React.FC<ComponentProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [createNew] = useCreateNewProjectInvestmentMutation();
   const [updateOne] = useUpdateBlogByIdMutation();
+  const [setNewProjectId, newProjectId] = useState<any>(null);
 
+  const query = {};
+
+  const { data: projects } = useGetAllProjectsQuery(generateQueryArray(query));
+  
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
     reset,
+    watch,
   } = useForm<BlogFormData>({
     resolver: zodResolver(blogFormSchema) as any,
     defaultValues: {
@@ -59,6 +68,7 @@ const InvestmentForm: React.FC<ComponentProps> = ({
       //   description: "",
       //   content: "",
       //   status: "DRAFT",
+      "projectId": projectId,
     },
   });
 
@@ -76,7 +86,7 @@ const InvestmentForm: React.FC<ComponentProps> = ({
     setIsSubmitting(true);
     try {
       const formData = new FormData();
-      formData.append("projectId", projectId);
+      formData.append("projectId", data?.projectId!);
       formData.append("userId", userId);
       formData.append("amount", data.amount.toString());
       formData.append("paymentMethod", data.paymentMethod || "");
@@ -124,6 +134,12 @@ const InvestmentForm: React.FC<ComponentProps> = ({
     }
   }, [info, reset]);
 
+  // useEffect(() => {
+  //   if(projectId){
+  //     setValue("projectId", projectId!);
+  //   }
+  // }, [projectId]);
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-auto mx-auto">
       <h2 className="text-xl font-semibold text-gray-700 mb-3">
@@ -148,95 +164,118 @@ const InvestmentForm: React.FC<ComponentProps> = ({
         </p>
       </Card>
 
+      <Card style={{ marginBottom: ".5rem" }}>
+        <label className="block mb-1 font-medium">Project</label>
+        <select
+          className="w-full border rounded p-2 color-green-700"
+          defaultValue={watch("projectId") || ""}
+          {...register("projectId")}
+        >
+          <option value="">Select Project</option>
+          {projects?.data?.map((project: any) => (
+            <option key={project.id} value={project.id}>
+              {project.title}
+            </option>
+          ))}
+        </select>
+        {errors.paymentMethod && (
+          <p className="text-red-500 text-sm">{errors.paymentMethod.message}</p>
+        )}
+      </Card>
+
       <Card>
-        {/* Payment Amount */}
-        <div className="mt-2">
-          <label className="block mb-1 font-medium">Payment Amount</label>
-          <input
-            type="number"
-            {...register("amount")}
-            className="w-full border rounded p-2"
-            placeholder="TK"
-          />
-          {errors.amount && (
-            <p className="text-red-500 text-sm">{errors.amount.message}</p>
-          )}
-        </div>
+        <div
+          style={{
+            pointerEvents: watch("projectId") ? "auto" : "none",
+            opacity: watch("projectId") ? 1 : 0.6,
+          }}
+        >
+          {/* Payment Amount */}
+          <div className="mt-2">
+            <label className="block mb-1 font-medium">Payment Amount</label>
+            <input
+              type="number"
+              {...register("amount")}
+              className="w-full border rounded p-2"
+              placeholder="TK"
+            />
+            {errors.amount && (
+              <p className="text-red-500 text-sm">{errors.amount.message}</p>
+            )}
+          </div>
 
-        <div className="mt-2">
-          <label className="block mb-1 font-medium">Payment Method</label>
-          <select
-            className="w-full border rounded p-2"
-            defaultValue="Bank"
-            {...register("paymentMethod")}
-          >
-            <option value="Bank">Bank</option>
-            <option value="Cash">Cash</option>
-          </select>
-          {/* <input
-            {...register("paymentMethod")}
-            className="w-full border rounded p-2"
-            placeholder="Bank/Bkash"
-          /> */}
-          {errors.paymentMethod && (
-            <p className="text-red-500 text-sm">
-              {errors.paymentMethod.message}
-            </p>
-          )}
-        </div>
+          <div className="mt-2">
+            <label className="block mb-1 font-medium">Payment Method</label>
+            <select
+              className="w-full border rounded p-2"
+              defaultValue="Bank"
+              {...register("paymentMethod")}
+            >
+              <option value="Bank">Bank</option>
+              <option value="Cash">Cash</option>
+            </select>
+            {errors.paymentMethod && (
+              <p className="text-red-500 text-sm">
+                {errors.paymentMethod.message}
+              </p>
+            )}
+          </div>
 
-        {/* Payment Date */}
-        <div className="mt-2">
-          <label className="block mb-1 font-medium">Payment Date</label>
-          <input
-            type="date"
-            {...register("paymentDate")}
-            className="w-full border rounded p-2"
-            placeholder="Enter blog title"
-          />
-          {errors.paymentDate && (
-            <p className="text-red-500 text-sm">{errors.paymentDate.message}</p>
-          )}
-        </div>
+          {/* Payment Date */}
+          <div className="mt-2">
+            <label className="block mb-1 font-medium">Payment Date</label>
+            <input
+              type="date"
+              {...register("paymentDate")}
+              className="w-full border rounded p-2"
+              placeholder="Enter blog title"
+            />
+            {errors.paymentDate && (
+              <p className="text-red-500 text-sm">
+                {errors.paymentDate.message}
+              </p>
+            )}
+          </div>
 
-        {/* Payment Date */}
-        <div className="mt-2">
-          <label className="block mb-1 font-medium">Transaction Id</label>
-          <input
-            {...register("transactionId")}
-            className="w-full border rounded p-2"
-            placeholder="Enter blog title"
-          />
-          {/* {errors.transactionId && (
+          {/* Payment Date */}
+          <div className="mt-2">
+            <label className="block mb-1 font-medium">Transaction Id</label>
+            <input
+              {...register("transactionId")}
+              className="w-full border rounded p-2"
+              placeholder="Enter blog title"
+            />
+            {/* {errors.transactionId && (
             <p className="text-red-500 text-sm">{errors.transactionId.message}</p>
           )} */}
-        </div>
+          </div>
 
-        {/* Content */}
-        <div className="mt-2">
-          <label className="block mb-1 font-medium">Remarks</label>
-          <textarea
-            {...register("comments")}
-            className="w-full border rounded p-2"
-            placeholder="Write your content..."
-          />
-        </div>
-
-        {/* Cover Photo */}
-        <div className="mt-2">
-          <label className="block mb-1 font-medium">Proof</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleCoverPhotoChange}
-          />
-          {coverPhotoPreview && (
-            <img
-              src={coverPhotoPreview}
-              alt="Preview"
-              className="mt-2 w-40 h-40 object-cover rounded-lg border"
+          {/* Content */}
+          <div className="mt-2">
+            <label className="block mb-1 font-medium">Remarks</label>
+            <textarea
+              {...register("comments")}
+              className="w-full border rounded p-2"
+              placeholder="Write your content..."
             />
-          )}
+          </div>
+
+          {/* Cover Photo */}
+          <div className="mt-2">
+            <label className="block mb-1 font-medium">Proof</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleCoverPhotoChange}
+            />
+            {coverPhotoPreview && (
+              <img
+                src={coverPhotoPreview}
+                alt="Preview"
+                className="mt-2 w-40 h-40 object-cover rounded-lg border"
+              />
+            )}
+          </div>
         </div>
       </Card>
 
