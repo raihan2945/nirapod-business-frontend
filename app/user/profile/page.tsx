@@ -49,7 +49,7 @@ const profileSchema = z.object({
   facebook: z.string().optional().nullable(),
   nomineeName: z.string().optional().nullable(),
   nomineeRelation: z.string().optional().nullable(),
-  nomineeMobile: z.string().optional(),
+  nomineeMobile: z.string().optional().nullable(),
   photo: z.string().optional().nullable(),
   address: z.string().optional().nullable(),
   password: z.string().optional(),
@@ -151,7 +151,7 @@ export default function ProfilePage() {
         </div>
 
         <Tabs tabPosition="top" defaultActiveKey="1" size="large">
-          <Tabs.TabPane tab="Submitted Investments" key="1">
+          <Tabs.TabPane tab="My Investments" key="1">
             <InvestorInvestments userId={userId!} />
           </Tabs.TabPane>
 

@@ -16,6 +16,7 @@ import { baseUrl } from "@/utils/baseUrl";
 import { RiEditBoxFill } from "react-icons/ri";
 import InvestmentView from "../admin/project/InvestmentView";
 import { format } from "date-fns";
+import CounterView from "./CounterView";
 
 const InvestorInvestments = ({ userId }: { userId: string }) => {
   const [query, setQuery] = useState({
@@ -32,10 +33,6 @@ const InvestorInvestments = ({ userId }: { userId: string }) => {
 
   interface DataType {
     id: string;
-    brand: string;
-    photo: string;
-    chasis_number: string;
-    status: boolean;
   }
 
   const columns: TableProps<DataType>["columns"] = [
@@ -145,7 +142,18 @@ const InvestorInvestments = ({ userId }: { userId: string }) => {
 
   return (
     <div>
-      <Table size="small" columns={columns} dataSource={data?.data} />
+      <CounterView userId={userId} />
+      <div className="flex justify-end  pb-3">
+        <Button type="primary" style={{ backgroundColor: "green" }}>
+          Make Investment
+        </Button>
+      </div>
+      <Table
+        size="small"
+        columns={columns}
+        dataSource={data?.data}
+        scroll={{ x: "max-content" }}
+      />
 
       {/* edit blog form */}
       <Modal
