@@ -1,7 +1,9 @@
+'use client'
 // components/ProfileView.tsx
 import { baseUrl } from '@/utils/baseUrl';
 import Image from 'next/image';
 // import { User } from '@/types/user'; // ← adjust path & type name as needed
+import demoProfile from '/public/images/demo-profile.jpg';
 
 interface ProfileViewProps {
   user: any;
@@ -20,17 +22,17 @@ export default function ProfileView({ user }: ProfileViewProps) {
             <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-white/80 shadow-xl flex-shrink-0">
               {user.photo ? (
                 <Image
-                  src={`${baseUrl}/uploads/users/${user?.photo}`}
+                  src={`${baseUrl}/uploads/photos/${user?.photo}`}
                   alt={`${user.fullName}'s photo`}
                   fill
                   className="object-cover"
                   sizes="128px"
                 />
               ) : (
-                <Image
-                  src={defaultAvatar}
+                <img
+                  src="/images/demo-profile.jpg"
                   alt="Default avatar"
-                  fill
+                  // fill
                   className="object-cover"
                   sizes="128px"
                 />
