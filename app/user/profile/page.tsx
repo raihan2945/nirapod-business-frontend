@@ -5,7 +5,7 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { object, z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,7 +14,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Upload, Mail, Phone, MapPin, Lock, User, Shield } from "lucide-react";
+import {
+  Upload,
+  Mail,
+  Phone,
+  MapPin,
+  Lock,
+  User,
+  Shield,
+  SquareDot,
+} from "lucide-react";
 import { useSelector } from "react-redux";
 import {
   useGetUserByIdQuery,
@@ -24,6 +33,7 @@ import { RootState } from "../../../state/store";
 import { Tabs } from "antd";
 import InvestorInvestments from "@/views/investor/InvestorInvestments";
 import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
+import SingleFileUpload from "@/components/upload/singleFileUpload";
 
 const phoneRegex = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/;
 
@@ -31,6 +41,15 @@ const profileSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
   mobile: z.string().regex(phoneRegex, "Invalid phone number!"),
   email: z.union([z.literal(""), z.string().email("Invalid email")]),
+  fatherName: z.string().optional().nullable(),
+  motherName: z.string().optional().nullable(),
+  nid: z.string().optional().nullable(),
+  gender: z.string().optional().nullable(),
+  currentProfession: z.string().optional().nullable(),
+  facebook: z.string().optional().nullable(),
+  nomineeName: z.string().optional().nullable(),
+  nomineeRelation: z.string().optional().nullable(),
+  nomineeMobile: z.string().optional(),
   photo: z.string().optional().nullable(),
   address: z.string().optional().nullable(),
   password: z.string().optional(),
@@ -74,30 +93,31 @@ export default function ProfilePage() {
     },
   });
 
-  const role = watch("role");
-  const status = watch("status");
-
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const result = reader.result as string;
-        setPhotoPreview(result);
-        setValue("photo", result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   const onSubmit = async (data: ProfileFormData) => {
     setIsLoading(true);
+
     try {
       if (!data?.password) {
         delete data.password;
       }
+
+      const form = new FormData();
+
+      Object.keys(data).forEach((key) => {
+        const typedKey = key as keyof ProfileFormData;
+        if (data[typedKey]) {
+          form.append(key, data[typedKey] as string | Blob);
+        }
+      });
+      
+      if (photoPreview) {
+        form.append("photo", photoPreview);
+      }
+
+      console.log("Submitting Data:", data);
+
       // API call would go here
-      const res = await UpdateProfile({ id: userId, data });
+      const res = await UpdateProfile({ id: userId, data: form });
       handleResponse(res);
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -110,11 +130,9 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (userProfile) {
-      setValue("fullName", userProfile.fullName || "");
-      setValue("mobile", userProfile.mobile || "");
-      setValue("email", userProfile.email || "");
-      setValue("address", userProfile.address || "");
-      // setPhotoPreview(userProfile.photo || null);
+      Object.keys(userProfile).forEach((key) => {
+        setValue(key as keyof ProfileFormData, userProfile[key]);
+      });
     }
   }, [userProfile, setValue]);
 
@@ -141,13 +159,20 @@ export default function ProfilePage() {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               {/* Personal Information */}
               <Card>
-                <CardHeader>
-                  <CardTitle>Personal Information</CardTitle>
-                  <CardDescription>
-                    Update your basic profile details
-                  </CardDescription>
-                </CardHeader>
                 <CardContent className="space-y-4">
+                  {/* Cover Photo */}
+                  <div className="mt-2">
+                    <label className="block mb-1 font-medium">
+                      Profile Photo
+                    </label>
+                    <SingleFileUpload
+                      image={photoPreview}
+                      setImage={setPhotoPreview}
+                      label=" "
+                      existImage={userProfile?.photo}
+                    />
+                  </div>
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -208,7 +233,181 @@ export default function ProfilePage() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Address
+                        NID
+                      </label>
+                      <div className="flex items-center">
+                        <input
+                          {...register("nid")}
+                          type="text"
+                          placeholder="Enter NID number"
+                          className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                        />
+                      </div>
+                      {errors.nid && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.nid.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Gender
+                      </label>
+                      <div className="flex items-center">
+                        <select
+                          className="w-full border rounded-lg p-2"
+                          defaultValue="Bank"
+                          {...register("gender")}
+                        >
+                          <option value="">Select Gender</option>
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                        </select>
+                      </div>
+                      {errors.gender && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.gender.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Current Profession
+                      </label>
+                      <div className="flex items-center">
+                        <input
+                          {...register("currentProfession")}
+                          type="text"
+                          placeholder="Enter your profession"
+                          className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                        />
+                      </div>
+                      {errors.currentProfession && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.currentProfession.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Facebook Link
+                      </label>
+                      <div className="flex items-center">
+                        <input
+                          {...register("facebook")}
+                          type="text"
+                          placeholder="Https://facebook.com/yourprofile"
+                          className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                        />
+                      </div>
+                      {errors.facebook && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.facebook.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Father Name
+                      </label>
+                      <div className="flex items-center">
+                        <input
+                          {...register("fatherName")}
+                          type="text"
+                          placeholder="Enter father name"
+                          className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                        />
+                      </div>
+                      {errors.fatherName && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.fatherName.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Mother Name
+                      </label>
+                      <div className="flex items-center">
+                        <input
+                          {...register("motherName")}
+                          type="text"
+                          placeholder="Enter mother name"
+                          className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                        />
+                      </div>
+                      {errors.motherName && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.motherName.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Nominee Name
+                      </label>
+                      <div className="flex items-center">
+                        <input
+                          {...register("nomineeName")}
+                          type="text"
+                          placeholder="Enter nominee name"
+                          className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                        />
+                      </div>
+                      {errors.nomineeName && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.nomineeName.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Nominee Relation
+                      </label>
+                      <div className="flex items-center">
+                        <input
+                          {...register("nomineeRelation")}
+                          type="text"
+                          placeholder="Enter nominee relation"
+                          className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                        />
+                      </div>
+                      {errors.nomineeRelation && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.nomineeRelation.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Nominee Mobile
+                      </label>
+                      <div className="flex items-center">
+                        <input
+                          {...register("nomineeMobile")}
+                          type="text"
+                          placeholder="Enter nominee mobile"
+                          className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                        />
+                      </div>
+                      {errors.nomineeMobile && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.nomineeMobile.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Permanent Address
                       </label>
                       <div className="flex items-center">
                         <MapPin className="h-5 w-5 text-gray-400 absolute ml-3" />
@@ -263,14 +462,13 @@ export default function ProfilePage() {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="bg-blue-600 hover:bg-blue-700"
+                  className="bg-green-700 hover:bg-green-800 cursor-pointer text-white"
                 >
                   {isLoading ? "Saving..." : "Save Changes"}
                 </Button>
               </div>
             </form>
           </Tabs.TabPane>
-          
         </Tabs>
       </main>
     </div>
