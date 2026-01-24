@@ -47,18 +47,18 @@ const InvestmentView = ({
 
   return (
     <div>
-      <div className="min-h-screen bg-gray-50 py-8 px-4">
+      <div className="min-h-screen bg-gray-50">
         <div className="max-w-5xl mx-auto space-y-8">
           {/* Header */}
           <div className="bg-white rounded-2xl shadow-xl p-8">
             <div className="flex items-center justify-between mb-8">
-              <h1 className="text-3xl font-bold text-gray-900">
+              <h1 className="text-xl font-bold text-gray-900">
                 Investment Details
               </h1>
               <span
-                className={`px-5 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 border`}
+                className={`px-5 py-2.5 rounded-full font-bold flex items-center gap-2 border`}
               >
-                <Clock className="w-4 h-4" />
+                {/* <Clock className="w-4 h-4" /> */}
                 {investment?.status}
               </span>
             </div>
@@ -67,13 +67,13 @@ const InvestmentView = ({
             {/* Simple Project & Investor Section */}
             <div className="grid md:grid-cols-2 gap-8">
               {/* Project */}
-              <div className="bg-gray-50 rounded-xl p-6">
+              <div className="rounded-xl">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                   <Building className="w-5 h-5 text-indigo-600" />
                   Project
                 </h3>
                 <div className="space-y-3 text-gray-700">
-                  <div>
+                  <div className="block">
                     <p className="text-sm text-gray-500">Title</p>
                     <p className="font-medium">{investment?.Project?.title}</p>
                   </div>
@@ -107,7 +107,7 @@ const InvestmentView = ({
               </div>
 
               {/* Investor */}
-              <div className="bg-gray-50 rounded-xl p-6">
+              <div className="">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                   <User className="w-5 h-5 text-green-600" />
                   Investor

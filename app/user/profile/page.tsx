@@ -126,6 +126,7 @@ export default function ProfilePage() {
       console.error("Error updating profile:", error);
     } finally {
       setIsLoading(false);
+      setIsEdit(false)
     }
   };
 

@@ -25,7 +25,6 @@ const InvestorInvestments = ({ userId }: { userId: string }) => {
   });
 
   const [isCreate, setIsCreate] = useState<any>(null);
-  
 
   const { data, isLoading } = useGetAllProjectInvestmentsQuery(
     generateQueryArray(query),
@@ -148,7 +147,11 @@ const InvestorInvestments = ({ userId }: { userId: string }) => {
     <div>
       <CounterView userId={userId} />
       <div className="flex justify-end  pb-3">
-        <Button onClick={()=>setIsCreate(true)} type="primary" style={{ backgroundColor: "green" }}>
+        <Button
+          onClick={() => setIsCreate(true)}
+          type="primary"
+          style={{ backgroundColor: "green" }}
+        >
           Make Investment
         </Button>
       </div>
@@ -166,17 +169,15 @@ const InvestorInvestments = ({ userId }: { userId: string }) => {
         onCancel={() => setIsEdit(false)}
         footer={null}
         destroyOnHidden={true}
-        className="responsive-modal"
-        width={"50%"}
+        className="responsive-ant-modal"
+        width="90vw"
         styles={{
           body: {
             padding: 0,
           },
         }}
       >
-        <div>
-          <InvestmentView investment={isEdit} />
-        </div>
+        <InvestmentView investment={isEdit} />
       </Modal>
 
       {/* edit blog form */}
