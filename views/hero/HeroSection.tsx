@@ -3,26 +3,30 @@ import React from "react";
 
 const HeroSection = () => {
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden">
+    <section className="mt-[75] w-full overflow-hidden">
+      <img
+        src="/images/herobg4.jpeg"
+        alt="Team holding frames"
+        className="w-full h-auto"
+      />
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
-        <img
-          src="/images/herobg3.jpeg"
+        {/* <img
+          src="/images/herobg4.jpeg"
           alt="Team holding frames"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gray-800/40" />
+          className="w-full h-auto object-fit"
+        /> */}
+        {/* <div className="absolute inset-0 bg-gray-800/40 bg-gradient-to-b from-gray-500 to-transparent" /> */}
       </div>
 
       {/* Hero Content */}
       <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
-        <h1 className="text-4xl uppercase sm:text-5xl md:text-6xl lg:text-8xl font-bold text-white mb-8 leading-tight">
+        {/* <h1 className="text-4xl uppercase sm:text-5xl md:text-6xl lg:text-8xl font-bold text-white mb-8 leading-tight">
           Nirapad Business
         </h1>
         <p className="text-white text-xl sm:text-base font-medium tracking-wider mb-4 uppercase">
           Together we learn more
-        </p>
-
+        </p> */}
       </div>
 
       {/* Curved Bottom Edge */}

@@ -65,7 +65,7 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
       ? "bg-[#31ad5c] shadow-lg"
       : isScrolled
         ? "bg-[#31ad5c] shadow-lg"
-        : "bg-transparent";
+        : "bg-gray-800/100";
 
   return (
     <nav
