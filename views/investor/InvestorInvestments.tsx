@@ -19,7 +19,13 @@ import { format } from "date-fns";
 import CounterView from "./CounterView";
 import InvestmentForm from "../projects/form/InvestmentForm";
 
-const InvestorInvestments = ({ userId }: { userId: string }) => {
+const InvestorInvestments = ({
+  userId,
+  isAdmin,
+}: {
+  userId: string;
+  isAdmin?: boolean;
+}) => {
   const [query, setQuery] = useState({
     userId: userId,
   });
@@ -147,13 +153,15 @@ const InvestorInvestments = ({ userId }: { userId: string }) => {
     <div>
       <CounterView userId={userId} />
       <div className="flex justify-end  pb-3">
-        <Button
-          onClick={() => setIsCreate(true)}
-          type="primary"
-          style={{ backgroundColor: "green" }}
-        >
-          Make Investment
-        </Button>
+        {!isAdmin && (
+          <Button
+            onClick={() => setIsCreate(true)}
+            type="primary"
+            style={{ backgroundColor: "green" }}
+          >
+            Make Investment
+          </Button>
+        )}
       </div>
       <Table
         size="small"

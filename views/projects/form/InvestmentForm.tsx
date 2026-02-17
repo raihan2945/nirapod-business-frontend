@@ -53,7 +53,7 @@ const InvestmentForm: React.FC<ComponentProps> = ({
   const query = {};
 
   const { data: projects } = useGetAllProjectsQuery(generateQueryArray(query));
-  
+
   const {
     register,
     handleSubmit,
@@ -68,7 +68,7 @@ const InvestmentForm: React.FC<ComponentProps> = ({
       //   description: "",
       //   content: "",
       //   status: "DRAFT",
-      "projectId": projectId,
+      projectId: projectId,
     },
   });
 
@@ -148,16 +148,33 @@ const InvestmentForm: React.FC<ComponentProps> = ({
 
       <Card style={{ marginBottom: "1rem" }}>
         <p className="text-lg">
-          <strong>Account No :</strong> N/A
+          <strong>Account No :</strong> 20503100100185308
         </p>
         <p className="text-lg">
-          <strong>Account Name :</strong>
+          <strong>Account Name :</strong>  HELLO FISH
         </p>
         <p className="text-lg">
-          <strong>Bank Name :</strong>
+          <strong>Bank Name :</strong> ISLAMI BANK
         </p>
         <p className="text-lg">
-          <strong>Branch :</strong>
+          <strong>Branch : </strong>BADDA
+        </p>
+        <p className="text-lg">
+          <strong></strong>
+        </p>
+      </Card>
+      <Card style={{ marginBottom: "1rem" }}>
+        <p className="text-lg">
+          <strong>Account No :</strong> 1931100520296
+        </p>
+        <p className="text-lg">
+          <strong>Account Name : </strong>HELLO FISH
+        </p>
+        <p className="text-lg">
+          <strong>Bank Name : </strong> DUCH BANLA BANK
+        </p>
+        <p className="text-lg">
+          <strong>Branch : </strong> PROGOTI SHORONI
         </p>
         <p className="text-lg">
           <strong></strong>

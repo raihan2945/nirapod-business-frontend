@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Select, Input, Button, Modal } from "antd";
+import { Select, Input, Button, Modal, Radio } from "antd";
 import BlogForm from "./form/UserForm";
 import useCheckAccess from "@/utils/checkAccess";
 
@@ -52,20 +52,41 @@ const UserHeader: React.FC<ComponentProps> = ({
               defaultValue={""}
               style={{ width: 120 }}
               onChange={(value) => {
-                changeQuery({ key: "status", value: value });
+                changeQuery({ key: "verifyStatus", value: value });
               }}
               options={[
                 { value: "", label: "All" },
-                { value: "DRAFT", label: "DRAFT" },
-                { value: "PUBLISHED", label: "PUBLISHED" },
+                { value: "PENDING", label: "Pending" },
+                { value: "APPROVED", label: "Approved" },
+                { value: "CANCELLED", label: "Cancelled" },
               ]}
             />
           </div>
+
+          <div>
+            <p className="text-sm mb-1 opacity-70">User Type</p>
+            <Radio.Group
+              block
+              options={[
+                { label: "All", value: null },
+                { label: "Investors", value: "true" },
+              ]}
+              onChange={(e) => {
+                console.log("Value is : ", e.target.value);
+                changeQuery({ key: "isInvestor", value: e.target.value });
+              }}
+              value={query["isInvestor"]}
+              optionType="button"
+              buttonStyle="solid"
+            />
+          </div>
+
           <div>
             <p className="text-sm mb-1 opacity-70">Search</p>
             <Search
               enterButton
               placeholder="Search"
+              value={query["search"]}
               onChange={(e) =>
                 changeQuery({ key: "search", value: e.target.value })
               }

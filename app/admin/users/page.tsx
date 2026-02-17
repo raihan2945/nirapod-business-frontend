@@ -8,7 +8,8 @@ import { useGetAllUsersQuery } from "@/state/features/user/userApi";
 const Users = () => {
   const [query, setQuery] = useState({
     search: null,
-    status: null,
+    verifyStatus: null,
+    isInvestor: null,
   });
 
   const { data, isLoading } = useGetAllUsersQuery(generateQueryArray(query));

@@ -1,24 +1,22 @@
 "use client";
 
 import React, { useState } from "react";
-import { Table, Tag, Space, Button, Popconfirm, Modal } from "antd";
+import { Table, Tag, Space, Button, Popconfirm, Modal, Badge } from "antd";
 import type { TableProps } from "antd";
 import Image from "next/image";
 
 //icons
-import { HiMiniClipboardDocumentList } from "react-icons/hi2";
 import { MdDelete } from "react-icons/md";
-
-// import { bikeData, carData } from "@/lib/data";
 import { RiEditBoxFill } from "react-icons/ri";
+import { RiGalleryView2 } from "react-icons/ri";
+
 import TableSkeleton from "@/components/TableSkeleton";
-import { generateQueryArray } from "@/utils/query";
-import { baseUrl } from "@/utils/baseUrl";
 import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
 // import useCheckAccess from "@/utils/checkAccess";
-import { useDeleteBlogByIdMutation } from "@/state/features/blogs/blogsApi";
 import UserForm from "./form/UserForm";
 import { useDeleteUserByIdMutation } from "@/state/features/user/userApi";
+import { format } from "date-fns";
+import InvestmentInfo from "./InvestmentInfo";
 
 interface ComponentProps {
   data?: any;
@@ -29,6 +27,7 @@ const UserView: React.FC<ComponentProps> = ({ data, isLoading }) => {
   // const { hasAccess } = useCheckAccess();
 
   const [isEdit, setIsEdit] = useState<any>(null);
+  const [viewInvestment, setViewInvestment] = useState<any>(null);
   const [showAlltoment, setShowAlltoment] = useState<any>(null);
 
   const { handleResponse } = useAPIResponseHandler();
@@ -52,11 +51,11 @@ const UserView: React.FC<ComponentProps> = ({ data, isLoading }) => {
   const columns: TableProps<DataType>["columns"] = [
     {
       title: "Id",
-      dataIndex: "id",
-      key: "id",
+      dataIndex: "serial",
+      key: "serial",
       render: (text) => `#${text}`,
     },
-  
+
     {
       title: "Full Name",
       dataIndex: "fullName",
@@ -83,14 +82,31 @@ const UserView: React.FC<ComponentProps> = ({ data, isLoading }) => {
     },
     {
       title: "status",
-      dataIndex: "status",
-      key: "status",
-      render: (text) => text,
+      dataIndex: "verifyStatus",
+      key: "verifyStatus",
+      render: (text) => <Tag color={text=="APPROVED" ? "blue" :"" }>{text}</Tag>,
     },
     {
-      title: "createdAt",
-      dataIndex: "createdAt",
-      key: "createdAt",
+      title: "Investments",
+      dataIndex: "verifyStatus",
+      key: "verifyStatus",
+      render: (text, data: any) => {
+        return (
+          <Tag
+            color={
+              Number(data?._count?.ProjectInvestment) > 0 ? "#09b531" : "green"
+            }
+          >
+            {data?._count?.ProjectInvestment}
+          </Tag>
+        );
+      },
+    },
+    {
+      title: "createAt",
+      dataIndex: "createAt",
+      key: "createAt",
+      render: (text) => format(text, "dd-MM-yyyy"),
     },
     {
       title: "Action",
@@ -98,6 +114,14 @@ const UserView: React.FC<ComponentProps> = ({ data, isLoading }) => {
       render: (_, record: any) => (
         <Space size="middle">
           {/* {hasAccess(["bike_management"]) && ( */}
+          <Button
+            onClick={() => {
+              setViewInvestment(record?.id);
+            }}
+            style={{ border: "none", padding: "5px" }}
+          >
+            <RiGalleryView2 color="#4d4d4d" size={20} />
+          </Button>
           <Button
             onClick={() => {
               setIsEdit(record);
@@ -147,6 +171,23 @@ const UserView: React.FC<ComponentProps> = ({ data, isLoading }) => {
           formType="edit"
           info={isEdit}
           modalCancel={() => setIsEdit(false)}
+          isAdmin={true}
+        />
+        {/* </div> */}
+      </Modal>
+      <Modal
+        centered
+        open={viewInvestment}
+        onCancel={() => setViewInvestment(null)}
+        footer={null}
+        destroyOnHidden={true}
+        width={"60%"}
+      >
+        {/* <div className="p-4 sm:p-6 max-h-[80vh] overflow-y-auto"> */}
+        <InvestmentInfo
+          // formType="edit"
+          userId={viewInvestment}
+          // modalCancel={() => setIsEdit(false)}
         />
         {/* </div> */}
       </Modal>

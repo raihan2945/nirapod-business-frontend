@@ -5,12 +5,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 // Adjust import path based on your setup
 import { baseUrl } from "@/utils/baseUrl";
 import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
-import { useCreateNewUserMutation, useUpdateUserMutation } from "@/state/features/user/userApi";
+import {
+  useCreateNewUserMutation,
+  useUpdateUserMutation,
+} from "@/state/features/user/userApi";
 
 // ✅ Zod schema for User
 export const createUserDTOSchema = z.object({
   fullName: z.string(),
-  mobile: z.string().regex(/^\+?[1-9]\d{1,14}$/, "Invalid number!"), // Example phone regex
+  mobile: z.string(), // Example phone regex
   email: z.union([z.literal(""), z.string().email()]),
   photo: z.any().optional().nullable(), // Adjusted to handle File for form
   address: z.string().optional().nullable(),
@@ -18,6 +21,7 @@ export const createUserDTOSchema = z.object({
   role: z.enum(["user", "investor", "admin"]).default("user"),
   permissions: z.array(z.string()).optional().default([]),
   status: z.enum(["ACTIVE", "INACTIVE"]).optional(),
+  verifyStatus: z.enum(["PENDING", "APPROVED", "CANCELLED"]).optional(),
 });
 
 type UserFormData = z.infer<typeof createUserDTOSchema>;
@@ -26,6 +30,7 @@ interface ComponentProps {
   modalCancel: () => void;
   formType?: "create" | "edit";
   info?: any;
+  isAdmin?: boolean;
 }
 
 const PermissionsInputSection = ({
@@ -80,7 +85,12 @@ const PermissionsInputSection = ({
   );
 };
 
-const UserForm: React.FC<ComponentProps> = ({ formType, info, modalCancel }) => {
+const UserForm: React.FC<ComponentProps> = ({
+  formType,
+  info,
+  modalCancel,
+  isAdmin
+}) => {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const { handleResponse } = useAPIResponseHandler();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -304,6 +314,23 @@ const UserForm: React.FC<ComponentProps> = ({ formType, info, modalCancel }) => 
           <p className="text-red-500 text-sm">{errors.status.message}</p>
         )}
       </div>
+      {/* ✅ Status */}
+      {isAdmin && (
+        <div>
+          <label className="block mb-1 font-medium">Verify Status</label>
+          <select
+            {...register("verifyStatus")}
+            className="w-full border rounded p-2"
+          >
+            <option value="PENDING">Pending</option>
+            <option value="APPROVED">Approved</option>
+            <option value="CANCELLED">Cancelled</option>
+          </select>
+          {errors.status && (
+            <p className="text-red-500 text-sm">{errors.status.message}</p>
+          )}
+        </div>
+      )}
 
       {/* 🔐 Permissions */}
       {/* <PermissionsInputSection
@@ -336,8 +363,8 @@ const UserForm: React.FC<ComponentProps> = ({ formType, info, modalCancel }) => 
         {isSubmitting
           ? "Submitting..."
           : formType === "edit"
-          ? "Update User"
-          : "Create User"}
+            ? "Update User"
+            : "Create User"}
       </button>
     </form>
   );
