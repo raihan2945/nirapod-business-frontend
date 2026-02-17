@@ -18,9 +18,11 @@ import { useUpdateProjectInvestmentByIdMutation } from "@/state/features/project
 const InvestmentView = ({
   investment,
   setIsEdit,
+  isAdmin
 }: {
   investment: any;
   setIsEdit?: any;
+  isAdmin?:boolean
 }) => {
   const { handleResponse } = useAPIResponseHandler();
 

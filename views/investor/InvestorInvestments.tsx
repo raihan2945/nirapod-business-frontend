@@ -96,11 +96,7 @@ const InvestorInvestments = ({
       title: "Status",
       dataIndex: "status",
       key: "status",
-      render: (text) => (
-        <Tag color={text ? "success" : "error"}>
-          {text ? "Active" : "Inactive"}
-        </Tag>
-      ),
+      render: (text) => <Tag color="blue">{text}</Tag>,
     },
     {
       title: "Payment Date",
@@ -185,10 +181,10 @@ const InvestorInvestments = ({
           },
         }}
       >
-        <InvestmentView investment={isEdit} />
+        <InvestmentView setIsEdit={isAdmin}  investment={isEdit} />
       </Modal>
 
-      {/* edit blog form */}
+      {/* create new investment */}
       <Modal
         centered
         open={isCreate}

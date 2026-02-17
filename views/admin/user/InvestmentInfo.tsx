@@ -4,7 +4,7 @@ import React from "react";
 const InvestmentInfo = ({ userId }: { userId: string }) => {
   return (
     <div>
-      <InvestorInvestments userId={userId!} isAdmin={true}/>
+      <InvestorInvestments setIsEdit={true} userId={userId!} isAdmin={true}/>
     </div>
   );
 };
