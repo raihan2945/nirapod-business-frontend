@@ -36,7 +36,7 @@ const InvestorInvestments = ({
     generateQueryArray(query),
   );
 
-  console.log("data", data);
+  // console.log("data", data);
 
   const [isEdit, setIsEdit] = useState<any>(null);
 
@@ -143,7 +143,7 @@ const InvestorInvestments = ({
     },
   ];
 
-  console.log("Investor Investments Data:", data);
+  // console.log("Investor Investments Data:", data);
 
   return (
     <div>

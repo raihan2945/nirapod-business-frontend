@@ -14,7 +14,7 @@ const Projects = () => {
 
   const { data, isLoading } = useGetAllProjectsQuery(generateQueryArray(query));
 
-  console.log("Projects Data:", data);
+  // console.log("Projects Data:", data);
 
   const changeQuery = ({ key, value }: { key: string; value: any }) => {
     setQuery((prev: any) => ({ ...prev, [key]: value }));

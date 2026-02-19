@@ -279,7 +279,7 @@ const InvestmentForm: React.FC<ComponentProps> = ({
 
           {/* Cover Photo */}
           <div className="mt-2">
-            <label className="block mb-1 font-medium">Proof</label>
+            <label className="block mb-1 font-medium">Submit your document</label>
             <input
               type="file"
               accept="image/*"

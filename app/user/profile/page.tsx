@@ -40,7 +40,7 @@ const phoneRegex = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/;
 
 const profileSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
-  mobile: z.string().regex(phoneRegex, "Invalid phone number!"),
+  mobile: z.string(),
   email: z.union([z.literal(""), z.string().email("Invalid email")]),
   fatherName: z.string().optional().nullable(),
   motherName: z.string().optional().nullable(),
@@ -130,7 +130,7 @@ export default function ProfilePage() {
     }
   };
 
-  console.log("User Profile Data:", userProfile);
+  // console.log("User Profile Data:", userProfile);
 
   useEffect(() => {
     if (userProfile) {

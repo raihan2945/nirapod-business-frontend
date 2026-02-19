@@ -97,7 +97,7 @@ export default function ProjectDetailsPage({
 
   const userProfile = useSelector((state: RootState) => state?.user?.data);
 
-  console.log("userProfile Data:", userProfile);
+  // console.log("userProfile Data:", userProfile);
   // console.log("Single Project:", project);
 
   const nextImage = () => {
@@ -148,7 +148,7 @@ export default function ProjectDetailsPage({
     }
   }, [project]);
 
-  console.log("theBusiness is : ", theBusiness);
+  // console.log("theBusiness is : ", theBusiness);
 
   return (
     <>

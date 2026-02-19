@@ -12,14 +12,23 @@ import {
 
 // ✅ Zod schema for User
 export const createUserDTOSchema = z.object({
-  fullName: z.string(),
-  mobile: z.string(), // Example phone regex
-  email: z.union([z.literal(""), z.string().email()]),
-  photo: z.any().optional().nullable(), // Adjusted to handle File for form
+  fullName: z.string().min(1, "Full name is required"),
+  mobile: z.string(),
+  email: z.union([z.literal(""), z.string().email("Invalid email")]),
+  fatherName: z.string().optional().nullable(),
+  motherName: z.string().optional().nullable(),
+  nid: z.string().optional().nullable(),
+  gender: z.string().optional().nullable(),
+  currentProfession: z.string().optional().nullable(),
+  facebook: z.string().optional().nullable(),
+  nomineeName: z.string().optional().nullable(),
+  nomineeRelation: z.string().optional().nullable(),
+  nomineeMobile: z.string().optional().nullable(),
+  photo: z.string().optional().nullable(),
   address: z.string().optional().nullable(),
-  password: z.string(),
+  password: z.string().optional(),
   role: z.enum(["user", "investor", "admin"]).default("user"),
-  permissions: z.array(z.string()).optional().default([]),
+  permissions: z.array(z.string()).optional(),
   status: z.enum(["ACTIVE", "INACTIVE"]).optional(),
   verifyStatus: z.enum(["PENDING", "APPROVED", "CANCELLED"]).optional(),
 });
@@ -89,7 +98,7 @@ const UserForm: React.FC<ComponentProps> = ({
   formType,
   info,
   modalCancel,
-  isAdmin
+  isAdmin,
 }) => {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const { handleResponse } = useAPIResponseHandler();
@@ -107,15 +116,15 @@ const UserForm: React.FC<ComponentProps> = ({
   } = useForm<UserFormData>({
     resolver: zodResolver(createUserDTOSchema) as any,
     defaultValues: {
-      fullName: "",
-      mobile: "",
-      email: "",
-      photo: null,
-      address: "",
-      password: "",
-      role: "user",
-      permissions: [],
-      status: "ACTIVE",
+      // fullName: "",
+      // mobile: "",
+      // email: "",
+      // photo: null,
+      // address: "",
+      // password: "",
+      // role: "user",
+      // permissions: [],
+      // status: "ACTIVE",
       ...info,
     },
   });
@@ -131,7 +140,6 @@ const UserForm: React.FC<ComponentProps> = ({
 
   // ✅ On form submit
   const onSubmit = async (data: UserFormData) => {
-    console.log("Submitting Data:", data);
     setIsSubmitting(true);
 
     try {
@@ -154,6 +162,8 @@ const UserForm: React.FC<ComponentProps> = ({
       //   console.log(`FormData: ${key} = ${value}`);
       // }
 
+      // console.log("Submit data : ", data)
+
       let res;
       if (formType === "edit" && info?.id) {
         res = await updateOne({ id: info.id, data: data });
@@ -174,7 +184,6 @@ const UserForm: React.FC<ComponentProps> = ({
   // ✅ Initialize form when editing
   useEffect(() => {
     if (info) {
-      console.log("info:", info);
 
       // Handle photo
       if (info.photo) {
@@ -239,7 +248,7 @@ const UserForm: React.FC<ComponentProps> = ({
 
       {/* 📱 Mobile */}
       <div>
-        <label className="block mb-1 font-medium">Mobile</label>
+        <label className="block mb-1 font-medium">Mobile </label>
         <input
           {...register("mobile")}
           className="w-full border rounded p-2"
@@ -263,6 +272,62 @@ const UserForm: React.FC<ComponentProps> = ({
         )}
       </div>
 
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          NID
+        </label>
+        <div className="flex items-center">
+          <input
+            {...register("nid")}
+            type="text"
+            placeholder="Enter NID number"
+            className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+          />
+        </div>
+        {errors.nid && (
+          <p className="text-red-500 text-sm mt-1">{errors.nid.message}</p>
+        )}
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Gender
+        </label>
+        <div className="flex items-center">
+          <select
+            className="w-full border rounded-lg p-2"
+            defaultValue="Bank"
+            {...register("gender")}
+          >
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+        {errors.gender && (
+          <p className="text-red-500 text-sm mt-1">{errors.gender.message}</p>
+        )}
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Current Profession
+        </label>
+        <div className="flex items-center">
+          <input
+            {...register("currentProfession")}
+            type="text"
+            placeholder="Enter your profession"
+            className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+          />
+        </div>
+        {errors.currentProfession && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.currentProfession.message}
+          </p>
+        )}
+      </div>
+
       {/* 🏠 Address */}
       <div>
         <label className="block mb-1 font-medium">Address</label>
@@ -276,8 +341,120 @@ const UserForm: React.FC<ComponentProps> = ({
         )}
       </div>
 
-      {/* 🔑 Password */}
       <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Facebook Link
+        </label>
+        <div className="flex items-center">
+          <input
+            {...register("facebook")}
+            type="text"
+            placeholder="Https://facebook.com/yourprofile"
+            className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+          />
+        </div>
+        {errors.facebook && (
+          <p className="text-red-500 text-sm mt-1">{errors.facebook.message}</p>
+        )}
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Father Name
+        </label>
+        <div className="flex items-center">
+          <input
+            {...register("fatherName")}
+            type="text"
+            placeholder="Enter father name"
+            className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+          />
+        </div>
+        {errors.fatherName && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.fatherName.message}
+          </p>
+        )}
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Mother Name
+        </label>
+        <div className="flex items-center">
+          <input
+            {...register("motherName")}
+            type="text"
+            placeholder="Enter mother name"
+            className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+          />
+        </div>
+        {errors.motherName && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.motherName.message}
+          </p>
+        )}
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Nominee Name
+        </label>
+        <div className="flex items-center">
+          <input
+            {...register("nomineeName")}
+            type="text"
+            placeholder="Enter nominee name"
+            className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+          />
+        </div>
+        {errors.nomineeName && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.nomineeName.message}
+          </p>
+        )}
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Nominee Relation
+        </label>
+        <div className="flex items-center">
+          <input
+            {...register("nomineeRelation")}
+            type="text"
+            placeholder="Enter nominee relation"
+            className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+          />
+        </div>
+        {errors.nomineeRelation && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.nomineeRelation.message}
+          </p>
+        )}
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Nominee Mobile
+        </label>
+        <div className="flex items-center">
+          <input
+            {...register("nomineeMobile")}
+            type="text"
+            placeholder="Enter nominee mobile"
+            className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+          />
+        </div>
+        {errors.nomineeMobile && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.nomineeMobile.message}
+          </p>
+        )}
+      </div>
+
+      {/* 🔑 Password */}
+      {/* <div>
         <label className="block mb-1 font-medium">Password</label>
         <input
           type="password"
@@ -288,10 +465,10 @@ const UserForm: React.FC<ComponentProps> = ({
         {errors.password && (
           <p className="text-red-500 text-sm">{errors.password.message}</p>
         )}
-      </div>
+      </div> */}
 
       {/* 🧑‍💼 Role */}
-      <div>
+      {/* <div>
         <label className="block mb-1 font-medium">Role</label>
         <select {...register("role")} className="w-full border rounded p-2">
           <option value="user">User</option>
@@ -301,7 +478,7 @@ const UserForm: React.FC<ComponentProps> = ({
         {errors.role && (
           <p className="text-red-500 text-sm">{errors.role.message}</p>
         )}
-      </div>
+      </div> */}
 
       {/* ✅ Status */}
       <div>

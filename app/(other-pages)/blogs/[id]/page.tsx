@@ -40,7 +40,7 @@ export default function BlogDetailsPage({
   const { data: userData, isLoading, isError } = useGetUserByIdQuery(userId);
   const userProfile = useSelector((state: RootState) => state?.user?.data);
 
-  console.log("blog Data:", data);
+  // console.log("blog Data:", data);
   // console.log("Single Project:", project);
 
   const nextImage = () => {

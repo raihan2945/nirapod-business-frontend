@@ -43,9 +43,9 @@ export default function ProfileView({ user }: ProfileViewProps) {
               <h1 className="text-2xl md:text-3xl font-bold">
                 {user.fullName || "—"}
               </h1>
-              <p className="mt-1 opacity-90">
-                {user.currentProfession || "—"}
-              </p>
+              {/* <p className="mt-1 opacity-90">
+                {user?.currentProfession || "—"}
+              </p> */}
               <div className="mt-2 inline-flex items-center gap-2 text-sm opacity-90">
                 <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${
                   user.status === "ACTIVE"
@@ -65,37 +65,42 @@ export default function ProfileView({ user }: ProfileViewProps) {
         {/* Main info */}
         <div className="p-6 sm:p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
 
-          <InfoItem label="Mobile" value={user.mobile} important />
-          <InfoItem label="Email" value={user.email || "—"} />
+          <InfoItem label="Mobile" value={user?.mobile} important />
+          <InfoItem label="Email" value={user?.email || "—"} />
 
-          <InfoItem label="Father's Name" value={user.fatherName} />
-          <InfoItem label="Mother's Name" value={user.motherName} />
+          <InfoItem label="Father's Name" value={user?.fatherName} />
+          <InfoItem label="Mother's Name" value={user?.motherName} />
 
-          <InfoItem label="NID / National ID" value={user.nid} />
-          <InfoItem label="Gender" value={user.gender} />
+          <InfoItem label="NID / National ID" value={user?.nid} />
+          <InfoItem label="Gender" value={user?.gender} />
+          <InfoItem label="Current Profession" value={user?.currentProfession} />
+          <InfoItem label="Facebook" value={<a href={user?.facebook} target='_blank'>{user?.facebook}</a>} />
+          {/* <InfoItem label="Nominee Name" value={user?.nomineeName} />
+          <InfoItem label="Nominee Relation" value={user?.nomineeRelation} />
+          <InfoItem label="Nominee Mobile" value={user?.nomineeMobile} /> */}
 
-          <InfoItem label="Address" value={user.address} spanFull />
+          <InfoItem label="Address" value={user?.address} spanFull />
 
           {/* Nominee Section */}
-          {(user.nomineeName || user.nomineeRelation || user.nomineeMobile) && (
+          {(user?.nomineeName || user?.nomineeRelation || user?.nomineeMobile) && (
             <div className="col-span-1 md:col-span-2 mt-4 pt-6 border-t border-gray-200">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Nominee</h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                <InfoItem label="Name" value={user.nomineeName} />
-                <InfoItem label="Relation" value={user.nomineeRelation} />
-                <InfoItem label="Mobile" value={user.nomineeMobile} />
+                <InfoItem label="Name" value={user?.nomineeName} />
+                <InfoItem label="Relation" value={user?.nomineeRelation} />
+                <InfoItem label="Mobile" value={user?.nomineeMobile} />
               </div>
             </div>
           )}
 
           {/* Social / Other */}
-          {/* {user.facebook && (
+          {/* {user?.facebook && (
             <div className="col-span-1 md:col-span-2 mt-2">
               <InfoItem
                 label="Facebook"
                 value={
                   <a
-                    href={user.facebook.startsWith('http') ? user.facebook : `https://${user.facebook}`}
+                    href={user?.facebook.startsWith('http') ? user?.facebook : `https://${user.facebook}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:underline"
@@ -122,7 +127,7 @@ function InfoItem({
   spanFull = false,
 }: {
   label: string;
-  value: string | null | undefined;
+  value: any;
   important?: boolean;
   spanFull?: boolean;
 }) {

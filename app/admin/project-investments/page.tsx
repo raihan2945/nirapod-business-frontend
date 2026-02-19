@@ -12,7 +12,7 @@ const Blogs = () => {
     status: "",
   });
 
-  console.log("query", query);
+  // console.log("query", query);
 
   const { data, isLoading } = useGetAllProjectInvestmentsQuery(generateQueryArray(query));
 

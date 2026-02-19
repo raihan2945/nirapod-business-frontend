@@ -13,7 +13,7 @@ const InvestorRequests = () => {
 
   const { data, isLoading } = useGetAllInvestorsQuery(generateQueryArray(query));
 
-  console.log("Investor Requests Data:", data);
+  // console.log("Investor Requests Data:", data);
 
   const changeQuery = ({ key, value }: { key: string; value: any }) => {
     setQuery((prev: any) => ({ ...prev, [key]: value }));
