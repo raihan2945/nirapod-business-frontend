@@ -24,6 +24,15 @@ const blogFormSchema = z.object({
   projectId: z.string().optional(),
 });
 
+function escapeHtml(unsafe: string): string {
+  return unsafe
+    .replace(/&/g, '&amp;')   // Must come first!
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 type BlogFormData = z.infer<typeof blogFormSchema>;
 
 interface ComponentProps {
@@ -32,6 +41,7 @@ interface ComponentProps {
   info?: any;
   projectId?: string;
   userId: string;
+  project?:any
 }
 
 const InvestmentForm: React.FC<ComponentProps> = ({
@@ -40,6 +50,7 @@ const InvestmentForm: React.FC<ComponentProps> = ({
   modalCancel,
   projectId,
   userId,
+  project
 }) => {
   const [coverPhotoPreview, setCoverPhotoPreview] = useState<string | null>(
     null,
@@ -147,7 +158,7 @@ const InvestmentForm: React.FC<ComponentProps> = ({
       </h2>
 
       <Card style={{ marginBottom: "1rem" }}>
-        <p className="text-lg">
+        {/* <p className="text-lg">
           <strong>Account No :</strong> 20503100100185308
         </p>
         <p className="text-lg">
@@ -161,9 +172,14 @@ const InvestmentForm: React.FC<ComponentProps> = ({
         </p>
         <p className="text-lg">
           <strong></strong>
-        </p>
+        </p> */}
+        {project?.bankInfo && (
+          <>
+            <p className="text-lg" style={{whiteSpace: "pre-line"}} dangerouslySetInnerHTML={{__html:project?.bankInfo}}></p>
+          </>
+        )}
       </Card>
-      <Card style={{ marginBottom: "1rem" }}>
+      {/* <Card style={{ marginBottom: "1rem" }}>
         <p className="text-lg">
           <strong>Account No :</strong> 1931100520296
         </p>
@@ -179,7 +195,7 @@ const InvestmentForm: React.FC<ComponentProps> = ({
         <p className="text-lg">
           <strong></strong>
         </p>
-      </Card>
+      </Card> */}
 
       <Card style={{ marginBottom: ".5rem" }}>
         <label className="block mb-1 font-medium">Project</label>

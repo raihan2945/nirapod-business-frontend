@@ -506,6 +506,7 @@ export default function ProjectDetailsPage({
           modalCancel={() => setIsCreate(false)}
           projectId={project?.id}
           userId={userProfile?.id!}
+          project={project}
         />
         {/* </div> */}
       </Modal>

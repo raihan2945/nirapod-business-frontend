@@ -2,10 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  useCreateNewBlogMutation,
-  useUpdateBlogByIdMutation,
-} from "@/state/features/blogs/blogsApi";
 import { baseUrl } from "@/utils/baseUrl";
 import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
 import {
@@ -30,6 +26,7 @@ const projectSchema = z.object({
   calculatedRoi: decimalSchema.default(0),
   musharakaMarkupReturn: z.string().optional(),
   expectedRoi: z.string().optional(),
+  bankInfo: z.string().optional(),
   repayment: z.coerce.number().int().default(0),
   projectDuration: z.coerce.number().int().default(0),
   leftDays: z.coerce.number().int().default(0),
@@ -116,7 +113,7 @@ const ProjectForm: React.FC<ComponentProps> = ({
   modalCancel,
 }) => {
   const [coverPhotoPreview, setCoverPhotoPreview] = useState<string | null>(
-    null
+    null,
   );
   const { handleResponse } = useAPIResponseHandler();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -240,19 +237,26 @@ const ProjectForm: React.FC<ComponentProps> = ({
       // Set other fields (non-array)
       reset((prev) => ({
         ...prev,
-        title: info.title || "",
-        description: info.description || "",
-        investmentGoal: info.investmentGoal || 0,
-        raised: info.raised || 0,
-        minInvestment: info.minInvestment || 0,
-        waiting: info.waiting || 0,
-        murabahaMarkupReturn: info.murabahaMarkupReturn || 0,
-        calculatedRoi: info.calculatedRoi || 0,
-        repayment: info.repayment || 0,
-        projectDuration: info.projectDuration || 0,
-        leftDays: info.leftDays || 0,
-        coverPhoto: info.coverPhoto || null,
-        photos: info.photos || [],
+        title: info?.title || "",
+        description: info?.description || "",
+        investmentGoal: info?.investmentGoal || 0,
+        raised: info?.raised || 0,
+        minInvestment: info?.minInvestment || 0,
+        waiting: info?.waiting || 0,
+        murabahaMarkupReturn: info?.murabahaMarkupReturn || 0,
+        calculatedRoi: info?.calculatedRoi || 0,
+        repayment: info?.repayment || 0,
+        projectDuration: info?.projectDuration || 0,
+        leftDays: info?.leftDays || 0,
+        coverPhoto: info?.coverPhoto || null,
+        photos: info?.photos || [],
+        bankInfo:
+          info?.bankInfo ||
+          `<strong>Account No : </strong> 
+<strong>Account Name :</strong>  
+<strong>Bank Name :</strong> 
+<strong>Branch :</strong>
+        `,
       }));
     } else if (!info) {
       setValue("roles", [
@@ -327,7 +331,7 @@ const ProjectForm: React.FC<ComponentProps> = ({
           className="w-full border rounded p-2"
           placeholder="Enter project title"
         />
-        {errors.title && (
+        {errors?.title && (
           <p className="text-red-500 text-sm">{errors?.title?.message}</p>
         )}
       </div>
@@ -340,8 +344,20 @@ const ProjectForm: React.FC<ComponentProps> = ({
           className="w-full border rounded p-2"
           placeholder="Enter description"
         />
-        {errors.title && (
+        {errors?.description && (
           <p className="text-red-500 text-sm">{errors?.description?.message}</p>
+        )}
+      </div>
+      {/* 📝 Description */}
+      <div>
+        <label className="block mb-1 font-medium">Bank Info</label>
+        <textarea
+          {...register("bankInfo")}
+          className="w-full border rounded p-2"
+          placeholder="Enter bank info"
+        />
+        {errors?.bankInfo && (
+          <p className="text-red-500 text-sm">{errors?.bankInfo?.message}</p>
         )}
       </div>
 
@@ -355,9 +371,9 @@ const ProjectForm: React.FC<ComponentProps> = ({
             {...register("investmentGoal")}
             className="w-full border rounded p-2"
           />
-          {errors.title && (
+          {errors.investmentGoal && (
             <p className="text-red-500 text-sm">
-              {errors?.description?.message}
+              {errors?.investmentGoal?.message}
             </p>
           )}
         </div>
@@ -369,7 +385,7 @@ const ProjectForm: React.FC<ComponentProps> = ({
             {...register("raised")}
             className="w-full border rounded p-2"
           />
-          {errors.title && (
+          {errors.raised && (
             <p className="text-red-500 text-sm">{errors?.raised?.message}</p>
           )}
         </div>
@@ -381,9 +397,9 @@ const ProjectForm: React.FC<ComponentProps> = ({
             {...register("minInvestment")}
             className="w-full border rounded p-2"
           />
-          {errors?.description && (
+          {errors?.minInvestment && (
             <p className="text-red-500 text-sm">
-              {errors?.description?.message}
+              {errors?.minInvestment?.message}
             </p>
           )}
         </div>
@@ -430,7 +446,7 @@ const ProjectForm: React.FC<ComponentProps> = ({
             </p>
           )}
         </div>
-        
+
         <div>
           <label className="block mb-1 font-medium">
             Murabaha Markup Return
@@ -583,8 +599,8 @@ const ProjectForm: React.FC<ComponentProps> = ({
         {isSubmitting
           ? "Submitting..."
           : formType === "edit"
-          ? "Update Project"
-          : "Create Project"}
+            ? "Update Project"
+            : "Create Project"}
       </button>
     </form>
   );
