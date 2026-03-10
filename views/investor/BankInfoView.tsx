@@ -1,6 +1,6 @@
 import { useGetAllProjectsQuery } from "@/state/features/projects/projectsApi";
 import { generateQueryArray } from "@/utils/query";
-import React from "react";
+import React, { useState } from "react";
 import ProjectCard from "../projects/ProjectCard";
 import Link from "next/link";
 import { TrendingUp } from "lucide-react";
@@ -26,7 +26,9 @@ type componentProps = {
 };
 
 const BankInfoView = ({ createInvestment }: componentProps) => {
-  const { data } = useGetAllProjectsQuery(generateQueryArray({}));
+  const [page, setPage] = useState<any>(3);
+
+  const { data } = useGetAllProjectsQuery(generateQueryArray({ size: page }));
 
   return (
     <div className="mt-4">
@@ -84,7 +86,7 @@ const BankInfoView = ({ createInvestment }: componentProps) => {
                   <TrendingUp className="h-3.5 w-3.5 group-hover/link:translate-x-1 transition-transform" />
                 </Link>
                 <button
-                  onClick={()=>createInvestment(project)}
+                  onClick={() => createInvestment(project)}
                   className="flex cursor-pointer items-center gap-1.5 text-white bg-green-600 hover:bg-green-700 font-semibold text-xs sm:text-sm group/link px-3 py-1.5 rounded transition-all"
                 >
                   <span>Make Investment</span>
@@ -94,6 +96,11 @@ const BankInfoView = ({ createInvestment }: componentProps) => {
             </div>
           </div>
         ))}
+      </div>
+      <div className="mt-6 w-full flex justify-center">
+        <Button size="large"  className="bg-green-500 hover:bg-green-600 rounded-lg" onClick={() => setPage(page == 3 ? 0 : 3)}>
+          {page == 3 ? "View All" : "View Less"}
+        </Button>
       </div>
     </div>
   );
