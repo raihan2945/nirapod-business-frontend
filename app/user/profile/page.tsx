@@ -156,7 +156,7 @@ export default function ProfilePage() {
 
         <Tabs tabPosition="top" defaultActiveKey="1" size="large" type="card">
           <Tabs.TabPane tab="My Investments" key="1">
-            <InvestorInvestments userId={userId!} />
+            <InvestorInvestments userId={userId!} showBankInfo={true}/>
           </Tabs.TabPane>
 
           <Tabs.TabPane tab="Profile" key="2">

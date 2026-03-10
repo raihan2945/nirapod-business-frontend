@@ -23,9 +23,11 @@ import BankInfoView from "./BankInfoView";
 const InvestorInvestments = ({
   userId,
   isAdmin,
+  showBankInfo,
 }: {
   userId: string;
   isAdmin?: boolean;
+  showBankInfo?: boolean;
 }) => {
   const [query, setQuery] = useState({
     userId: userId,
@@ -167,10 +169,12 @@ const InvestorInvestments = ({
         scroll={{ x: "max-content" }}
       />
 
-      <div className="mt-4">
-        <h1 className="text-lg font-semibold">Bank Informations</h1>
-        <BankInfoView createInvestment={setIsCreate} />
-      </div>
+      {showBankInfo && (
+        <div className="mt-4">
+          <h1 className="text-lg font-semibold">Bank Informations</h1>
+          <BankInfoView createInvestment={setIsCreate} />
+        </div>
+      )}
 
       {/* edit blog form */}
       <Modal
