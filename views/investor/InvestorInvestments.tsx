@@ -18,6 +18,7 @@ import InvestmentView from "../admin/project/InvestmentView";
 import { format } from "date-fns";
 import CounterView from "./CounterView";
 import InvestmentForm from "../projects/form/InvestmentForm";
+import BankInfoView from "./BankInfoView";
 
 const InvestorInvestments = ({
   userId,
@@ -166,6 +167,11 @@ const InvestorInvestments = ({
         scroll={{ x: "max-content" }}
       />
 
+      <div className="mt-4">
+        <h1 className="text-lg font-semibold">Bank Informations</h1>
+        <BankInfoView createInvestment={setIsCreate} />
+      </div>
+
       {/* edit blog form */}
       <Modal
         centered
@@ -181,7 +187,7 @@ const InvestorInvestments = ({
           },
         }}
       >
-        <InvestmentView setIsEdit={isAdmin}  investment={isEdit} />
+        <InvestmentView setIsEdit={isAdmin} investment={isEdit} />
       </Modal>
 
       {/* create new investment */}
@@ -205,6 +211,8 @@ const InvestorInvestments = ({
           // info={isEdit}
           modalCancel={() => setIsCreate(false)}
           userId={userId}
+          project={isCreate}
+          projectId={isCreate?.id || ""}
         />
         {/* </div> */}
       </Modal>

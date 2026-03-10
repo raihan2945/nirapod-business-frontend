@@ -79,13 +79,21 @@ const UserListView: React.FC<ComponentProps> = ({ data, isLoading }) => {
       title: "Role",
       dataIndex: "role",
       key: "role",
-      render: (text) => text,
+      render: (text, data: any) => {
+        return (
+          <Tag>
+            {Number(data?._count?.ProjectInvestment) > 0 ? "Investor" : "User"}
+          </Tag>
+        );
+      },
     },
     {
       title: "status",
       dataIndex: "verifyStatus",
       key: "verifyStatus",
-      render: (text) => <Tag color={text=="APPROVED" ? "blue" :"" }>{text}</Tag>,
+      render: (text) => (
+        <Tag color={text == "APPROVED" ? "blue" : ""}>{text}</Tag>
+      ),
     },
     {
       title: "Investments",

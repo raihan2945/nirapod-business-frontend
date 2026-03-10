@@ -8,7 +8,7 @@ import {
 } from "@/state/features/blogs/blogsApi";
 import { baseUrl } from "@/utils/baseUrl";
 import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
-import { Card } from "antd";
+import { Card, Image } from "antd";
 import { useCreateNewProjectInvestmentMutation } from "@/state/features/projects/projectInvestmentApi";
 import { useGetAllProjectsQuery } from "@/state/features/projects/projectsApi";
 import { generateQueryArray } from "@/utils/query";
@@ -26,11 +26,11 @@ const blogFormSchema = z.object({
 
 function escapeHtml(unsafe: string): string {
   return unsafe
-    .replace(/&/g, '&amp;')   // Must come first!
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
+    .replace(/&/g, "&amp;") // Must come first!
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
 type BlogFormData = z.infer<typeof blogFormSchema>;
@@ -41,7 +41,7 @@ interface ComponentProps {
   info?: any;
   projectId?: string;
   userId: string;
-  project?:any
+  project?: any;
 }
 
 const InvestmentForm: React.FC<ComponentProps> = ({
@@ -50,7 +50,7 @@ const InvestmentForm: React.FC<ComponentProps> = ({
   modalCancel,
   projectId,
   userId,
-  project
+  project,
 }) => {
   const [coverPhotoPreview, setCoverPhotoPreview] = useState<string | null>(
     null,
@@ -60,6 +60,10 @@ const InvestmentForm: React.FC<ComponentProps> = ({
   const [createNew] = useCreateNewProjectInvestmentMutation();
   const [updateOne] = useUpdateBlogByIdMutation();
   const [setNewProjectId, newProjectId] = useState<any>(null);
+
+  const [existingProject, setExistingProject] = useState<any>(
+    project ? project : null,
+  );
 
   const query = {};
 
@@ -103,7 +107,7 @@ const InvestmentForm: React.FC<ComponentProps> = ({
       formData.append("paymentMethod", data.paymentMethod || "");
       formData.append(
         "paymentDate",
-        data.paymentDate ? data.paymentDate.toISOString() : "",
+        data.paymentDate ? data?.paymentDate?.toISOString() : "",
       );
       formData.append("transactionId", data.transactionId || "");
       formData.append("comments", data.comments || "");
@@ -145,17 +149,41 @@ const InvestmentForm: React.FC<ComponentProps> = ({
     }
   }, [info, reset]);
 
-  // useEffect(() => {
-  //   if(projectId){
-  //     setValue("projectId", projectId!);
-  //   }
-  // }, [projectId]);
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full mx-auto">
       <h2 className="text-xl font-semibold text-gray-700 mb-3">
         {"Make Project Investment"}
       </h2>
+
+      <Card style={{ marginBottom: ".5rem" }}>
+        <label className="block mb-1 font-medium">Project</label>
+        <select
+          className="w-full border rounded p-2 color-green-700"
+          defaultValue={watch("projectId") || ""}
+          {...register("projectId")}
+          onChange={(e) => {
+            setExistingProject(
+              projects?.data?.find((p: any) => p.id === e.target.value),
+            );
+          }}
+        >
+          <option value="">Select Project</option>
+          {projects?.data?.map((project: any) => (
+            <option
+              onClick={() => {
+                setExistingProject(project);
+              }}
+              key={project.id}
+              value={project.id}
+            >
+              {project.title}
+            </option>
+          ))}
+        </select>
+        {errors.paymentMethod && (
+          <p className="text-red-500 text-sm">{errors.paymentMethod.message}</p>
+        )}
+      </Card>
 
       <Card style={{ marginBottom: "1rem" }}>
         {/* <p className="text-lg">
@@ -173,9 +201,13 @@ const InvestmentForm: React.FC<ComponentProps> = ({
         <p className="text-lg">
           <strong></strong>
         </p> */}
-        {project?.bankInfo && (
+        {existingProject?.bankInfo && (
           <>
-            <p className="text-lg" style={{whiteSpace: "pre-line"}} dangerouslySetInnerHTML={{__html:project?.bankInfo}}></p>
+            <p
+              className="text-lg"
+              style={{ whiteSpace: "pre-line" }}
+              dangerouslySetInnerHTML={{ __html: existingProject?.bankInfo }}
+            ></p>
           </>
         )}
       </Card>
@@ -196,25 +228,6 @@ const InvestmentForm: React.FC<ComponentProps> = ({
           <strong></strong>
         </p>
       </Card> */}
-
-      <Card style={{ marginBottom: ".5rem" }}>
-        <label className="block mb-1 font-medium">Project</label>
-        <select
-          className="w-full border rounded p-2 color-green-700"
-          defaultValue={watch("projectId") || ""}
-          {...register("projectId")}
-        >
-          <option value="">Select Project</option>
-          {projects?.data?.map((project: any) => (
-            <option key={project.id} value={project.id}>
-              {project.title}
-            </option>
-          ))}
-        </select>
-        {errors.paymentMethod && (
-          <p className="text-red-500 text-sm">{errors.paymentMethod.message}</p>
-        )}
-      </Card>
 
       <Card>
         <div
@@ -295,7 +308,9 @@ const InvestmentForm: React.FC<ComponentProps> = ({
 
           {/* Cover Photo */}
           <div className="mt-2">
-            <label className="block mb-1 font-medium">Submit your document</label>
+            <label className="block mb-1 font-medium">
+              Submit your document
+            </label>
             <input
               type="file"
               accept="image/*"
