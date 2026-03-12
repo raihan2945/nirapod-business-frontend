@@ -53,6 +53,11 @@ const profileSchema = z.object({
   nomineeMobile: z.string().optional().nullable(),
   photo: z.string().optional().nullable(),
   address: z.string().optional().nullable(),
+  bankAccountNo: z.string().optional().nullable(),
+  bankAccountName: z.string().optional().nullable(),
+  bankName: z.string().optional().nullable(),
+  branchName: z.string().optional().nullable(),
+  routingNo: z.string().optional().nullable(),
   password: z.string().optional(),
   role: z.enum(["user", "investor", "admin"]).default("user"),
   permissions: z.array(z.string()).optional(),
@@ -126,7 +131,7 @@ export default function ProfilePage() {
       console.error("Error updating profile:", error);
     } finally {
       setIsLoading(false);
-      setIsEdit(false)
+      setIsEdit(false);
     }
   };
 
@@ -156,7 +161,7 @@ export default function ProfilePage() {
 
         <Tabs tabPosition="top" defaultActiveKey="1" size="large" type="card">
           <Tabs.TabPane tab="My Investments" key="1">
-            <InvestorInvestments userId={userId!} showBankInfo={true}/>
+            <InvestorInvestments userId={userId!} showBankInfo={true} />
           </Tabs.TabPane>
 
           <Tabs.TabPane tab="Profile" key="2">
@@ -433,6 +438,104 @@ export default function ProfilePage() {
                             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                           />
                         </div>
+                      </div>
+
+                      <div>
+                        
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Bank Account Number
+                        </label>
+                        <div className="flex items-center">
+                          <input
+                            {...register("bankAccountNo")}
+                            type="text"
+                            placeholder="Enter bank account number"
+                            className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                          />
+                        </div>
+                        {errors.bankAccountNo && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {errors?.bankAccountNo?.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Account Name
+                        </label>
+                        <div className="flex items-center">
+                          <input
+                            {...register("bankAccountName")}
+                            type="text"
+                            placeholder="Enter bank account name"
+                            className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                          />
+                        </div>
+                        {errors.bankAccountName && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {errors?.bankAccountName?.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Bank Name
+                        </label>
+                        <div className="flex items-center">
+                          <input
+                            {...register("branchName")}
+                            type="text"
+                            placeholder="Enter branch name"
+                            className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                          />
+                        </div>
+                        {errors.branchName && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {errors?.branchName?.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Branch Name
+                        </label>
+                        <div className="flex items-center">
+                          <input
+                            {...register("bankName")}
+                            type="text"
+                            placeholder="Enter bank name"
+                            className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                          />
+                        </div>
+                        {errors.bankName && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {errors?.bankName?.message}
+                          </p>
+                        )}
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Routing No.
+                        </label>
+                        <div className="flex items-center">
+                          <input
+                            {...register("routingNo")}
+                            type="text"
+                            placeholder="Enter routing no."
+                            className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                          />
+                        </div>
+                        {errors.routingNo && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {errors?.routingNo?.message}
+                          </p>
+                        )}
                       </div>
                     </div>
                   </CardContent>

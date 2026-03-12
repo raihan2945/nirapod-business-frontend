@@ -1,21 +1,21 @@
-'use client'
+"use client";
 // components/ProfileView.tsx
-import { baseUrl } from '@/utils/baseUrl';
-import Image from 'next/image';
+import { baseUrl } from "@/utils/baseUrl";
+import Image from "next/image";
 // import { User } from '@/types/user'; // ← adjust path & type name as needed
-import demoProfile from '/public/images/demo-profile.jpg';
+import demoProfile from "/public/images/demo-profile.jpg";
 
 interface ProfileViewProps {
   user: any;
 }
 
 export default function ProfileView({ user }: ProfileViewProps) {
-  const defaultAvatar = "https://unsplash.com/photos/birds-eye-view-photograph-of-green-mountains-01_igFr7hd4";
+  const defaultAvatar =
+    "https://unsplash.com/photos/birds-eye-view-photograph-of-green-mountains-01_igFr7hd4";
 
   return (
     <div className="mx-auto w-full">
       <div className="bg-white shadow-md rounded-xl overflow-hidden border border-gray-200">
-
         {/* Header / Photo area */}
         <div className="bg-gradient-to-r from-green-700 to-green-600 px-6 py-10 text-white">
           <div className="flex flex-col items-center sm:flex-row sm:items-center gap-6">
@@ -47,11 +47,13 @@ export default function ProfileView({ user }: ProfileViewProps) {
                 {user?.currentProfession || "—"}
               </p> */}
               <div className="mt-2 inline-flex items-center gap-2 text-sm opacity-90">
-                <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                  user.status === "ACTIVE"
-                    ? "bg-green-100 text-green-800"
-                    : "bg-red-100 text-red-800"
-                }`}>
+                <span
+                  className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                    user.status === "ACTIVE"
+                      ? "bg-green-100 text-green-800"
+                      : "bg-red-100 text-red-800"
+                  }`}
+                >
                   {user.status || "UNKNOWN"}
                 </span>
                 <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-white/20">
@@ -64,7 +66,6 @@ export default function ProfileView({ user }: ProfileViewProps) {
 
         {/* Main info */}
         <div className="p-6 sm:p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-
           <InfoItem label="Mobile" value={user?.mobile} important />
           <InfoItem label="Email" value={user?.email || "—"} />
 
@@ -73,8 +74,18 @@ export default function ProfileView({ user }: ProfileViewProps) {
 
           <InfoItem label="NID / National ID" value={user?.nid} />
           <InfoItem label="Gender" value={user?.gender} />
-          <InfoItem label="Current Profession" value={user?.currentProfession} />
-          <InfoItem label="Facebook" value={<a href={user?.facebook} target='_blank'>{user?.facebook}</a>} />
+          <InfoItem
+            label="Current Profession"
+            value={user?.currentProfession}
+          />
+          <InfoItem
+            label="Facebook"
+            value={
+              <a href={user?.facebook} target="_blank">
+                {user?.facebook}
+              </a>
+            }
+          />
           {/* <InfoItem label="Nominee Name" value={user?.nomineeName} />
           <InfoItem label="Nominee Relation" value={user?.nomineeRelation} />
           <InfoItem label="Nominee Mobile" value={user?.nomineeMobile} /> */}
@@ -82,9 +93,13 @@ export default function ProfileView({ user }: ProfileViewProps) {
           <InfoItem label="Address" value={user?.address} spanFull />
 
           {/* Nominee Section */}
-          {(user?.nomineeName || user?.nomineeRelation || user?.nomineeMobile) && (
+          {(user?.nomineeName ||
+            user?.nomineeRelation ||
+            user?.nomineeMobile) && (
             <div className="col-span-1 md:col-span-2 mt-4 pt-6 border-t border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Nominee</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                Nominee
+              </h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                 <InfoItem label="Name" value={user?.nomineeName} />
                 <InfoItem label="Relation" value={user?.nomineeRelation} />
@@ -92,6 +107,21 @@ export default function ProfileView({ user }: ProfileViewProps) {
               </div>
             </div>
           )}
+
+          {/* Bank Info Section */}
+
+          <div className="col-span-1 md:col-span-2 mt-4 pt-6 border-t border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              Bank Information
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+              <InfoItem label="Bank Name" value={user?.bankName} />
+              <InfoItem label="Branch Name" value={user?.branchName} />
+              <InfoItem label="Account Number" value={user?.bankAccountNo} />
+              <InfoItem label="Account Name" value={user?.bankAccountName} />
+              <InfoItem label="Routing Number" value={user?.routingNo} />
+            </div>
+          </div>
 
           {/* Social / Other */}
           {/* {user?.facebook && (
@@ -111,9 +141,7 @@ export default function ProfileView({ user }: ProfileViewProps) {
               />
             </div>
           )} */}
-
         </div>
-
       </div>
     </div>
   );
@@ -134,7 +162,9 @@ function InfoItem({
   return (
     <div className={spanFull ? "md:col-span-2" : ""}>
       <dt className="text-sm font-medium text-gray-500">{label}</dt>
-      <dd className={`mt-1 ${important ? "font-medium text-gray-900" : "text-gray-900"}`}>
+      <dd
+        className={`mt-1 ${important ? "font-medium text-gray-900" : "text-gray-900"}`}
+      >
         {value || "—"}
       </dd>
     </div>
