@@ -27,14 +27,13 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  const dispatch: AppDispatch = useDispatch();
-  const router = useRouter();
-
+  
   const userId = useSelector((state: RootState) => state.auth?.id);
   const { data: userData, isLoading, isError } = useGetUserByIdQuery(userId);
   const userProfile = useSelector((state: RootState) => state?.user?.data);
-
-  // console.log("User Profile:", userProfile);
+  
+  const dispatch: AppDispatch = useDispatch();
+  const router = useRouter();
 
   const logout = () => {
     console.log("logged Out!!!");
@@ -250,7 +249,7 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
               </Link>
               <Link
                 onClick={toggleMenu}
-                href="/investment"
+                href="/investor-signup"
                 className="block w-full text-white hover:text-cyan-400 px-3 py-2 text-md font-medium"
               >
                 Apply for Investments

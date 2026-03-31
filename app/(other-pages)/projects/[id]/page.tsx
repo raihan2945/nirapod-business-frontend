@@ -492,11 +492,9 @@ export default function ProjectDetailsPage({
         footer={null}
         destroyOnHidden={true}
         width="90vw"
-        // width={700}
         styles={{
           body: { padding: 0 },
         }}
-        // Optional: add this class for extra control
         className="responsive-ant-modal"
       >
         {/* <div className="p-4 sm:p-6 max-h-[80vh] overflow-y-auto"> */}
