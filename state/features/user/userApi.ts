@@ -47,7 +47,7 @@ const userApi = apiSlice.injectEndpoints({
           dispatch(setUser(result.data.data));
         } catch (err) {
           console.log("Error fetching user data:", err);
-          dispatch(userLoggedOut());
+          // dispatch(userLoggedOut());
         }
       },
       providesTags: ["Users"],
