@@ -9,8 +9,6 @@ import { userLoggedOut } from "../auth/authSlice";
 
 const token = store.getState().auth?.access_token;
 
-console.log("TOOOKEEEN", token)
-
 const userApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAllUsers: builder.query<UserResponse, any>({
