@@ -71,7 +71,8 @@ export function LoginForm({
 
   const router = useRouter();
 
-  const { data: userData, isLoading, isError } = useGetUserByIdQuery(1);
+  const userId = useSelector((state: RootState) => state?.auth?.id);
+  const { data: userData, isLoading, isError } = useGetUserByIdQuery(userId);
   const userProfile = useSelector((state: RootState) => state?.user?.data);
 
   // console.log("User Data from API:", userProfile);
