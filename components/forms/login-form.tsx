@@ -71,9 +71,10 @@ export function LoginForm({
 
   const router = useRouter();
 
-  const userId = useSelector((state: RootState) => state?.auth?.id);
-  const { data: userData, isLoading, isError } = useGetUserByIdQuery(userId);
+  const { data: userData, isLoading, isError } = useGetUserByIdQuery(1);
   const userProfile = useSelector((state: RootState) => state?.user?.data);
+
+  // console.log("User Data from API:", userProfile);
 
   useEffect(() => {
     if (isLoading) return;
@@ -82,9 +83,9 @@ export function LoginForm({
       return;
     }
     if (userProfile) {
-      if (userProfile.role === "admin") {
+      if (userProfile?.role === "admin") {
         router.push("/admin/projects");
-      } else if (userProfile.role === "user") {
+      } else if (userProfile?.role === "user") {
         router.push("/user/profile");
       }
     }

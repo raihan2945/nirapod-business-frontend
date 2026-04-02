@@ -5,6 +5,7 @@ import { setUser } from "./userSlice";
 import { store } from "../../store";
 import { User, UserResponse, UpdateUserData } from "./types";
 import { generateUrlQueryString } from "@/utils/query";
+import { userLoggedOut } from "../auth/authSlice";
 
 const token = store.getState().auth?.access_token;
 
@@ -31,21 +32,21 @@ const userApi = apiSlice.injectEndpoints({
 
     getUserById: builder.query<UserResponse, any>({
       query: (id) => ({
-        url: `/api/v1/users/${id}`,
+        url: `/api/v1/users/token`,
         method: "GET",
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
       }),
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
         try {
-          const result = await queryFulfilled;
+          const result:any = await queryFulfilled;
+
           dispatch(setUser(result.data.data));
         } catch (err) {
-          // Handle error if needed
+          console.log("Error fetching user data:", err);
+          dispatch(userLoggedOut());
         }
       },
       providesTags: ["Users"],
+      
     }),
 
     getUserCountsById: builder.query<any, any>({
