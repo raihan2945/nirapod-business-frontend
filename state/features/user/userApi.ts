@@ -9,6 +9,8 @@ import { userLoggedOut } from "../auth/authSlice";
 
 const token = store.getState().auth?.access_token;
 
+console.log("TOOOKEEEN", token)
+
 const userApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAllUsers: builder.query<UserResponse, any>({
@@ -34,10 +36,15 @@ const userApi = apiSlice.injectEndpoints({
       query: (id) => ({
         url: `/api/v1/users/token`,
         method: "GET",
+        // headers: {
+        //   authorization: `Bearer ${token}`,
+        // },
       }),
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
         try {
-          const result:any = await queryFulfilled;
+          const result: any = await queryFulfilled;
+
+          console.log("Result is : ", result)
 
           dispatch(setUser(result.data.data));
         } catch (err) {
@@ -46,7 +53,7 @@ const userApi = apiSlice.injectEndpoints({
         }
       },
       providesTags: ["Users"],
-      
+
     }),
 
     getUserCountsById: builder.query<any, any>({
