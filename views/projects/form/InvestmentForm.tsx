@@ -1,3 +1,5 @@
+'use client';
+
 import React, { use, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -160,19 +162,20 @@ const InvestmentForm: React.FC<ComponentProps> = ({
         <select
           className="w-full border rounded p-2 color-green-700"
           defaultValue={watch("projectId") || ""}
-          {...register("projectId")}
+          // {...register("projectId")}
           onChange={(e) => {
-            setExistingProject(
-              projects?.data?.find((p: any) => p.id === e.target.value),
-            );
+            const p = projects?.data?.find((p: any) => p.id === e.target.value)
+            setExistingProject(p)
+            setValue("projectId", p?.id)
           }}
         >
           <option value="">Select Project</option>
           {projects?.data?.map((project: any) => (
             <option
-              onClick={() => {
-                setExistingProject(project);
-              }}
+              // onClick={() => {
+              //   console.log("Existing Project : ", project)
+              //   setExistingProject(project);
+              // }}
               key={project.id}
               value={project.id}
             >
@@ -180,9 +183,6 @@ const InvestmentForm: React.FC<ComponentProps> = ({
             </option>
           ))}
         </select>
-        {errors.paymentMethod && (
-          <p className="text-red-500 text-sm">{errors.paymentMethod.message}</p>
-        )}
       </Card>
 
       <Card style={{ marginBottom: "1rem" }}>

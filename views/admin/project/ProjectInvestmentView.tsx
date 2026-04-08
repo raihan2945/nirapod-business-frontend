@@ -59,7 +59,7 @@ const ProjectInvestmentView: React.FC<ComponentProps> = ({
       dataIndex: "id",
       key: "id",
       render: (text) => `#${text}`,
-      width: 170,
+      width: 80,
     },
     {
       title: "Proof",
@@ -101,6 +101,12 @@ const ProjectInvestmentView: React.FC<ComponentProps> = ({
       dataIndex: "transactionId",
       key: "transactionId",
       render: (text) => text,
+    },
+    {
+      title: "User SL Id",
+      dataIndex: "userId",
+      key: "userId",
+      render: (text, data:any) => <Tag color="blue">{data?.User?.serial}</Tag>,
     },
     {
       title: "Status",
@@ -155,7 +161,6 @@ const ProjectInvestmentView: React.FC<ComponentProps> = ({
   ];
 
   if (isLoading) return <TableSkeleton />;
-
 
   return (
     <>
