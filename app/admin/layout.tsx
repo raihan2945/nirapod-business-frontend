@@ -5,7 +5,8 @@ import {
   UploadOutlined,
   UserOutlined,
   VideoCameraOutlined,
-  ProjectOutlined 
+  ProjectOutlined,
+  RetweetOutlined 
 } from "@ant-design/icons";
 import { Button, Layout, Menu, Popconfirm, theme } from "antd";
 import Link from "next/link";
@@ -32,16 +33,21 @@ const menuItems = [
   },
   {
     key: "2",
+    label: <Link href="/admin/investment-returns">Investment Returns</Link>,
+    icon: <RetweetOutlined />,
+  },
+  {
+    key: "3",
     label: <Link href="/admin/blogs">Blogs</Link>,
     icon: <VideoCameraOutlined />,
   },
   {
-    key: "3",
+    key: "4",
     label: <Link href="/admin/users">Users</Link>,
     icon: <UserOutlined />,
   },
   {
-    key: "4",
+    key: "5",
     label: <Link href="/admin/investors">Investors Req</Link>,
     icon: <UserOutlined />,
   },
