@@ -145,31 +145,30 @@ export default function ProjectCard({ project }: { project: any }) {
             <div className="flex justify-between items-center text-sm">
               <span className="text-gray-600 flex items-center gap-1.5">
                 {/* <Target className="h-3.5 w-3.5" /> */}
-                Goal:
+                Total Shares:
               </span>
               <span className="font-semibold text-gray-900">
-                {numberToBanglaTk(Number(project?.investmentGoal || 0))} ৳
+                {numberToBanglaTk(Number(project?.totalShares || 0))} 
               </span>
             </div>
             <div className="flex justify-between items-center text-sm">
               <span className="text-gray-600 flex items-center gap-1.5">
                 {/* <TrendingUp className="h-3.5 w-3.5" /> */}
-                Raised:
+                Raised Shares:
               </span>
               <span className="font-semibold text-green-600">
-                {numberToBanglaTk(Number(project?.raised || 0))} ৳
+                {numberToBanglaTk(Number(project?.raisedShares || 0))} 
               </span>
             </div>
-            <div className="flex justify-between items-center text-sm">
+            {/* <div className="flex justify-between items-center text-sm">
               <span className="text-gray-600 flex items-center gap-1.5">
-                {/* <TrendingUp className="h-3.5 w-3.5" /> */}
                 Waiting:
               </span>
               <span className="font-semibold text-green-600">
                 {" "}
                 {numberToBanglaTk(Number(project?.waiting || 0))} ৳
               </span>
-            </div>
+            </div> */}
             <div className="flex justify-between items-center text-sm">
               <span className="text-gray-600 flex items-center gap-1.5">
                 {/* <TrendingUp className="h-3.5 w-3.5" /> */}
