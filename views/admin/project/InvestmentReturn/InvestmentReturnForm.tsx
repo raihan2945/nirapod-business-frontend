@@ -67,7 +67,7 @@ const BlogForm: React.FC<ComponentProps> = ({
     setIsSubmitting(true);
     try {
       const formData = new FormData();
-      formData.append("note", data.note);
+      formData.append("note", data?.note);
       formData.append("status", "PAID");
 
       if (data.photo instanceof File) {

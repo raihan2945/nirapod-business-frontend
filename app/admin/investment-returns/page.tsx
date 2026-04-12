@@ -8,7 +8,7 @@ import { useGetAllProjectInvestmentReturnsQuery } from "@/state/features/project
 const Blogs = () => {
   const [query, setQuery] = useState<any>({
     search: null,
-    status: "PENDING",
+    status: "",
     days: 1,
   });
 

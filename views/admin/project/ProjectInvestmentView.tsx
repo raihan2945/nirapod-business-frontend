@@ -19,6 +19,7 @@ import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
 import { useDeleteBlogByIdMutation } from "@/state/features/blogs/blogsApi";
 import InvestmentView from "./InvestmentView";
 import InvestmentHeader from "./InvestmentHeader";
+import { format } from "date-fns";
 // import BlogForm from "./form/BlogForm";
 
 interface ComponentProps {
@@ -77,6 +78,12 @@ const ProjectInvestmentView: React.FC<ComponentProps> = ({
       ),
     },
     {
+      title: "QTY",
+      dataIndex: "qty",
+      key: "qty",
+      render: (text) => <Tag color="blue" className="m-0">{text}</Tag>,
+    },
+    {
       title: "Amount",
       dataIndex: "amount",
       key: "amount",
@@ -94,7 +101,7 @@ const ProjectInvestmentView: React.FC<ComponentProps> = ({
       title: "Payment Date",
       dataIndex: "paymentDate",
       key: "paymentDate",
-      render: (text) => text,
+      render: (text) => format(text, "dd-MM-yyyy"),
     },
     {
       title: "Transaction Id",

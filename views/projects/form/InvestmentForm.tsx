@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { use, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -10,13 +10,15 @@ import {
 } from "@/state/features/blogs/blogsApi";
 import { baseUrl } from "@/utils/baseUrl";
 import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
-import { Card, Image } from "antd";
+import { Button, Card, Image, Tag } from "antd";
 import { useCreateNewProjectInvestmentMutation } from "@/state/features/projects/projectInvestmentApi";
 import { useGetAllProjectsQuery } from "@/state/features/projects/projectsApi";
 import { generateQueryArray } from "@/utils/query";
+import { Minus, Plus } from "lucide-react";
 
 // ✅ Zod schema for validation
 const blogFormSchema = z.object({
+  qty: z.coerce.number(),
   amount: z.coerce.number(),
   paymentMethod: z.string().optional(),
   paymentDate: z.coerce.date().optional(),
@@ -62,6 +64,7 @@ const InvestmentForm: React.FC<ComponentProps> = ({
   const [createNew] = useCreateNewProjectInvestmentMutation();
   const [updateOne] = useUpdateBlogByIdMutation();
   const [setNewProjectId, newProjectId] = useState<any>(null);
+  const [qty, setQty] = useState(1);
 
   const [existingProject, setExistingProject] = useState<any>(
     project ? project : null,
@@ -81,7 +84,7 @@ const InvestmentForm: React.FC<ComponentProps> = ({
   } = useForm<BlogFormData>({
     resolver: zodResolver(blogFormSchema) as any,
     defaultValues: {
-      //   title: "",
+      qty: 1,
       //   description: "",
       //   content: "",
       //   status: "DRAFT",
@@ -106,6 +109,7 @@ const InvestmentForm: React.FC<ComponentProps> = ({
       formData.append("projectId", data?.projectId!);
       formData.append("userId", userId);
       formData.append("amount", data.amount.toString());
+      formData.append("qty", qty.toString());
       formData.append("paymentMethod", data.paymentMethod || "");
       formData.append(
         "paymentDate",
@@ -135,6 +139,13 @@ const InvestmentForm: React.FC<ComponentProps> = ({
     }
   };
 
+  const addQty = () => {
+    setQty((ext) => Number(ext) + 1);
+  };
+  const removeQty = () => {
+    setQty((ext) => Number(ext) - 1);
+  };
+
   // ✅ Initialize form when editing
   useEffect(() => {
     if (info) {
@@ -151,6 +162,11 @@ const InvestmentForm: React.FC<ComponentProps> = ({
     }
   }, [info, reset]);
 
+  useEffect(() => {
+    const currentValue = qty * Number(project?.minInvestment);
+    setValue("amount", currentValue);
+  }, [qty]);
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full mx-auto">
       <h2 className="text-xl font-semibold text-gray-700 mb-3">
@@ -164,9 +180,9 @@ const InvestmentForm: React.FC<ComponentProps> = ({
           defaultValue={watch("projectId") || ""}
           // {...register("projectId")}
           onChange={(e) => {
-            const p = projects?.data?.find((p: any) => p.id === e.target.value)
-            setExistingProject(p)
-            setValue("projectId", p?.id)
+            const p = projects?.data?.find((p: any) => p.id === e.target.value);
+            setExistingProject(p);
+            setValue("projectId", p?.id);
           }}
         >
           <option value="">Select Project</option>
@@ -238,13 +254,46 @@ const InvestmentForm: React.FC<ComponentProps> = ({
         >
           {/* Payment Amount */}
           <div className="mt-2">
-            <label className="block mb-1 font-medium">Payment Amount</label>
-            <input
-              type="number"
-              {...register("amount")}
-              className="w-full border rounded p-2"
-              placeholder="TK"
-            />
+            <label className="block mb-3 font-medium">
+              Total Investments{" "}
+              <Button
+                size="small"
+                type="primary"
+                style={{
+                  backgroundColor: "#ff240b",
+                  marginLeft: 1,
+                }}
+                shape="circle"
+              >
+                {qty}
+              </Button>
+            </label>
+            <div className="flex gap-2 item-center">
+              <input
+                type="number"
+                {...register("amount")}
+                className="w-full border rounded p-2"
+                placeholder="TK"
+                disabled
+              />
+              <div className="flex gap-2 items-center">
+                <Button
+                  size="large"
+                  type="primary"
+                  color="green"
+                  icon={<Plus />}
+                  onClick={addQty}
+                  shape="circle"
+                />
+                <Button
+                  onClick={removeQty}
+                  disabled={qty <= 1}
+                  size="large"
+                  icon={<Minus />}
+                  shape="circle"
+                />
+              </div>
+            </div>
             {errors.amount && (
               <p className="text-red-500 text-sm">{errors.amount.message}</p>
             )}
