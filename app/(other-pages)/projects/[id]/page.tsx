@@ -233,12 +233,12 @@ export default function ProjectDetailsPage({
                   </span>
                 </div>
 
-                <div className="flex justify-between items-center pb-4 border-b">
+                {/* <div className="flex justify-between items-center pb-4 border-b">
                   <span className="text-gray-600">Waiting:</span>
                   <span className="font-semibold text-gray-900">
                     {numberToBanglaTk(Number(project?.waiting || 0))} ৳
                   </span>
-                </div>
+                </div> */}
 
                 {project?.musharakaMarkupReturn ? (
                   <div className="flex justify-between items-center pb-4 border-b">
