@@ -9,10 +9,8 @@ const Blogs = () => {
   const [query, setQuery] = useState<any>({
     search: null,
     status: "",
-    days: 1,
+    days: 0,
   });
-
-  console.log("query", query);
 
   const { data, isLoading } = useGetAllProjectInvestmentReturnsQuery(
     generateQueryArray(query),

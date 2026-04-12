@@ -68,7 +68,7 @@ const InvestmentReturnHeader: React.FC<ComponentProps> = ({
               onChange={(e) => changeQuery({ key: "days", value: e })}
               placeholder="Select Date"
               options={[
-                { value: "all", label: "All" },
+                { value: 0, label: "All" },
                 { value: 1, label: "Today" },
                 { value: 2, label: "2 Days" },
                 { value: 3, label: "3 Days" },

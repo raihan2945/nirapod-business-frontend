@@ -27,6 +27,8 @@ const projectSchema = z.object({
   musharakaMarkupReturn: z.string().optional(),
   expectedRoi: z.string().optional(),
   bankInfo: z.string().optional(),
+  totalShares: z.coerce.number().int().default(0),
+  raisedShares: z.coerce.number().int().default(0),
   repayment: z.coerce.number().int().default(0),
   projectDuration: z.coerce.number().int().default(0),
   leftDays: z.coerce.number().int().default(0),
@@ -243,6 +245,8 @@ const ProjectForm: React.FC<ComponentProps> = ({
         raised: info?.raised || 0,
         minInvestment: info?.minInvestment || 0,
         waiting: info?.waiting || 0,
+        totalShares: info?.totalShares || 0,
+        raisedShares: info?.raisedShares || 0,
         murabahaMarkupReturn: info?.murabahaMarkupReturn || 0,
         calculatedRoi: info?.calculatedRoi || 0,
         repayment: info?.repayment || 0,
@@ -364,6 +368,36 @@ const ProjectForm: React.FC<ComponentProps> = ({
       {/* 💰 Investment Fields */}
       <div className="grid grid-cols-2 gap-4">
         <div>
+          <label className="block mb-1 font-medium">Total Shares</label>
+          <input
+            type="number"
+            step="0.01"
+            {...register("totalShares")}
+            className="w-full border rounded p-2"
+          />
+          {errors.totalShares && (
+            <p className="text-red-500 text-sm">
+              {errors?.totalShares?.message}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label className="block mb-1 font-medium">Raised Shares</label>
+          <input
+            type="number"
+            step="0.01"
+            {...register("raisedShares")}
+            className="w-full border rounded p-2"
+          />
+          {errors.raisedShares && (
+            <p className="text-red-500 text-sm">
+              {errors?.raisedShares?.message}
+            </p>
+          )}
+        </div>
+
+        <div>
           <label className="block mb-1 font-medium">Investment Goal</label>
           <input
             type="number"
@@ -377,6 +411,7 @@ const ProjectForm: React.FC<ComponentProps> = ({
             </p>
           )}
         </div>
+
         <div>
           <label className="block mb-1 font-medium">Raised</label>
           <input

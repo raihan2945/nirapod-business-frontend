@@ -213,9 +213,16 @@ export default function ProjectDetailsPage({
 
               <div className="space-y-4">
                 <div className="flex justify-between items-center pb-4 border-b">
-                  <span className="text-gray-600">Investment Goal:</span>
+                  <span className="text-gray-600">Total Shares:</span>
                   <span className="font-semibold text-gray-900">
-                    {numberToBanglaTk(Number(project?.investmentGoal || 0))} ৳
+                    {numberToBanglaTk(Number(project?.totalShares || 0))} 
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center pb-4 border-b">
+                  <span className="text-gray-600">Raised Shares:</span>
+                  <span className="font-semibold text-gray-900">
+                    {numberToBanglaTk(Number(project?.raisedShares || 0))} 
                   </span>
                 </div>
 
@@ -223,13 +230,6 @@ export default function ProjectDetailsPage({
                   <span className="text-gray-600">Min. Investment:</span>
                   <span className="font-semibold text-gray-900">
                     {numberToBanglaTk(Number(project?.minInvestment || 0))} ৳
-                  </span>
-                </div>
-
-                <div className="flex justify-between items-center pb-4 border-b">
-                  <span className="text-gray-600">Raised:</span>
-                  <span className="font-semibold text-gray-900">
-                    {numberToBanglaTk(Number(project?.raised || 0))} ৳
                   </span>
                 </div>
 
@@ -320,6 +320,8 @@ export default function ProjectDetailsPage({
                       setIsCreate(true);
                     }
                   }}
+                
+                  disabled={project?.raisedShares >= project?.totalShares }
                   className="w-full cursor-pointer bg-gray-900 hover:bg-gray-800 text-white mt-6"
                 >
                   Invest Now
@@ -331,7 +333,7 @@ export default function ProjectDetailsPage({
           {/* Roles Section */}
           <div className="mb-12">
             <h3 className="text-2xl font-bold text-red-600 mb-4">
-              Roles of Nirapod Business
+              Roles of Nirapad Business
             </h3>
             <ul className="space-y-3 text-gray-700">
               {Array.isArray(roles) &&
