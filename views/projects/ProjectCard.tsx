@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Users, TrendingUp, Target } from "lucide-react";
 import { baseUrl } from "@/utils/baseUrl";
+import dayjs from "dayjs";
 
 interface Project {
   id: number;
@@ -241,10 +242,10 @@ export default function ProjectCard({ project }: { project: any }) {
             <div className="flex justify-between items-center text-sm">
               <span className="text-gray-600 flex items-center gap-1.5">
                 {/* <TrendingUp className="h-3.5 w-3.5" /> */}
-                Days Left:
+               Closed date:
               </span>
               <span className="font-semibold text-green-600">
-                {englishToBanglaNumber(Number(project?.daysLeft || 0))} দিন
+                 {dayjs(project?.closedDate).format('DD-MM-YYYY')}
               </span>
             </div>
           </div>
