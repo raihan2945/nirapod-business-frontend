@@ -17,6 +17,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../state/store";
 import { useGetUserByIdQuery } from "@/state/features/user/userApi";
 import { useRouter } from "next/navigation";
+import dayjs from "dayjs";
 
 function numberToBanglaTk(value: number) {
   if (value === null || value === undefined) return "";
@@ -215,14 +216,14 @@ export default function ProjectDetailsPage({
                 <div className="flex justify-between items-center pb-4 border-b">
                   <span className="text-gray-600">Total Shares:</span>
                   <span className="font-semibold text-gray-900">
-                    {numberToBanglaTk(Number(project?.totalShares || 0))} 
+                    {numberToBanglaTk(Number(project?.totalShares || 0))}
                   </span>
                 </div>
 
                 <div className="flex justify-between items-center pb-4 border-b">
                   <span className="text-gray-600">Raised Shares:</span>
                   <span className="font-semibold text-gray-900">
-                    {numberToBanglaTk(Number(project?.raisedShares || 0))} 
+                    {numberToBanglaTk(Number(project?.raisedShares || 0))}
                   </span>
                 </div>
 
@@ -301,9 +302,10 @@ export default function ProjectDetailsPage({
                 </div>
 
                 <div className="flex justify-between items-center pb-4">
-                  <span className="text-gray-600">Days Left:</span>
+                  <span className="text-gray-600">Closed Date:</span>
                   <span className="font-semibold text-gray-900">
-                    {englishToBanglaNumber(Number(project?.daysLeft || 0))} দিন
+                    {/* {format(project?.closedDate, "dd-MM-yyyy")} */}
+                    {dayjs(project?.closedDate).format('DD-MM-YYYY')}
                   </span>
                 </div>
                 {userProfile?.role !== "user" && (
@@ -320,8 +322,7 @@ export default function ProjectDetailsPage({
                       setIsCreate(true);
                     }
                   }}
-                
-                  disabled={project?.raisedShares >= project?.totalShares }
+                  disabled={project?.raisedShares >= project?.totalShares}
                   className="w-full cursor-pointer bg-gray-900 hover:bg-gray-800 text-white mt-6"
                 >
                   Invest Now

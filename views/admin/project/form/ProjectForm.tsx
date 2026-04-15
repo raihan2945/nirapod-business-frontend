@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { baseUrl } from "@/utils/baseUrl";
@@ -8,6 +8,9 @@ import {
   useCreateNewProjectMutation,
   useUpdateProjectByIdMutation,
 } from "@/state/features/projects/projectsApi";
+import { DatePicker } from "antd";
+import { format } from "date-fns";
+import dayjs from "dayjs";
 
 // 🧮 Define a reusable project schema
 const decimalSchema = z
@@ -39,6 +42,7 @@ const projectSchema = z.object({
   potentialRisks: z.any().optional(),
   coverPhoto: z.any().optional().nullable(),
   photos: z.array(z.any()).default([]),
+  closedDate: z.coerce.date().optional(),
 });
 
 type ProjectFormData = z.infer<typeof projectSchema>;
@@ -129,6 +133,7 @@ const ProjectForm: React.FC<ComponentProps> = ({
     formState: { errors },
     reset,
     control,
+    watch,
   } = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema) as any,
     defaultValues: info || {},
@@ -549,6 +554,66 @@ const ProjectForm: React.FC<ComponentProps> = ({
           />
           {errors?.leftDays && (
             <p className="text-red-500 text-sm">{errors?.leftDays?.message}</p>
+          )}
+        </div>
+        <div>
+          <label className="block mb-1 font-medium">Close Date</label>
+          {/* <DatePicker
+            // {...register("closedDate")}
+            onChange={(date, dateString) => {
+              console.log("date is : ", dateString);
+              // setValue("closedDate", dayjs(date.$d));
+            }}
+            value={watch("closedDate") ? dayjs(watch("closedDate")) : null}
+            size="large"
+            style={{
+              width: "100%",
+            }}
+          /> */}
+
+          {/* <Controller
+            name="closedDate"
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
+              <DatePicker
+                {...field}
+                value={field.value ? dayjs(field.value) : null}
+                onChange={(date) => field.onChange(date)}
+              />
+            )}
+          /> */}
+          <Controller
+            name="closedDate"
+            control={control}
+            render={({ field }) => (
+              <DatePicker
+                size="large"
+                style={{
+                  width: "100%",
+                }}
+                value={field.value ? dayjs(field.value) : null}
+                onChange={(date) => {
+                  if (!date) {
+                    field.onChange(null);
+                    return;
+                  }
+
+                  // 👉 convert to JS Date
+                  const jsDate = date.toDate();
+
+                  // 👉 format with date-fns
+                  const formatted = format(jsDate, "yyyy-MM-dd");
+
+                  field.onChange(formatted);
+                }}
+              />
+            )}
+          />
+          {errors?.closedDate && (
+            <p className="text-red-500 text-sm">
+              {errors?.closedDate?.message}
+            </p>
           )}
         </div>
       </div>
