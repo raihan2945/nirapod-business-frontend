@@ -42,8 +42,6 @@ const userApi = apiSlice.injectEndpoints({
         try {
           const result: any = await queryFulfilled;
 
-          console.log("Result is : ", result)
-
           dispatch(setUser(result.data.data));
         } catch (err) {
           console.log("Error fetching user data:", err);

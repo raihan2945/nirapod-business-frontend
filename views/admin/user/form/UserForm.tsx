@@ -121,15 +121,6 @@ const UserForm: React.FC<ComponentProps> = ({
   } = useForm<UserFormData>({
     resolver: zodResolver(createUserDTOSchema) as any,
     defaultValues: {
-      // fullName: "",
-      // mobile: "",
-      // email: "",
-      // photo: null,
-      // address: "",
-      // password: "",
-      // role: "user",
-      // permissions: [],
-      // status: "ACTIVE",
       ...info,
     },
   });
@@ -148,26 +139,6 @@ const UserForm: React.FC<ComponentProps> = ({
     setIsSubmitting(true);
 
     try {
-      // const formData = new FormData();
-
-      // Append all fields
-      // Object.keys(data).forEach((key) => {
-      //   const value = data[key as keyof UserFormData];
-      //   if (key === "photo" && value instanceof File) {
-      //     formData.append("photo", value);
-      //   } else if (key === "permissions" && Array.isArray(value)) {
-      //     formData.append(key, JSON.stringify(value));
-      //   } else {
-      //     formData.append(key, value != null ? String(value) : "");
-      //   }
-      // });
-
-      // Log FormData for debugging
-      // for (const [key, value] of formData.entries()) {
-      //   console.log(`FormData: ${key} = ${value}`);
-      // }
-
-      // console.log("Submit data : ", data)
 
       let res;
       if (formType === "edit" && info?.id) {

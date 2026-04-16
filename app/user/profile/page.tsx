@@ -122,7 +122,7 @@ export default function ProfilePage() {
         form.append("photo", photoPreview);
       }
 
-      console.log("Submitting Data:", data);
+      // console.log("Submitting Data:", data);
 
       // API call would go here
       const res = await UpdateProfile({ id: userId, data: form });
