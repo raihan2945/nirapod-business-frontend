@@ -11,7 +11,6 @@ interface ProfileViewProps {
 
 export default function ProfileView({ user }: ProfileViewProps) {
  
-  console.log("user : ", user)
   
   return (
     <div className="mx-auto w-full">
