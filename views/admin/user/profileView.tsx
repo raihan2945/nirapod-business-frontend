@@ -10,9 +10,9 @@ interface ProfileViewProps {
 }
 
 export default function ProfileView({ user }: ProfileViewProps) {
-  const defaultAvatar =
-    "https://unsplash.com/photos/birds-eye-view-photograph-of-green-mountains-01_igFr7hd4";
-
+ 
+  console.log("user : ", user)
+  
   return (
     <div className="mx-auto w-full">
       <div className="bg-white shadow-md rounded-xl overflow-hidden border border-gray-200">
@@ -41,7 +41,7 @@ export default function ProfileView({ user }: ProfileViewProps) {
 
             <div className="text-center sm:text-left">
               <h1 className="text-2xl md:text-3xl font-bold">
-                {user.fullName || "—"}
+                {user?.fullName || "—"}
               </h1>
               {/* <p className="mt-1 opacity-90">
                 {user?.currentProfession || "—"}

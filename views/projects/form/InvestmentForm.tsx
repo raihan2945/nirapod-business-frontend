@@ -163,9 +163,9 @@ const InvestmentForm: React.FC<ComponentProps> = ({
   }, [info, reset]);
 
   useEffect(() => {
-    const currentValue = qty * Number(project?.minInvestment);
+    const currentValue = qty * Number(existingProject?.minInvestment);
     setValue("amount", currentValue);
-  }, [qty]);
+  }, [qty, existingProject]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full mx-auto">
@@ -181,6 +181,7 @@ const InvestmentForm: React.FC<ComponentProps> = ({
           // {...register("projectId")}
           onChange={(e) => {
             const p = projects?.data?.find((p: any) => p.id === e.target.value);
+            setQty(1);
             setExistingProject(p);
             setValue("projectId", p?.id);
           }}
