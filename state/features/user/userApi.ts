@@ -32,7 +32,29 @@ const userApi = apiSlice.injectEndpoints({
 
     getUserById: builder.query<UserResponse, any>({
       query: (id) => ({
-        url: `/api/v1/users/token`,
+        url: `/api/v1/users/$token`,
+        method: "GET",
+        // headers: {
+        //   authorization: `Bearer ${token}`,
+        // },
+      }),
+      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+        try {
+          const result: any = await queryFulfilled;
+
+          dispatch(setUser(result.data.data));
+        } catch (err) {
+          console.log("Error fetching user data:", err);
+          // dispatch(userLoggedOut());
+        }
+      },
+      providesTags: ["Users"],
+
+    }),
+
+    getUserByIdV2: builder.query<UserResponse, any>({
+      query: (id) => ({
+        url: `/api/v1/users/${id}`,
         method: "GET",
         // headers: {
         //   authorization: `Bearer ${token}`,
@@ -103,6 +125,7 @@ const userApi = apiSlice.injectEndpoints({
 
 export const {
   useGetUserByIdQuery,
+  useGetUserByIdV2Query,
   useUpdateUserMutation,
   useGetAllUsersQuery,
   useCreateNewUserMutation,

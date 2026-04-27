@@ -151,3 +151,12 @@
     max-width: 800px !important;
   }
 }
+
+.ant-tabs-tab-active{
+   background-color: #31AD5C !important;
+  color: #ffffff !important;
+}
+.ant-tabs-tab-active .ant-tabs-tab-btn{
+  background-color: #31AD5C !important;
+  color: #ffffff !important;
+}

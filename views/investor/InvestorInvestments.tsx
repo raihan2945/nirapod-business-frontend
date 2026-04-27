@@ -10,6 +10,7 @@ import {
   Popconfirm,
   Modal,
   Divider,
+  Tabs,
 } from "antd";
 import Image from "next/image";
 import { baseUrl } from "@/utils/baseUrl";
@@ -19,6 +20,7 @@ import { format } from "date-fns";
 import CounterView from "./CounterView";
 import InvestmentForm from "../projects/form/InvestmentForm";
 import BankInfoView from "./BankInfoView";
+import { BanknoteArrowDown, BriefcaseBusiness, Wallet } from "lucide-react";
 
 const InvestorInvestments = ({
   userId,
@@ -36,7 +38,7 @@ const InvestorInvestments = ({
   const [isCreate, setIsCreate] = useState<any>(null);
 
   const { data, isLoading } = useGetAllProjectInvestmentsQuery(
-    generateQueryArray(query),
+    generateQueryArray({}),
   );
 
   // console.log("data", data);
@@ -151,23 +153,77 @@ const InvestorInvestments = ({
   return (
     <div>
       <CounterView userId={userId} />
-      <div className="flex justify-end  pb-3">
+      <div className="flex justify-end gap-2 pb-3 flex-wrap">
         {!isAdmin && (
           <Button
             onClick={() => setIsCreate(true)}
             type="primary"
-            style={{ backgroundColor: "green" }}
+            style={{ backgroundColor: "#31AD5C" }}
+            icon={<BriefcaseBusiness className="size-5" />}
           >
             Make Investment
           </Button>
         )}
+        {!isAdmin && (
+          <Button
+            onClick={() => setIsCreate(true)}
+            type="primary"
+            style={{ backgroundColor: "black" }}
+            icon={<Wallet className="size-5" />}
+          >
+            Add Money
+          </Button>
+        )}
+        {!isAdmin && (
+          <Button
+            icon={<BanknoteArrowDown className="size-5" />}
+            onClick={() => setIsCreate(true)}
+            type="default"
+          >
+            Withdraw
+          </Button>
+        )}
       </div>
-      <Table
-        size="small"
-        columns={columns}
-        dataSource={data?.data}
-        scroll={{ x: "max-content" }}
-      />
+      <Tabs
+        direction="ltr"
+        tabPosition="top"
+        defaultActiveKey="1"
+        // size="large"
+        type="card"
+      >
+        <Tabs.TabPane
+          tab={
+            <div className="flex gap-2 items-center">
+              <BriefcaseBusiness className="size-5" />
+              Investments
+            </div>
+          }
+          key="1"
+        >
+          <Table
+            size="small"
+            columns={columns}
+            dataSource={data?.data}
+            scroll={{ x: "max-content" }}
+          />
+        </Tabs.TabPane>
+        <Tabs.TabPane
+          tab={
+            <div className="flex gap-2 items-center">
+              <Wallet className="size-5" />
+              Wallet Transactions
+            </div>
+          }
+          key="2"
+        >
+          <Table
+            size="small"
+            columns={columns}
+            dataSource={data?.data}
+            scroll={{ x: "max-content" }}
+          />
+        </Tabs.TabPane>
+      </Tabs>
 
       {showBankInfo && (
         <div className="mt-4">

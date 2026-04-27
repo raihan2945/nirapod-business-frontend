@@ -10,11 +10,16 @@ import {
   CheckCircle,
   XCircle,
 } from "lucide-react";
-import { useGetUserCountsByIdQuery } from "@/state/features/user/userApi";
+import { useGetUserByIdQuery, useGetUserByIdV2Query, useGetUserCountsByIdQuery } from "@/state/features/user/userApi";
 
 const CounterView = ({ userId }: { userId: string }) => {
+  const { data, isLoading } = useGetUserCountsByIdQuery(userId);
 
-  const {data, isLoading} = useGetUserCountsByIdQuery(userId);
+    const {
+      data: userData,
+      isLoading: isFetchLoading,
+      isError,
+    } = useGetUserByIdV2Query(userId);
 
   return (
     <div>
@@ -26,25 +31,25 @@ const CounterView = ({ userId }: { userId: string }) => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-gradient-to-br from-green-50 to-emerald-100 p-6 rounded-xl border border-green-200">
-            <p className="text-sm font-medium text-green-700">
-              Total Projects
-            </p>
+            <p className="text-sm font-medium text-green-700">Total Balance</p>
             <p className="text-4xl font-bold text-green-800 mt-2">
-              {data?.data?.totalProjects || 0}
+              ৳{(Number(userData?.data?.balance || 0) + Number(data?.data?.totalInvestedAmount || 0))?.toLocaleString()}
             </p>
           </div>
           <div className="bg-gradient-to-br from-blue-50 to-indigo-100 p-6 rounded-xl border border-blue-200">
-            <p className="text-sm font-medium text-blue-700">Total Invested Amount</p>
-            <p className="text-2xl font-bold text-blue-800 mt-2">
-              ৳{data?.data?.totalInvestedAmount || 0}
+            <p className="text-sm font-medium text-blue-700">
+              Active Investments
+            </p>
+            <p className="text-4xl font-bold text-blue-800 mt-2">
+              ৳{Number(data?.data?.totalInvestedAmount || 0)?.toLocaleString()}
             </p>
           </div>
-          <div className="bg-gradient-to-br from-purple-50 to-violet-100 p-6 rounded-xl border border-purple-200">
-            <p className="text-sm font-medium text-purple-700">
-              Pendings
+          <div className="bg-gradient-to-br from-gray-50 to-gray-300/70 p-6 rounded-xl border border-purple-200">
+            <p className="text-sm font-medium text-gray-700">
+              Wallet Balance
             </p>
-            <p className="text-lg font-bold text-purple-800 mt-2 break-all">
-              {data?.data?.totalPendingInvestments || 0}
+            <p className="text-4xl font-bold text-gray-900 mt-2 break-all">
+              ৳{Number(userData?.data?.balance || 0)?.toLocaleString()}
             </p>
           </div>
         </div>
