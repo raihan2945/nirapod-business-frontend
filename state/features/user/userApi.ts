@@ -32,7 +32,7 @@ const userApi = apiSlice.injectEndpoints({
 
     getUserById: builder.query<UserResponse, any>({
       query: (id) => ({
-        url: `/api/v1/users/$token`,
+        url: `/api/v1/users/token`,
         method: "GET",
         // headers: {
         //   authorization: `Bearer ${token}`,
