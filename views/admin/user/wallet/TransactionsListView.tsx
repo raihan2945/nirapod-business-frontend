@@ -13,18 +13,14 @@ import {
   Tabs,
 } from "antd";
 import Image from "next/image";
+import { format } from "date-fns";
 import { baseUrl } from "@/utils/baseUrl";
 import { RiEditBoxFill } from "react-icons/ri";
-import InvestmentView from "../admin/project/InvestmentView";
-import { format } from "date-fns";
-import CounterView from "./CounterView";
-import InvestmentForm from "../projects/form/InvestmentForm";
-import BankInfoView from "./BankInfoView";
 import { BanknoteArrowDown, BriefcaseBusiness, Wallet } from "lucide-react";
-import WalletTransactionForm from "../admin/user/wallet/WalletTransactionForm";
-import TransactionsListView from "../admin/user/wallet/TransactionsListView";
+import { useGetAllWalletTransactionsQuery } from "@/state/features/wallet/walletTransactionApi";
+import { cn } from "@/lib/utils";
 
-const InvestorInvestments = ({
+const TransactionsListView = ({
   userId,
   isAdmin,
   showBankInfo,
@@ -39,7 +35,7 @@ const InvestorInvestments = ({
 
   const [isCreate, setIsCreate] = useState<any>(null);
 
-  const { data, isLoading } = useGetAllProjectInvestmentsQuery(
+  const { data, isLoading } = useGetAllWalletTransactionsQuery(
     generateQueryArray({}),
   );
 
@@ -75,10 +71,21 @@ const InvestorInvestments = ({
       ),
     },
     {
-      title: "Project",
-      dataIndex: "project",
-      key: "serial",
-      render: (text, data: any) => data?.Project?.title,
+      title: "Type",
+      dataIndex: "type",
+      key: "type",
+      render: (text, data: any) => (
+        <Tag>
+          <p
+            className={cn(
+              "font-bold",
+              text == "DEPOSIT" ? "text-green-600" : "text-amber-600",
+            )}
+          >
+            {text}
+          </p>
+        </Tag>
+      ),
     },
     {
       title: "Amount",
@@ -151,12 +158,11 @@ const InvestorInvestments = ({
     },
   ];
 
-  // console.log("Investor Investments Data:", data);
+  console.log("Transaction Data:", data);
 
   return (
     <div>
-      <CounterView userId={userId} />
-      <div className="flex justify-end gap-2 pb-3 flex-wrap">
+      {/* <div className="flex justify-end gap-2 pb-3 flex-wrap">
         {!isAdmin && (
           <Button
             onClick={() => setIsCreate(true)}
@@ -186,67 +192,14 @@ const InvestorInvestments = ({
             Withdraw
           </Button>
         )}
-      </div>
-      <Tabs
-        direction="ltr"
-        tabPosition="top"
-        defaultActiveKey="1"
-        // size="large"
-        type="card"
-      >
-        <Tabs.TabPane
-          tab={
-            <div className="flex gap-2 items-center">
-              <BriefcaseBusiness className="size-5" />
-              Investments
-            </div>
-          }
-          key="1"
-        >
-          <Table
-            size="small"
-            columns={columns}
-            dataSource={data?.data}
-            scroll={{ x: "max-content" }}
-          />
-        </Tabs.TabPane>
-        <Tabs.TabPane
-          tab={
-            <div className="flex gap-2 items-center">
-              <Wallet className="size-5" />
-              Wallet Transactions
-            </div>
-          }
-          key="2"
-        >
-          <TransactionsListView userId={userId} />
-        </Tabs.TabPane>
-      </Tabs>
+      </div> */}
 
-      {showBankInfo && (
-        <div className="mt-4">
-          <h1 className="text-lg font-semibold">Bank Informations</h1>
-          <BankInfoView createInvestment={setIsCreate} />
-        </div>
-      )}
-
-      {/* edit investment form */}
-      <Modal
-        centered
-        open={isEdit}
-        onCancel={() => setIsEdit(false)}
-        footer={null}
-        destroyOnHidden={true}
-        className="responsive-ant-modal"
-        width="90vw"
-        styles={{
-          body: {
-            padding: 0,
-          },
-        }}
-      >
-        <InvestmentView setIsEdit={isAdmin} investment={isEdit} />
-      </Modal>
+      <Table
+        size="small"
+        columns={columns}
+        dataSource={data?.data}
+        scroll={{ x: "max-content" }}
+      />
 
       {/* Deposit/withdraw to wallet */}
       <Modal
@@ -264,40 +217,13 @@ const InvestorInvestments = ({
         className="responsive-ant-modal"
       >
         {/* <div className="p-4 sm:p-6 max-h-[80vh] overflow-y-auto"> */}
-        <WalletTransactionForm
+        {/* <WalletTransactionForm
           formType="create"
-          modalCancel={() => setOpenTransaction(null)}
+          modalCancel={() =>  setOpenTransaction(null)}
           userId={userId}
           projectId={isCreate?.id || ""}
           type={openTransaction}
-        />
-        {/* </div> */}
-      </Modal>
-
-      {/* create new investment */}
-      <Modal
-        centered
-        open={isCreate}
-        onCancel={() => setIsCreate(false)}
-        footer={null}
-        destroyOnHidden={true}
-        width="90vw"
-        // width={700}
-        styles={{
-          body: { padding: 0 },
-        }}
-        // Optional: add this class for extra control
-        className="responsive-ant-modal"
-      >
-        {/* <div className="p-4 sm:p-6 max-h-[80vh] overflow-y-auto"> */}
-        <InvestmentForm
-          formType="create"
-          // info={isEdit}
-          modalCancel={() => setIsCreate(false)}
-          userId={userId}
-          project={isCreate}
-          projectId={isCreate?.id || ""}
-        />
+        /> */}
         {/* </div> */}
       </Modal>
 
@@ -334,4 +260,4 @@ const InvestorInvestments = ({
   );
 };
 
-export default InvestorInvestments;
+export default TransactionsListView;

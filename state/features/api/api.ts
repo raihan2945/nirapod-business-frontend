@@ -45,7 +45,8 @@ const apiSlice = createApi({
     "Users",
     "Projects",
     "ProjectInvestments",
-    "Investors"
+    "Investors",
+    "Wallet"
   ],
   endpoints: (builder) => ({}), // Define your endpoints here
 });

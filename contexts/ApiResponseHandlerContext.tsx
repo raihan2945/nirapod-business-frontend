@@ -39,6 +39,8 @@ export const APIResponseHandlerProvider: React.FC<{ children: ReactNode }> = ({
 
     const handleResponse = (res: ModalOptions) => {
 
+        console.log("REEEEEES : ", res)
+
         let returnRes: any = {}
 
         if (res?.error?.status == 400) {
