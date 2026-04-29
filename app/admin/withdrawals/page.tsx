@@ -21,6 +21,7 @@ import { RiEditBoxFill } from "react-icons/ri";
 import { BanknoteArrowDown, BriefcaseBusiness, Wallet } from "lucide-react";
 import { useGetAllWalletTransactionsQuery } from "@/state/features/wallet/walletTransactionApi";
 import { cn } from "@/lib/utils";
+import WithdrawHeader from "@/views/admin/withdrawal/HeaderSection";
 
 const WithDrawals = ({
   userId,
@@ -33,12 +34,14 @@ const WithDrawals = ({
 }) => {
   const [query, setQuery] = useState({
     userId: userId,
+    type: "WITHDRAWAL",
+    status: "PENDING",
   });
 
   const [isCreate, setIsCreate] = useState<any>(null);
 
   const { data, isLoading } = useGetAllWalletTransactionsQuery(
-    generateQueryArray({}),
+    generateQueryArray(query),
   );
 
   // console.log("data", data);
@@ -49,6 +52,10 @@ const WithDrawals = ({
   interface DataType {
     id: string;
   }
+
+  const changeQuery = ({ key, value }: { key: string; value: any }) => {
+    setQuery((prev: any) => ({ ...prev, [key]: value }));
+  };
 
   const columns: TableProps<DataType>["columns"] = [
     {
@@ -163,38 +170,9 @@ const WithDrawals = ({
 
   return (
     <div>
-      {/* <div className="flex justify-end gap-2 pb-3 flex-wrap">
-        {!isAdmin && (
-          <Button
-            onClick={() => setIsCreate(true)}
-            type="primary"
-            style={{ backgroundColor: "#31AD5C" }}
-            icon={<BriefcaseBusiness className="size-5" />}
-          >
-            Make Investment
-          </Button>
-        )}
-        {!isAdmin && (
-          <Button
-            onClick={() => setOpenTransaction("DEPOSIT")}
-            type="primary"
-            style={{ backgroundColor: "black" }}
-            icon={<Wallet className="size-5" />}
-          >
-            Add Money
-          </Button>
-        )}
-        {!isAdmin && (
-          <Button
-            icon={<BanknoteArrowDown className="size-5" />}
-            onClick={() => setOpenTransaction("WITHDRAWAL")}
-            type="default"
-          >
-            Withdraw
-          </Button>
-        )}
-      </div> */}
-
+      <div className="mb-2">
+        <WithdrawHeader query={query} changeQuery={changeQuery}/>
+      </div>
       <Table
         size="small"
         columns={columns}

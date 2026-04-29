@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Table, Tag, Space, Button, Popconfirm, Modal, Divider } from "antd";
+import { Table, Tag, Space, Button, Popconfirm, Modal, Divider, Image } from "antd";
 import type { TableProps } from "antd";
-import Image from "next/image";
 
 //icons
 import { HiMiniClipboardDocumentList } from "react-icons/hi2";
@@ -67,12 +66,10 @@ const ProjectInvestmentView: React.FC<ComponentProps> = ({
       dataIndex: "proof1",
       key: "proof1",
       render: (text) => (
-        <div className="relative w-20 h-20 p-1 overflow-hidden rounded">
+        <div>
           <Image
             alt="photo"
             src={`${baseUrl}/uploads/photos/${text}`}
-            fill
-            className="w-full h-auto object-contain"
           />
         </div>
       ),
