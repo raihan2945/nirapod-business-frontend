@@ -60,18 +60,7 @@ const userApi = apiSlice.injectEndpoints({
         //   authorization: `Bearer ${token}`,
         // },
       }),
-      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
-        try {
-          const result: any = await queryFulfilled;
-
-          dispatch(setUser(result.data.data));
-        } catch (err) {
-          console.log("Error fetching user data:", err);
-          // dispatch(userLoggedOut());
-        }
-      },
       providesTags: ["Users"],
-
     }),
 
     getUserCountsById: builder.query<any, any>({

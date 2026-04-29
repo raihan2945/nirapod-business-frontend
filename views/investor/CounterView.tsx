@@ -21,6 +21,8 @@ const CounterView = ({ userId }: { userId: string }) => {
       isError,
     } = useGetUserByIdV2Query(userId);
 
+    
+
   return (
     <div>
       <div className="pt-2">

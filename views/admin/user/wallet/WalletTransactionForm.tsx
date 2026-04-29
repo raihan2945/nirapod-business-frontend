@@ -133,7 +133,7 @@ const WalletTransactionForm: React.FC<ComponentProps> = ({
       formData.append("qty", qty.toString());
       formData.append("paymentMethod", data.paymentMethod || "");
       data.paymentDate &&
-        formData.append("paymentDate", data?.paymentDate?.toISOString());
+      formData.append("paymentDate", data?.paymentDate?.toISOString());
       formData.append("transactionId", data.transactionId || "");
       formData.append("comments", data.comments || "");
 
@@ -317,7 +317,6 @@ const WalletTransactionForm: React.FC<ComponentProps> = ({
               )}
             </div>
           )}
-
         </div>
       </Card>
 

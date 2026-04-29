@@ -36,7 +36,7 @@ const TransactionsListView = ({
   const [isCreate, setIsCreate] = useState<any>(null);
 
   const { data, isLoading } = useGetAllWalletTransactionsQuery(
-    generateQueryArray({}),
+    generateQueryArray({ userId }),
   );
 
   // console.log("data", data);

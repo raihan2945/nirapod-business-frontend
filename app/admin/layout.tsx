@@ -6,7 +6,7 @@ import {
   UserOutlined,
   VideoCameraOutlined,
   ProjectOutlined,
-  RetweetOutlined 
+  RetweetOutlined,
 } from "@ant-design/icons";
 import { Button, Layout, Menu, Popconfirm, theme } from "antd";
 import Link from "next/link";
@@ -17,10 +17,16 @@ import { useGetUserByIdQuery } from "@/state/features/user/userApi";
 import { AppDispatch } from "@/state/store";
 import { userLoggedOut } from "@/state/features/auth/authSlice";
 import { useRouter } from "next/navigation";
+import { BanknoteArrowDown, LayoutDashboard } from "lucide-react";
 
 const { Header, Content, Footer, Sider } = Layout;
 
 const menuItems = [
+  {
+    key: "6",
+    label: <Link href="/admin/dashboard">Dashboard</Link>,
+    icon: <LayoutDashboard size={17}/>
+  },
   {
     key: "0",
     label: <Link href="/admin/projects">Projects</Link>,
@@ -35,6 +41,11 @@ const menuItems = [
     key: "2",
     label: <Link href="/admin/investment-returns">Investment Returns</Link>,
     icon: <RetweetOutlined />,
+  },
+  {
+    key: "7",
+    label: <Link href="/admin/withdrawals">Withdrawals</Link>,
+    icon: <BanknoteArrowDown size={17}/>,
   },
   {
     key: "3",
