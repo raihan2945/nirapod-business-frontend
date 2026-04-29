@@ -14,14 +14,27 @@ import {
   Divider,
   Tabs,
   Image,
+  Popover,
 } from "antd";
 import { format } from "date-fns";
 import { baseUrl } from "@/utils/baseUrl";
 import { RiEditBoxFill } from "react-icons/ri";
-import { BanknoteArrowDown, BriefcaseBusiness, Wallet } from "lucide-react";
-import { useGetAllWalletTransactionsQuery } from "@/state/features/wallet/walletTransactionApi";
+import {
+  BanknoteArrowDown,
+  BriefcaseBusiness,
+  CircleCheck,
+  CircleCheckBig,
+  CircleX,
+  Wallet,
+} from "lucide-react";
+import {
+  useGetAllWalletTransactionsQuery,
+  useUpdateWalletTransactionMutation,
+} from "@/state/features/wallet/walletTransactionApi";
 import { cn } from "@/lib/utils";
 import WithdrawHeader from "@/views/admin/withdrawal/HeaderSection";
+import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
+import WalletTransactionForm from "@/views/admin/user/wallet/WalletTransactionForm";
 
 const WithDrawals = ({
   userId,
@@ -44,6 +57,11 @@ const WithDrawals = ({
     generateQueryArray(query),
   );
 
+  const [UpdateTransaction, { isLoading: isUpdating }] =
+    useUpdateWalletTransactionMutation();
+
+  const { handleResponse } = useAPIResponseHandler();
+
   // console.log("data", data);
 
   const [isEdit, setIsEdit] = useState<any>(null);
@@ -57,12 +75,36 @@ const WithDrawals = ({
     setQuery((prev: any) => ({ ...prev, [key]: value }));
   };
 
+  const onSubmit = async (data: { id: string; status: string }) => {
+    try {
+      const formData = new FormData();
+      formData.append("status", data?.status);
+
+      const res = await UpdateTransaction({ id: data.id, data: formData });
+
+      console.log("Response is : ", res);
+
+      handleResponse(res);
+    } catch (error) {
+      console.error("❌ Error submitting form:", error);
+      alert("Failed to create blog.");
+    }
+  };
+
   const columns: TableProps<DataType>["columns"] = [
     {
       title: "Id",
       dataIndex: "serial",
       key: "serial",
       render: (text) => `#${text}`,
+    },
+    {
+      title: "User Id",
+      dataIndex: "serial",
+      key: "serial",
+      render: (text, record: any) => (
+        <Tag>{record?.User?.serial || record?.userId}</Tag>
+      ),
     },
     {
       title: "Proof",
@@ -73,7 +115,7 @@ const WithDrawals = ({
           <Image
             alt="Image"
             src={`${baseUrl}/uploads/photos/${text}`}
-            // className="w-full h-auto object-contain"
+            style={{ width: "50px" }}
           />
         </div>
       ),
@@ -119,7 +161,20 @@ const WithDrawals = ({
       title: "Status",
       dataIndex: "status",
       key: "status",
-      render: (text) => <Tag color="blue">{text}</Tag>,
+      render: (text) => (
+        <p
+          className={cn(
+            "font-bold",
+            text == "APPROVED"
+              ? "text-green-600"
+              : text == "REJECTED"
+                ? "text-red-500"
+                : "text-yellow-500",
+          )}
+        >
+          {text}
+        </p>
+      ),
     },
     {
       title: "Payment Date",
@@ -136,20 +191,42 @@ const WithDrawals = ({
     {
       title: "Action",
       key: "action",
-      render: (_, record: any) => (
-        <Space size="middle">
-          {/* {hasAccess(["bike_management"]) && ( */}
-          <Button
-            onClick={() => {
-              setIsEdit(record);
-            }}
-            style={{ border: "none", padding: "5px" }}
-          >
-            <RiEditBoxFill color="#4d4d4d" size={20} />
-          </Button>
-          {/* )} */}
+      render: (_, record: any) =>
+        record?.status == "PENDING" && (
+          <Space size="middle">
+            {/* {hasAccess(["bike_management"]) && ( */}
+            <Popconfirm
+              title="Reject the deposit"
+              description="Are you sure to reject this deposit?"
+              okText="Yes"
+              cancelText="No"
+              placement="left"
+              onConfirm={() => {
+                onSubmit({ id: record?.id, status: "REJECTED" });
+              }}
+            >
+              <Button style={{ border: "none", padding: "5px" }} size="small">
+                <CircleX className="text-red-500" />
+              </Button>
+            </Popconfirm>
+            <Popconfirm
+              title="Approve the deposit"
+              description="Are you sure to approve this deposit?"
+              okText="Yes"
+              cancelText="No"
+              placement="left"
+              onConfirm={() => {
+                record?.type == "WITHDRAWAL"
+                  ? setIsEdit(record)
+                  : onSubmit({ id: record?.id, status: "APPROVED" });
+              }}
+            >
+              <Button style={{ border: "none", padding: "5px" }} size="small">
+                <CircleCheck className="text-green-500" />
+              </Button>
+            </Popconfirm>
 
-          {/* <Popconfirm
+            {/* <Popconfirm
             title="Delete the task"
             description="Are you sure to delete this task?"
             onConfirm={() => submitDelete(record?.id)}
@@ -161,17 +238,15 @@ const WithDrawals = ({
               <MdDelete color="red" size={20} />
             </Button>
           </Popconfirm> */}
-        </Space>
-      ),
+          </Space>
+        ),
     },
   ];
-
-  console.log("Transaction Data:", data);
 
   return (
     <div>
       <div className="mb-2">
-        <WithdrawHeader query={query} changeQuery={changeQuery}/>
+        <WithdrawHeader query={query} changeQuery={changeQuery} />
       </div>
       <Table
         size="small"
@@ -183,8 +258,8 @@ const WithDrawals = ({
       {/* Deposit/withdraw to wallet */}
       <Modal
         centered
-        open={openTransaction}
-        onCancel={() => setOpenTransaction(null)}
+        open={isEdit}
+        onCancel={() => setIsEdit(null)}
         footer={null}
         destroyOnHidden={true}
         width="90vw"
@@ -192,17 +267,18 @@ const WithDrawals = ({
         styles={{
           body: { padding: 0 },
         }}
-        // Optional: add this class for extra control
         className="responsive-ant-modal"
       >
         {/* <div className="p-4 sm:p-6 max-h-[80vh] overflow-y-auto"> */}
-        {/* <WalletTransactionForm
-          formType="create"
-          modalCancel={() =>  setOpenTransaction(null)}
+        <WalletTransactionForm
+          formType="edit"
+          modalCancel={() => setIsEdit(null)}
           userId={userId}
           projectId={isCreate?.id || ""}
           type={openTransaction}
-        /> */}
+          info={isEdit}
+          title="Approve withdrawal"
+        />
         {/* </div> */}
       </Modal>
 

@@ -108,16 +108,29 @@ const TransactionsListView = ({
       render: (text) => text,
     },
     {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      render: (text) => <Tag color="blue">{text}</Tag>,
-    },
-    {
       title: "Payment Date",
       dataIndex: "paymentDate",
       key: "paymentDate",
       render: (text) => format(new Date(text), "dd-MM-yyyy"),
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (text) => (
+        <p
+          className={cn(
+            "font-bold",
+            text == "APPROVED"
+              ? "text-green-600"
+              : text == "REJECTED"
+                ? "text-red-500"
+                : "text-yellow-500",
+          )}
+        >
+          {text}
+        </p>
+      ),
     },
     {
       title: "createdAt",
@@ -125,37 +138,37 @@ const TransactionsListView = ({
       key: "createdAt",
       render: (text) => format(new Date(text), "dd-MM-yyyy"),
     },
-    {
-      title: "Action",
-      key: "action",
-      render: (_, record: any) => (
-        <Space size="middle">
-          {/* {hasAccess(["bike_management"]) && ( */}
-          <Button
-            onClick={() => {
-              setIsEdit(record);
-            }}
-            style={{ border: "none", padding: "5px" }}
-          >
-            <RiEditBoxFill color="#4d4d4d" size={20} />
-          </Button>
-          {/* )} */}
+    // {
+    //   title: "Action",
+    //   key: "action",
+    //   render: (_, record: any) => (
+    //     <Space size="middle">
+    //       {/* {hasAccess(["bike_management"]) && ( */}
+    //       <Button
+    //         onClick={() => {
+    //           setIsEdit(record);
+    //         }}
+    //         style={{ border: "none", padding: "5px" }}
+    //       >
+    //         <RiEditBoxFill color="#4d4d4d" size={20} />
+    //       </Button>
+    //       {/* )} */}
 
-          {/* <Popconfirm
-            title="Delete the task"
-            description="Are you sure to delete this task?"
-            onConfirm={() => submitDelete(record?.id)}
-            // onCancel={cancel}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button style={{ border: "none", padding: "5px" }}>
-              <MdDelete color="red" size={20} />
-            </Button>
-          </Popconfirm> */}
-        </Space>
-      ),
-    },
+    //       {/* <Popconfirm
+    //         title="Delete the task"
+    //         description="Are you sure to delete this task?"
+    //         onConfirm={() => submitDelete(record?.id)}
+    //         // onCancel={cancel}
+    //         okText="Yes"
+    //         cancelText="No"
+    //       >
+    //         <Button style={{ border: "none", padding: "5px" }}>
+    //           <MdDelete color="red" size={20} />
+    //         </Button>
+    //       </Popconfirm> */}
+    //     </Space>
+    //   ),
+    // },
   ];
 
   console.log("Transaction Data:", data);

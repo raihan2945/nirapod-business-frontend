@@ -129,7 +129,7 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
             {/* Demos Dropdown */}
 
             {userProfile && userProfile.role == "admin" ? (
-              <Link href="/admin/projects">
+              <Link href="/admin/dashboard">
                 <Button style={{ cursor: "pointer" }}>Dashboard</Button>
               </Link>
             ) : userProfile?.role == "user" ? (

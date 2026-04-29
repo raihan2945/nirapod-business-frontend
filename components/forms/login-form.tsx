@@ -85,7 +85,7 @@ export function LoginForm({
     }
     if (userProfile) {
       if (userProfile?.role === "admin") {
-        router.push("/admin/projects");
+        router.push("/admin/dashboard");
       } else if (userProfile?.role === "user") {
         router.push("/user/profile");
       }

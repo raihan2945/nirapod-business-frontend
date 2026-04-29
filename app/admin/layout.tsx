@@ -23,45 +23,45 @@ const { Header, Content, Footer, Sider } = Layout;
 
 const menuItems = [
   {
-    key: "6",
+    key: "0",
     label: <Link href="/admin/dashboard">Dashboard</Link>,
     icon: <LayoutDashboard size={17}/>
   },
   {
-    key: "0",
+    key: "1",
     label: <Link href="/admin/projects">Projects</Link>,
     icon: <UploadOutlined />,
   },
   {
-    key: "1",
+    key: "2",
     label: <Link href="/admin/project-investments">Project Investments</Link>,
     icon: <ProjectOutlined />,
   },
   {
-    key: "2",
+    key: "3",
     label: <Link href="/admin/investment-returns">Investment Returns</Link>,
     icon: <RetweetOutlined />,
   },
   {
-    key: "7",
+    key: "4",
     label: <Link href="/admin/withdrawals">Withdrawals</Link>,
     icon: <BanknoteArrowDown size={17}/>,
   },
   {
-    key: "3",
+    key: "5",
     label: <Link href="/admin/blogs">Blogs</Link>,
     icon: <VideoCameraOutlined />,
   },
   {
-    key: "4",
+    key: "6",
     label: <Link href="/admin/users">Users</Link>,
     icon: <UserOutlined />,
   },
-  {
-    key: "5",
-    label: <Link href="/admin/investors">Investors Req</Link>,
-    icon: <UserOutlined />,
-  },
+  // {
+  //   key: "7",
+  //   label: <Link href="/admin/investors">Investors Req</Link>,
+  //   icon: <UserOutlined />,
+  // },
 ];
 
 export default function App({

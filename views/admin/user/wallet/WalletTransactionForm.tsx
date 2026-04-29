@@ -58,7 +58,7 @@ function escapeHtml(unsafe: string): string {
     .replace(/'/g, "&#039;");
 }
 
-type BlogFormData = z.infer<typeof transactionFormSchema>;
+type transactionFormData = z.infer<typeof transactionFormSchema>;
 
 interface ComponentProps {
   modalCancel: () => void;
@@ -67,6 +67,7 @@ interface ComponentProps {
   projectId?: string;
   userId: string;
   type?: string;
+  title?:string
 }
 
 const WalletTransactionForm: React.FC<ComponentProps> = ({
@@ -76,6 +77,7 @@ const WalletTransactionForm: React.FC<ComponentProps> = ({
   projectId,
   userId,
   type,
+  title
 }) => {
   const [coverPhotoPreview, setCoverPhotoPreview] = useState<string | null>(
     null,
@@ -96,13 +98,15 @@ const WalletTransactionForm: React.FC<ComponentProps> = ({
 
   const {
     register,
+
     handleSubmit,
     setValue,
     formState: { errors },
     reset,
     watch,
     setError,
-  } = useForm<BlogFormData>({
+    getValues,
+  } = useForm<transactionFormData>({
     resolver: zodResolver(transactionFormSchema) as any,
     defaultValues: {
       qty: 1,
@@ -123,8 +127,9 @@ const WalletTransactionForm: React.FC<ComponentProps> = ({
   };
 
   // ✅ On form submit
-  const onSubmit = async (data: BlogFormData) => {
+  const onSubmit = async (data: transactionFormData) => {
     setIsSubmitting(true);
+    console.log("Submitting........");
     try {
       const formData = new FormData();
       formData.append("userId", userId);
@@ -132,13 +137,16 @@ const WalletTransactionForm: React.FC<ComponentProps> = ({
       formData.append("amount", data.amount.toString());
       formData.append("qty", qty.toString());
       formData.append("paymentMethod", data.paymentMethod || "");
-      data.paymentDate &&
-      formData.append("paymentDate", data?.paymentDate?.toISOString());
+      data.paymentDate && formData.append("paymentDate", data?.paymentDate);
       formData.append("transactionId", data.transactionId || "");
       formData.append("comments", data.comments || "");
 
       if (data.proof1 instanceof File) {
         formData.append("proof1", data.proof1);
+      }
+
+      if (formType == "edit") {
+        formData.append("status", "APPROVED");
       }
 
       let res;
@@ -196,13 +204,13 @@ const WalletTransactionForm: React.FC<ComponentProps> = ({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full mx-auto">
       <h2 className="text-xl font-semibold text-gray-700 mb-3">
-        {formType == "create"
+        {title || (formType == "create"
           ? type == "DEPOSIT"
             ? "Add Money To Your Wallet"
             : type == "WITHDRAWAL"
               ? "Withdraw From Your Wallet"
               : ""
-          : "Edit Transaction"}
+          : "Edit Transaction")}
       </h2>
 
       <Card>
@@ -214,11 +222,13 @@ const WalletTransactionForm: React.FC<ComponentProps> = ({
             }
           }
         >
-          <Card>
-            <h1 className="text-lg font-bold">
-              Your current wallet balance : ৳{userProfile?.balance}
-            </h1>
-          </Card>
+          {formType == "create" && (
+            <Card>
+              <h1 className="text-lg font-bold">
+                Your current wallet balance : ৳{userProfile?.balance}
+              </h1>
+            </Card>
+          )}
 
           {/* Payment Amount */}
           <div className="mt-2">
@@ -229,7 +239,7 @@ const WalletTransactionForm: React.FC<ComponentProps> = ({
                 {...register("amount")}
                 className="w-full border rounded p-2"
                 placeholder="TK"
-                // disabled
+                disabled={formType == "edit"}
               />
             </div>
             {errors.amount && (
@@ -324,13 +334,17 @@ const WalletTransactionForm: React.FC<ComponentProps> = ({
         <p className="mt-2 text-lg text-red-500 font-semibold">{customError}</p>
       )}
 
-      <button
-        type="submit"
+      <Button
+        // htmlType="submit"
         disabled={isCreating || isUpdating || customError}
-        className="mt-3 w-full cursor-pointer bg-green-600 text-white py-2 rounded hover:bg-green-700"
+        className="mt-3 w-full cursor-pointer bg-green-500 text-white py-2 rounded hover:bg-green-600"
+        onClick={() => {
+          onSubmit(getValues());
+        }}
+        type="primary"
       >
-        Send
-      </button>
+        {formType == "edit" ? "Approve" : "Send"}
+      </Button>
     </form>
   );
 };

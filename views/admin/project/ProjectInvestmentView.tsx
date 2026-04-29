@@ -55,9 +55,9 @@ const ProjectInvestmentView: React.FC<ComponentProps> = ({
 
   const columns: TableProps<DataType>["columns"] = [
     {
-      title: "Id",
-      dataIndex: "id",
-      key: "id",
+      title: "SL",
+      dataIndex: "serial",
+      key: "serial",
       render: (text) => `#${text}`,
       width: 80,
     },
@@ -70,6 +70,7 @@ const ProjectInvestmentView: React.FC<ComponentProps> = ({
           <Image
             alt="photo"
             src={`${baseUrl}/uploads/photos/${text}`}
+            style={{width:"50px"}}
           />
         </div>
       ),
