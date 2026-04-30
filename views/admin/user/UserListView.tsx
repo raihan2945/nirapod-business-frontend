@@ -192,13 +192,7 @@ const UserListView: React.FC<ComponentProps> = ({ data, isLoading }) => {
         destroyOnHidden={true}
         width={"60%"}
       >
-        {/* <div className="p-4 sm:p-6 max-h-[80vh] overflow-y-auto"> */}
-        <InvestmentInfo
-          // formType="edit"
-          userId={viewInvestment}
-          // modalCancel={() => setIsEdit(false)}
-        />
-        {/* </div> */}
+        <InvestmentInfo userId={viewInvestment} />
       </Modal>
     </>
   );

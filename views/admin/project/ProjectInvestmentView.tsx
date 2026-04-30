@@ -1,25 +1,28 @@
 "use client";
 
 import React, { useState } from "react";
-import { Table, Tag, Space, Button, Popconfirm, Modal, Divider, Image } from "antd";
+import {
+  Table,
+  Tag,
+  Space,
+  Button,
+  Popconfirm,
+  Modal,
+  Divider,
+  Image,
+} from "antd";
 import type { TableProps } from "antd";
 
 //icons
-import { HiMiniClipboardDocumentList } from "react-icons/hi2";
-import { MdDelete } from "react-icons/md";
 
-// import { bikeData, carData } from "@/lib/data";
 import { RiEditBoxFill } from "react-icons/ri";
 import TableSkeleton from "@/components/TableSkeleton";
-import { generateQueryArray } from "@/utils/query";
 import { baseUrl } from "@/utils/baseUrl";
 import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
-// import useCheckAccess from "@/utils/checkAccess";
 import { useDeleteBlogByIdMutation } from "@/state/features/blogs/blogsApi";
 import InvestmentView from "./InvestmentView";
-import InvestmentHeader from "./InvestmentHeader";
 import { format } from "date-fns";
-// import BlogForm from "./form/BlogForm";
+import InvestmentInfo from "../user/InvestmentInfo";
 
 interface ComponentProps {
   data?: any;
@@ -34,6 +37,7 @@ const ProjectInvestmentView: React.FC<ComponentProps> = ({
 
   const [isEdit, setIsEdit] = useState<any>(null);
   const [showAlltoment, setShowAlltoment] = useState<any>(null);
+  const [viewUserInvestment, setViewUserInvestment] = useState<any>(null);
 
   const { handleResponse } = useAPIResponseHandler();
 
@@ -70,7 +74,7 @@ const ProjectInvestmentView: React.FC<ComponentProps> = ({
           <Image
             alt="photo"
             src={`${baseUrl}/uploads/photos/${text}`}
-            style={{width:"50px"}}
+            style={{ width: "50px" }}
           />
         </div>
       ),
@@ -79,7 +83,11 @@ const ProjectInvestmentView: React.FC<ComponentProps> = ({
       title: "QTY",
       dataIndex: "qty",
       key: "qty",
-      render: (text) => <Tag color="blue" className="m-0">{text}</Tag>,
+      render: (text) => (
+        <Tag color="blue" className="m-0">
+          {text}
+        </Tag>
+      ),
     },
     {
       title: "Amount",
@@ -106,12 +114,34 @@ const ProjectInvestmentView: React.FC<ComponentProps> = ({
       dataIndex: "transactionId",
       key: "transactionId",
       render: (text) => text,
+      width: "50px",
     },
+    {
+      title: "Invest. From",
+      dataIndex: "fromWallet",
+      key: "fromWallet",
+      render: (text) => {`${text}`},
+      width: "50px",
+    },
+
     {
       title: "User SL Id",
       dataIndex: "userId",
       key: "userId",
-      render: (text, data:any) => <Tag color="blue">{data?.User?.serial}</Tag>,
+      render: (text, data: any) => (
+        <Button
+          style={{
+            cursor: "pointer",
+          }}
+          size="small"
+          onClick={() => {
+            setViewUserInvestment(data?.userId);
+          }}
+          color="blue"
+        >
+          {data?.User?.serial}
+        </Button>
+      ),
     },
     {
       title: "Status",
@@ -131,6 +161,7 @@ const ProjectInvestmentView: React.FC<ComponentProps> = ({
       title: "createdAt",
       dataIndex: "createdAt",
       key: "createdAt",
+      render: (text) => format(text, "yyyy/MM/dd"),
     },
     {
       title: "Action",
@@ -191,6 +222,17 @@ const ProjectInvestmentView: React.FC<ComponentProps> = ({
         <div>
           <InvestmentView investment={isEdit} setIsEdit={setIsEdit} />
         </div>
+      </Modal>
+
+      <Modal
+        centered
+        open={viewUserInvestment}
+        onCancel={() => setViewUserInvestment(null)}
+        footer={null}
+        destroyOnHidden={true}
+        width={"60%"}
+      >
+        <InvestmentInfo userId={viewUserInvestment} />
       </Modal>
 
       <style jsx global>{`

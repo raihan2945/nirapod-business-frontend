@@ -5,18 +5,12 @@ import {
   Table,
   TableProps,
   Tag,
-  Space,
-  Button,
-  Popconfirm,
   Modal,
-  Divider,
-  Tabs,
+  Image,
+
 } from "antd";
-import Image from "next/image";
 import { format } from "date-fns";
 import { baseUrl } from "@/utils/baseUrl";
-import { RiEditBoxFill } from "react-icons/ri";
-import { BanknoteArrowDown, BriefcaseBusiness, Wallet } from "lucide-react";
 import { useGetAllWalletTransactionsQuery } from "@/state/features/wallet/walletTransactionApi";
 import { cn } from "@/lib/utils";
 
@@ -60,11 +54,10 @@ const TransactionsListView = ({
       dataIndex: "proof1",
       key: "proof1",
       render: (text) => (
-        <div className="relative w-20 h-20 p-1 overflow-hidden rounded">
+        <div className="relative w-20">
           <Image
             alt="N/A"
             src={`${baseUrl}/uploads/photos/${text}`}
-            fill
             className="w-full h-auto object-contain"
           />
         </div>

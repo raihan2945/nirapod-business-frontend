@@ -19,6 +19,7 @@ import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
 import { useDeleteBlogByIdMutation } from "@/state/features/blogs/blogsApi";
 import BlogForm from "./form/ProjectForm";
 import { useDeleteProjectByIdMutation } from "@/state/features/projects/projectsApi";
+import { format } from "date-fns";
 
 interface ComponentProps {
   data?: any;
@@ -51,9 +52,9 @@ const ProjectView: React.FC<ComponentProps> = ({ data, isLoading }) => {
 
   const columns: TableProps<DataType>["columns"] = [
     {
-      title: "Id",
-      dataIndex: "id",
-      key: "id",
+      title: "SL ID",
+      dataIndex: "serial",
+      key: "serial",
       render: (text) => `#${text}`,
       width: 170,
     },
@@ -85,10 +86,23 @@ const ProjectView: React.FC<ComponentProps> = ({ data, isLoading }) => {
       render: (text) => text,
     },
     {
-      title: "status",
-      dataIndex: "status",
-      key: "status",
+      title: "Total Shares",
+      dataIndex: "totalShares",
+      key: "totalShares",
       render: (text) => text,
+    },
+    {
+      title: "Raised Shares",
+      dataIndex: "raisedShares",
+      key: "raisedShares",
+      render: (text) => text,
+    },
+    {
+      title: "Raised Amount",
+      dataIndex: "raisedShares",
+      key: "raisedShares",
+      render: (text, record: any) =>
+        Number(text || 0) * Number(record?.minInvestment || 0),
     },
     {
       title: "status",
@@ -100,6 +114,7 @@ const ProjectView: React.FC<ComponentProps> = ({ data, isLoading }) => {
       title: "createdAt",
       dataIndex: "createdAt",
       key: "createdAt",
+      render: (text) => format(text, "yyyy-MM-dd"),
     },
     {
       title: "Action",

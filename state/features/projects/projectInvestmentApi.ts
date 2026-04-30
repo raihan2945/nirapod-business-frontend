@@ -57,7 +57,7 @@ const projectInvestmentApi = apiSlice.injectEndpoints({
           authorization: `Bearer ${token}`,
         },
       }),
-      invalidatesTags: ["ProjectInvestments"],
+      invalidatesTags: ["ProjectInvestments", "Users"],
     }),
 
     updateProjectInvestmentById: builder.mutation<any, { id: string; data: any }>({
