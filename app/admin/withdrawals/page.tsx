@@ -47,8 +47,8 @@ const WithDrawals = ({
 }) => {
   const [query, setQuery] = useState({
     userId: userId,
-    type: "WITHDRAWAL",
-    status: "PENDING",
+    type: "All",
+    status: "All",
   });
 
   const [isCreate, setIsCreate] = useState<any>(null);

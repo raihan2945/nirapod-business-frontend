@@ -52,6 +52,7 @@ const WithdrawHeader: React.FC<ComponentProps> = ({
             <p className="text-sm mb-1 opacity-70">Type </p>
             <Radio.Group
               options={[
+                { value: "All", label: "All" },
                 { value: "WITHDRAWAL", label: "Withdrawal" },
                 { value: "DEPOSIT", label: "Deposit" },
                 // { value: "CANCELLED", label: "REJECTED" },
