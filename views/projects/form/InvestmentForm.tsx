@@ -375,7 +375,7 @@ const InvestmentForm: React.FC<ComponentProps> = ({
         </div>
       </Card>
 
-      {Number(watch("amount") || 0) > Number(userData?.data?.balance || 0) && (
+      {methodValue !== "direct" && Number(watch("amount") || 0) > Number(userData?.data?.balance || 0) && (
         <p className="mt-2 text-lg text-red-500 font-semibold">
           Your wallet balance is : ৳{userData?.data?.balance}
         </p>
