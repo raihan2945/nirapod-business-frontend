@@ -384,8 +384,7 @@ const InvestmentForm: React.FC<ComponentProps> = ({
       <Button
         // htmlType="submit"
         disabled={
-          isSubmitting ||
-          Number(watch("amount") || 0) > Number(userData?.data?.balance || 0)
+        methodValue !== "direct" && Number(watch("amount") || 0) > Number(userData?.data?.balance || 0)
         }
         onClick={() => onSubmit(getValues())}
         className="mt-3 w-full cursor-pointer bg-green-600 text-white py-2 rounded hover:bg-green-700/80"
