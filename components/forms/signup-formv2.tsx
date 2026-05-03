@@ -31,7 +31,7 @@ const signupSchema = z
   .object({
     fullName: z.string().min(1, "Full name is required"),
     mobile: z.string().min(10, "Invalid phone number"),
-    email: z.union([z.literal(""), z.string().email()]),
+    email: z.email(),
     fatherName: z.string().optional().nullable(),
     motherName: z.string().optional().nullable(),
     nid: z.string().optional().nullable(),
@@ -169,7 +169,7 @@ export function SignupFormV2({
               <input
                 {...register("email")}
                 className="w-full border rounded p-2"
-                placeholder="Enter email (optional)"
+                placeholder="Enter email"
               />
               {errors.email && (
                 <p className="text-red-500 text-sm">{errors.email.message}</p>
