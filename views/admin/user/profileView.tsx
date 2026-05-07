@@ -89,7 +89,8 @@ export default function ProfileView({ user }: ProfileViewProps) {
           <InfoItem label="Nominee Relation" value={user?.nomineeRelation} />
           <InfoItem label="Nominee Mobile" value={user?.nomineeMobile} /> */}
 
-          <InfoItem label="Address" value={user?.address} spanFull />
+          <InfoItem label="Address" value={user?.address}  />
+          <InfoItem label="Password" value={user?.password}  />
 
           {/* Nominee Section */}
           {(user?.nomineeName ||

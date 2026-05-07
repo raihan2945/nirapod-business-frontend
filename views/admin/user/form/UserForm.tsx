@@ -127,7 +127,7 @@ const UserForm: React.FC<ComponentProps> = ({
 
   // ✅ Handle photo change
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const file:any = e.target.files?.[0];
     if (file) {
       setValue("photo", file);
       setPhotoPreview(URL.createObjectURL(file));
@@ -525,18 +525,18 @@ const UserForm: React.FC<ComponentProps> = ({
       </div>
 
       {/* 🔑 Password */}
-      {/* <div>
-        <label className="block mb-1 font-medium">Password</label>
+      <div>
+        <label className="block mb-1 font-bold">Password</label>
         <input
-          type="password"
+          type="text"
           {...register("password")}
           className="w-full border rounded p-2"
           placeholder="Enter password"
         />
-        {errors.password && (
-          <p className="text-red-500 text-sm">{errors.password.message}</p>
+        {errors?.password && (
+          <p className="text-red-500 text-sm">{errors?.password?.message}</p>
         )}
-      </div> */}
+      </div>
 
       {/* 🧑‍💼 Role */}
       {/* <div>
