@@ -10,7 +10,7 @@ import {
 } from "@/state/features/blogs/blogsApi";
 import { baseUrl } from "@/utils/baseUrl";
 import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
-import { Button, Card, Image, Radio, Tag } from "antd";
+import { Button, Card, Image, Modal, Radio, Tag } from "antd";
 import { useCreateNewProjectInvestmentMutation } from "@/state/features/projects/projectInvestmentApi";
 import { useGetAllProjectsQuery } from "@/state/features/projects/projectsApi";
 import { generateQueryArray } from "@/utils/query";
@@ -64,9 +64,10 @@ const InvestmentForm: React.FC<ComponentProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [createNew] = useCreateNewProjectInvestmentMutation();
   const [updateOne] = useUpdateBlogByIdMutation();
-  const [setNewProjectId, newProjectId] = useState<any>(null);
   const [qty, setQty] = useState(1);
   const [methodValue, setMethodValue] = useState("direct");
+  const [customQty, setCustomQty] = useState(false);
+  const [customValue, setCustomValue] = useState<number>(0);
 
   const [existingProject, setExistingProject] = useState<any>(
     project ? project : null,
@@ -173,226 +174,294 @@ const InvestmentForm: React.FC<ComponentProps> = ({
     setValue("amount", currentValue);
   }, [qty, existingProject]);
 
-  console.log("Method value : ", methodValue);
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="w-full mx-auto">
-      <h2 className="text-xl font-semibold text-gray-700 mb-3">
-        {"Make Project Investment"}
-      </h2>
+    <>
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full mx-auto">
+        <h2 className="text-xl font-semibold text-gray-700 mb-3">
+          {"Make Project Investment"}
+        </h2>
 
-      <Card style={{ marginBottom: ".5rem" }}>
-        <label className="block mb-1 font-medium">Project</label>
-        <select
-          className="w-full border rounded p-2 color-green-700"
-          value={watch("projectId") || ""}
-          onChange={(e) => {
-            const p = projects?.data?.find((p: any) => p.id === e.target.value);
-            setQty(1);
-            setExistingProject(p);
-            setValue("projectId", p?.id);
-          }}
-        >
-          <option value="">Select Project</option>
-          {projects?.data?.map((project: any) => (
-            <option key={project.id} value={project.id}>
-              {project.title}
-            </option>
-          ))}
-        </select>
-      </Card>
-
-      <Card style={{ marginBottom: ".5rem" }}>
-        <div className="flex flex-col md:flex-row justify-between md:items-center gap-2">
-          <div>
-            <h1 className="mb-2 text-md ">Choose the investment Method</h1>
-            <Radio.Group
-              value={methodValue}
-              onChange={(e) => {
-                setMethodValue(e.target.value);
-              }}
-              buttonStyle="solid"
-            >
-              <Radio.Button value="direct">Direct</Radio.Button>
-              <Radio.Button value="fromWallet">From Wallet</Radio.Button>
-            </Radio.Group>
-          </div>
-          <div className="text-align-right flex flex-col md:items-end">
-            <h1 className="text-md">Your Wallet Balance</h1>
-            <h1 className="text-3xl font-bold">
-              ৳{userData?.data?.balance || 0}
-            </h1>
-          </div>
-        </div>
-      </Card>
-
-      {methodValue !== "fromWallet" && (
-        <Card style={{ marginBottom: "1rem" }}>
-          {existingProject?.bankInfo && (
-            <>
-              <p
-                className="text-lg"
-                style={{ whiteSpace: "pre-line" }}
-                dangerouslySetInnerHTML={{ __html: existingProject?.bankInfo }}
-              ></p>
-            </>
-          )}
+        <Card style={{ marginBottom: ".5rem" }}>
+          <label className="block mb-1 font-medium">Project</label>
+          <select
+            className="w-full border rounded p-2 color-green-700"
+            value={watch("projectId") || ""}
+            onChange={(e) => {
+              const p = projects?.data?.find(
+                (p: any) => p.id === e.target.value,
+              );
+              setQty(1);
+              setExistingProject(p);
+              setValue("projectId", p?.id);
+            }}
+          >
+            <option value="">Select Project</option>
+            {projects?.data?.map((project: any) => (
+              <option key={project.id} value={project.id}>
+                {project.title}
+              </option>
+            ))}
+          </select>
         </Card>
-      )}
 
-      <Card>
-        <div
-          style={{
-            pointerEvents: watch("projectId") ? "auto" : "none",
-            opacity: watch("projectId") ? 1 : 0.6,
-          }}
-        >
-          {/* Payment Amount */}
-          <div className="mt-2">
-            <label className="block mb-3 font-medium">
-              Total Investments{" "}
-              <Button
-                size="small"
-                type="primary"
-                style={{
-                  backgroundColor: "#ff240b",
-                  marginLeft: 1,
+        <Card style={{ marginBottom: ".5rem" }}>
+          <div className="flex flex-col md:flex-row justify-between md:items-center gap-2">
+            <div>
+              <h1 className="mb-2 text-md ">Choose the investment Method</h1>
+              <Radio.Group
+                value={methodValue}
+                onChange={(e) => {
+                  setMethodValue(e.target.value);
                 }}
-                shape="circle"
+                buttonStyle="solid"
               >
-                {qty}
-              </Button>
-            </label>
-            <div className="flex gap-2 item-center">
-              <input
-                type="number"
-                {...register("amount")}
-                className="w-full border rounded p-2"
-                placeholder="TK"
-                disabled
-              />
-              <div className="flex gap-2 items-center">
-                <Button
-                  size="large"
-                  type="primary"
-                  color="green"
-                  icon={<Plus />}
-                  onClick={addQty}
-                  shape="circle"
-                />
-                <Button
-                  onClick={removeQty}
-                  disabled={qty <= 1}
-                  size="large"
-                  icon={<Minus />}
-                  shape="circle"
-                />
-              </div>
+                <Radio.Button value="direct">Direct</Radio.Button>
+                <Radio.Button value="fromWallet">From Wallet</Radio.Button>
+              </Radio.Group>
             </div>
-            {errors.amount && (
-              <p className="text-red-500 text-sm">{errors.amount.message}</p>
-            )}
+            <div className="text-align-right flex flex-col md:items-end">
+              <h1 className="text-md">Your Wallet Balance</h1>
+              <h1 className="text-3xl font-bold">
+                ৳{userData?.data?.balance || 0}
+              </h1>
+            </div>
           </div>
+        </Card>
 
-          {methodValue !== "fromWallet" && (
-            <>
-              <div className="mt-2">
-                <label className="block mb-1 font-medium">Payment Method</label>
-                <select
-                  className="w-full border rounded p-2"
-                  defaultValue="Bank"
-                  {...register("paymentMethod")}
+        {methodValue !== "fromWallet" && (
+          <Card style={{ marginBottom: "1rem" }}>
+            {existingProject?.bankInfo && (
+              <>
+                <p
+                  className="text-lg"
+                  style={{ whiteSpace: "pre-line" }}
+                  dangerouslySetInnerHTML={{
+                    __html: existingProject?.bankInfo,
+                  }}
+                ></p>
+              </>
+            )}
+          </Card>
+        )}
+
+        <Card>
+          <div
+            style={{
+              pointerEvents: watch("projectId") ? "auto" : "none",
+              opacity: watch("projectId") ? 1 : 0.6,
+            }}
+          >
+            {/* Payment Amount */}
+            <div className="mt-2">
+              <label className="block mb-3 font-medium">
+                Total Investments{" "}
+                <Button
+                  size="small"
+                  type="primary"
+                  style={{
+                    backgroundColor: "#ff240b",
+                    marginLeft: 1,
+                  }}
+                  shape="circle"
+                  onClick={() => setCustomQty(true)}
                 >
-                  <option value="Bank">Bank</option>
-                  <option value="Cash">Cash</option>
-                </select>
-                {errors.paymentMethod && (
-                  <p className="text-red-500 text-sm">
-                    {errors.paymentMethod.message}
-                  </p>
-                )}
-              </div>
-
-              {/* Payment Date */}
-              <div className="mt-2">
-                <label className="block mb-1 font-medium">Payment Date</label>
+                  {qty}
+                </Button>
+              </label>
+              <div className="flex gap-2 item-center">
                 <input
-                  type="date"
-                  {...register("paymentDate")}
+                  type="number"
+                  {...register("amount")}
                   className="w-full border rounded p-2"
-                  placeholder="Enter blog title"
+                  placeholder="TK"
+                  disabled
                 />
-                {errors.paymentDate && (
-                  <p className="text-red-500 text-sm">
-                    {errors.paymentDate.message}
-                  </p>
-                )}
+                <div className="flex gap-2 items-center">
+                  <Button
+                    size="large"
+                    type="primary"
+                    color="green"
+                    icon={<Plus />}
+                    onClick={addQty}
+                    shape="circle"
+                  />
+                  <Button
+                    onClick={removeQty}
+                    disabled={qty <= 1}
+                    size="large"
+                    icon={<Minus />}
+                    shape="circle"
+                  />
+                </div>
               </div>
+              {errors.amount && (
+                <p className="text-red-500 text-sm">{errors.amount.message}</p>
+              )}
+            </div>
 
-              {/* Payment Date */}
-              <div className="mt-2">
-                <label className="block mb-1 font-medium">Transaction Id</label>
-                <input
-                  {...register("transactionId")}
-                  className="w-full border rounded p-2"
-                  placeholder="Enter blog title"
-                />
-                {/* {errors.transactionId && (
+            {methodValue !== "fromWallet" && (
+              <>
+                <div className="mt-2">
+                  <label className="block mb-1 font-medium">
+                    Payment Method
+                  </label>
+                  <select
+                    className="w-full border rounded p-2"
+                    defaultValue="Bank"
+                    {...register("paymentMethod")}
+                  >
+                    <option value="Bank">Bank</option>
+                    <option value="Cash">Cash</option>
+                  </select>
+                  {errors.paymentMethod && (
+                    <p className="text-red-500 text-sm">
+                      {errors.paymentMethod.message}
+                    </p>
+                  )}
+                </div>
+
+                {/* Payment Date */}
+                <div className="mt-2">
+                  <label className="block mb-1 font-medium">Payment Date</label>
+                  <input
+                    type="date"
+                    {...register("paymentDate")}
+                    className="w-full border rounded p-2"
+                    placeholder="Enter blog title"
+                  />
+                  {errors.paymentDate && (
+                    <p className="text-red-500 text-sm">
+                      {errors.paymentDate.message}
+                    </p>
+                  )}
+                </div>
+
+                {/* Payment Date */}
+                <div className="mt-2">
+                  <label className="block mb-1 font-medium">
+                    Transaction Id
+                  </label>
+                  <input
+                    {...register("transactionId")}
+                    className="w-full border rounded p-2"
+                    placeholder="Enter blog title"
+                  />
+                  {/* {errors.transactionId && (
             <p className="text-red-500 text-sm">{errors.transactionId.message}</p>
           )} */}
-              </div>
+                </div>
 
-              {/* Content */}
-              <div className="mt-2">
-                <label className="block mb-1 font-medium">Remarks</label>
-                <textarea
-                  {...register("comments")}
-                  className="w-full border rounded p-2"
-                  placeholder="Write your content..."
-                />
-              </div>
-
-              {/* Proof Photo */}
-              <div className="mt-2">
-                <label className="block mb-1 font-medium">
-                  Submit your document
-                </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleCoverPhotoChange}
-                />
-                {coverPhotoPreview && (
-                  <img
-                    src={coverPhotoPreview}
-                    alt="Preview"
-                    className="mt-2 w-40 h-40 object-cover rounded-lg border"
+                {/* Content */}
+                <div className="mt-2">
+                  <label className="block mb-1 font-medium">Remarks</label>
+                  <textarea
+                    {...register("comments")}
+                    className="w-full border rounded p-2"
+                    placeholder="Write your content..."
                   />
-                )}
-              </div>
-            </>
+                </div>
+
+                {/* Proof Photo */}
+                <div className="mt-2">
+                  <label className="block mb-1 font-medium">
+                    Submit your document
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleCoverPhotoChange}
+                  />
+                  {coverPhotoPreview && (
+                    <img
+                      src={coverPhotoPreview}
+                      alt="Preview"
+                      className="mt-2 w-40 h-40 object-cover rounded-lg border"
+                    />
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+        </Card>
+
+        {methodValue !== "direct" &&
+          Number(watch("amount") || 0) >
+            Number(userData?.data?.balance || 0) && (
+            <p className="mt-2 text-lg text-red-500 font-semibold">
+              Your wallet balance is : ৳{userData?.data?.balance}
+            </p>
           )}
-        </div>
-      </Card>
 
-      {methodValue !== "direct" && Number(watch("amount") || 0) > Number(userData?.data?.balance || 0) && (
-        <p className="mt-2 text-lg text-red-500 font-semibold">
-          Your wallet balance is : ৳{userData?.data?.balance}
-        </p>
-      )}
+        <Button
+          // htmlType="submit"
+          disabled={
+            methodValue !== "direct" &&
+            Number(watch("amount") || 0) > Number(userData?.data?.balance || 0)
+          }
+          onClick={() => onSubmit(getValues())}
+          className="mt-3 w-full cursor-pointer bg-green-600 text-white py-2 rounded hover:bg-green-700/80"
+          type="primary"
+        >
+          Send
+        </Button>
+      </form>
 
-      <Button
-        // htmlType="submit"
-        disabled={
-        methodValue !== "direct" && Number(watch("amount") || 0) > Number(userData?.data?.balance || 0)
-        }
-        onClick={() => onSubmit(getValues())}
-        className="mt-3 w-full cursor-pointer bg-green-600 text-white py-2 rounded hover:bg-green-700/80"
-        type="primary"
+      <Modal
+        centered
+        open={customQty}
+        onCancel={() => {
+          setCustomValue(0);
+          setCustomQty(false);
+        }}
+        footer={null}
+        destroyOnHidden={true}
+        width={250}
+        closable={false}
       >
-        Send
-      </Button>
-    </form>
+        <div className=" flex flex-col">
+          <div>
+            <p className="text-md font-semibold mb-1">Custom Amount : </p>
+            <input
+              type="number"
+              className=" mb-2 h-11
+            rounded
+            border
+            bg-white
+            px-4
+            text-sm
+            transition-all
+            focus-visible:ring-2
+            focus-visible:ring-blue-500
+            focus-visible:border-blue-500"
+              value={customValue}
+              onChange={(e) => setCustomValue(Number(e.target.value || 0))}
+            />
+          </div>
+          <div className="flex gap-2 items-center">
+            <Button
+              onClick={() => {
+                setCustomQty(false);
+              }}
+              style={{ flex: 1 }}
+            >
+              {" "}
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                setQty(customValue);
+                setCustomQty(false);
+              }}
+              type="primary"
+              style={{ flex: 1 }}
+            >
+              {" "}
+              Okay
+            </Button>
+          </div>
+        </div>
+      </Modal>
+    </>
   );
 };
 
