@@ -72,6 +72,18 @@ const projectsApi = apiSlice.injectEndpoints({
       invalidatesTags: ["Projects"],
     }),
 
+    closeProjectById: builder.mutation<any, { id: string; data: any }>({
+      query: ({ id, data }) => ({
+        url: `/api/v1/projects/close-project/${id}`,
+        method: "PATCH",
+        body: data,
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }),
+      invalidatesTags: ["Projects"],
+    }),
+
     deleteProjectById: builder.mutation<any, { id: string }>({
       query: (id) => ({
         url: `/api/v1/projects/${id}`,
@@ -93,6 +105,7 @@ export const {
   useGetProjectsCountsQuery,
   useCreateNewProjectMutation,
   useUpdateProjectByIdMutation,
+  useCloseProjectByIdMutation,
   useDeleteProjectByIdMutation,
 } = projectsApi;
 export default projectsApi;

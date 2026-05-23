@@ -5,84 +5,9 @@ import { generateQueryArray } from "@/utils/query";
 import ProjectCard from "@/views/projects/ProjectCard";
 import { useState } from "react";
 
-const projects = [
-  {
-    id: 1,
-    title: "Green Valley Apartments",
-    description:
-      "A modern residential complex with eco-friendly features and sustainable design principles.",
-    image: "/modern-apartment-building.png",
-    status: "Active",
-    funded: "75%",
-    target: "BDT 50,000,000",
-    raised: "BDT 37,500,000",
-    investors: 245,
-  },
-  {
-    id: 2,
-    title: "Tech Hub Commercial Center",
-    description:
-      "State-of-the-art commercial space designed for technology companies and startups.",
-    image: "/modern-office-building.png",
-    status: "Active",
-    funded: "92%",
-    target: "BDT 75,000,000",
-    raised: "BDT 69,000,000",
-    investors: 412,
-  },
-  {
-    id: 3,
-    title: "Riverside Shopping Mall",
-    description:
-      "Premium shopping destination with waterfront views and luxury retail spaces.",
-    image: "/shopping-mall-exterior.jpg",
-    status: "Completed",
-    funded: "100%",
-    target: "BDT 120,000,000",
-    raised: "BDT 120,000,000",
-    investors: 678,
-  },
-  {
-    id: 4,
-    title: "Smart City Housing Project",
-    description:
-      "Integrated smart home technology in affordable housing units for modern families.",
-    image: "/smart-home-residential.jpg",
-    status: "Active",
-    funded: "45%",
-    target: "BDT 85,000,000",
-    raised: "BDT 38,250,000",
-    investors: 189,
-  },
-  {
-    id: 5,
-    title: "Healthcare Innovation Center",
-    description:
-      "Medical facility with cutting-edge equipment and patient-centered design.",
-    image: "/modern-hospital.png",
-    status: "Active",
-    funded: "68%",
-    target: "BDT 95,000,000",
-    raised: "BDT 64,600,000",
-    investors: 321,
-  },
-  {
-    id: 6,
-    title: "Educational Excellence Campus",
-    description:
-      "Modern educational facility with advanced learning spaces and recreational areas.",
-    image: "/modern-school-campus.png",
-    status: "Upcoming",
-    funded: "15%",
-    target: "BDT 60,000,000",
-    raised: "BDT 9,000,000",
-    investors: 87,
-  },
-];
-
 export default function ProjectsPage() {
   const [query, setQuery] = useState({
-    status: null,
+    status: "ACTIVE",
     sort: "asc"
   });
 

@@ -8,6 +8,7 @@ import Image from "next/image";
 //icons
 import { HiMiniClipboardDocumentList } from "react-icons/hi2";
 import { MdDelete } from "react-icons/md";
+import { GrCompliance } from "react-icons/gr";
 
 // import { bikeData, carData } from "@/lib/data";
 import { RiEditBoxFill } from "react-icons/ri";
@@ -17,8 +18,11 @@ import { baseUrl } from "@/utils/baseUrl";
 import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
 // import useCheckAccess from "@/utils/checkAccess";
 import { useDeleteBlogByIdMutation } from "@/state/features/blogs/blogsApi";
-import BlogForm from "./form/ProjectForm";
-import { useDeleteProjectByIdMutation } from "@/state/features/projects/projectsApi";
+import ProjectForm from "./form/ProjectForm";
+import {
+  useCloseProjectByIdMutation,
+  useDeleteProjectByIdMutation,
+} from "@/state/features/projects/projectsApi";
 import { format } from "date-fns";
 
 interface ComponentProps {
@@ -35,6 +39,7 @@ const ProjectView: React.FC<ComponentProps> = ({ data, isLoading }) => {
   const { handleResponse } = useAPIResponseHandler();
 
   const [deleteOne] = useDeleteProjectByIdMutation();
+  const [closeOne] = useCloseProjectByIdMutation();
 
   interface DataType {
     id: string;
@@ -48,6 +53,26 @@ const ProjectView: React.FC<ComponentProps> = ({ data, isLoading }) => {
     const res = await deleteOne(id);
 
     handleResponse(res);
+  };
+
+  const submitClose = async (id: any) => {
+    const res = await closeOne({ id: id, data: {} });
+
+    handleResponse(res);
+  };
+
+  const handleClose = (id: number) => {
+    return Modal.confirm({
+      title: "Close this project?",
+      content: `This project will be closed. This cannot be undone.`,
+      okText: "Close",
+      okType: "danger",
+      cancelText: "Cancel",
+      onOk() {
+        console.log("Deleted:", id);
+        submitClose(id);
+      },
+    });
   };
 
   const columns: TableProps<DataType>["columns"] = [
@@ -140,8 +165,20 @@ const ProjectView: React.FC<ComponentProps> = ({ data, isLoading }) => {
             okText="Yes"
             cancelText="No"
           >
-            <Button style={{ border: "none", padding: "5px" }}>
+            <Button disabled={record?.status == "CLOSED"} style={{ border: "none", padding: "5px" }}>
               <MdDelete color="red" size={20} />
+            </Button>
+          </Popconfirm>
+          <Popconfirm
+            title="Close the project"
+            description="Are you sure to close this project?"
+            onConfirm={() => submitClose(record?.id)}
+            // onCancel={cancel}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button disabled={record?.status == "CLOSED"} style={{ border: "none", padding: "5px" }}>
+              <GrCompliance color="blue" size={20} />
             </Button>
           </Popconfirm>
         </Space>
@@ -157,7 +194,7 @@ const ProjectView: React.FC<ComponentProps> = ({ data, isLoading }) => {
         <Table columns={columns} dataSource={data} />
       </div>
 
-      {/* edit blog form */}
+      {/* edit project form */}
       <Modal
         centered
         open={isEdit}
@@ -167,7 +204,7 @@ const ProjectView: React.FC<ComponentProps> = ({ data, isLoading }) => {
         className="responsive-modal"
         width={"50%"}
       >
-        <BlogForm
+        <ProjectForm
           formType="edit"
           info={isEdit}
           modalCancel={() => setIsEdit(false)}
