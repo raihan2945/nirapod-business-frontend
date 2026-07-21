@@ -9,13 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,9 +17,9 @@ import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
 import { useUserSignUpMutation } from "@/state/features/auth/authApi";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { AlertCircle, Eye, EyeOff } from "lucide-react";
 import SingleFileUpload from "../upload/singleFileUpload";
 
-// Define the validation schema with Zod
 const signupSchema = z
   .object({
     fullName: z.string().min(1, "Full name is required"),
@@ -41,7 +34,6 @@ const signupSchema = z
     nomineeName: z.string().optional().nullable(),
     nomineeRelation: z.string().optional().nullable(),
     nomineeMobile: z.string().optional().nullable(),
-    photo: z.string().optional().nullable(),
     address: z.string().optional().nullable(),
     bankAccountNo: z.string().optional().nullable(),
     bankAccountName: z.string().optional().nullable(),
@@ -50,18 +42,43 @@ const signupSchema = z
     routingNo: z.string().optional().nullable(),
     password: z.string().min(6, "Password must be at least 6 characters long"),
     confirmPassword: z.string().min(6, "Please confirm your password"),
-    role: z.enum(["user", "investor", "admin"]).default("user"),
-    permissions: z.array(z.string()).optional(),
-    status: z.enum(["ACTIVE", "INACTIVE"]).optional(),
-    verifyStatus: z.enum(["PENDING", "APPROVED", "CANCELLED"]).optional(),
   })
   .refine((data) => data.password === data?.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
 
-// Infer the type from the schema
 type SignupFormData = z.infer<typeof signupSchema>;
+type FieldName = keyof SignupFormData;
+
+//readable names for the error summary
+const FIELD_LABELS: Record<string, string> = {
+  fullName: "Full Name",
+  email: "Email",
+  mobile: "Mobile",
+  password: "Password",
+  confirmPassword: "Confirm Password",
+  nid: "NID",
+  gender: "Gender",
+  fatherName: "Father's Name",
+  motherName: "Mother's Name",
+  currentProfession: "Current Profession",
+  facebook: "Facebook Link",
+  address: "Address",
+  nomineeName: "Nominee Name",
+  nomineeRelation: "Nominee Relation",
+  nomineeMobile: "Nominee Mobile",
+  bankAccountName: "Account Name",
+  bankAccountNo: "Account Number",
+  bankName: "Bank Name",
+  branchName: "Branch Name",
+  routingNo: "Routing No.",
+};
+
+const inputBase =
+  "w-full rounded-lg border px-4 py-2.5 outline-none transition focus:border-transparent focus:ring-2";
+const inputOk = "border-gray-300 focus:ring-[#31AD5C]";
+const inputBad = "border-red-400 bg-red-50/40 focus:ring-red-400";
 
 export function SignupFormV2({
   className,
@@ -69,47 +86,49 @@ export function SignupFormV2({
   ...props
 }: React.ComponentProps<"div"> & { title?: string }) {
   const { handleResponse } = useAPIResponseHandler();
-  const [UserSignup] = useUserSignUpMutation(); // Hypothetical mutation hook
+  const [UserSignup] = useUserSignUpMutation();
   const router = useRouter();
+
   const [apiError, setApiError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [photoFile, setPhotoFile] = useState<any>(null);
 
-  // Initialize React Hook Form with Zod resolver
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
-    setValue,
+    setFocus,
+    formState: { errors, isSubmitting, isSubmitted },
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema) as any,
-    defaultValues: {
-      role: "user",
-      permissions: [],
-    },
+    //validate as soon as a field is touched, and re-validate on every change
+    //once it has failed, so errors clear the moment they are fixed
+    mode: "onTouched",
+    reValidateMode: "onChange",
   });
 
-  // Handle form submission
+  const errorList = Object.keys(errors) as FieldName[];
+  const showSummary = isSubmitted && errorList.length > 0;
+
   const onSubmit = async (data: SignupFormData) => {
     setApiError(null);
     try {
+      //multipart, so the profile photo travels with the rest of the fields
       const form = new FormData();
 
-      Object.keys(data).forEach((key) => {
-        const typedKey = key as keyof SignupFormData;
-        if (data[typedKey]) {
-          form.append(key, data[typedKey] as string | Blob);
-        }
+      Object.entries(data).forEach(([key, value]) => {
+        if (key === "confirmPassword") return;
+        if (value === undefined || value === null || value === "") return;
+        form.append(key, String(value));
       });
 
-      if (photoPreview) {
-        form.append("photo", photoPreview);
+      if (photoFile instanceof File) {
+        form.append("photo", photoFile);
       }
 
-      const res = await UserSignup({ ...data }).unwrap();
+      const res = await UserSignup(form).unwrap();
       handleResponse(res);
-      router.push("/user/profile"); // Redirect to login page after successful signup
+      router.push("/user/profile");
     } catch (error: any) {
       if (process.env.NODE_ENV !== "production") {
         console.error("Signup failed:", error);
@@ -118,476 +137,428 @@ export function SignupFormV2({
     }
   };
 
+  //bring the first invalid field into view when submit is blocked
+  const onInvalid = () => {
+    const first = (Object.keys(errors) as FieldName[])[0];
+    if (first) setFocus(first as any);
+  };
+
+  const Label = ({
+    htmlFor,
+    children,
+    required,
+  }: {
+    htmlFor: FieldName;
+    children: React.ReactNode;
+    required?: boolean;
+  }) => (
+    <label
+      htmlFor={htmlFor}
+      className="mb-1.5 block text-sm font-medium text-gray-700"
+    >
+      {children}
+      {required && <span className="ml-0.5 text-red-500">*</span>}
+    </label>
+  );
+
+  const Err = ({ name }: { name: FieldName }) =>
+    errors[name] ? (
+      <p
+        id={`${name}-error`}
+        role="alert"
+        className="mt-1.5 flex items-center gap-1.5 text-sm text-red-600"
+      >
+        <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+        {errors[name]?.message as string}
+      </p>
+    ) : null;
+
+  //shared props that wire up the invalid state + a11y for any field
+  const fieldProps = (name: FieldName) => ({
+    id: name,
+    "aria-invalid": errors[name] ? ("true" as const) : ("false" as const),
+    "aria-describedby": errors[name] ? `${name}-error` : undefined,
+    className: cn(inputBase, errors[name] ? inputBad : inputOk),
+  });
+
+  const Section = ({
+    title: sectionTitle,
+    description,
+    children,
+  }: {
+    title: string;
+    description: string;
+    children: React.ReactNode;
+  }) => (
+    <section className="border-t border-gray-100 pt-6 first:border-t-0 first:pt-0">
+      <h3 className="text-base font-semibold text-gray-900">{sectionTitle}</h3>
+      <p className="mb-5 mt-0.5 text-sm text-gray-500">{description}</p>
+      <div className="grid gap-5 sm:grid-cols-2">{children}</div>
+    </section>
+  );
+
   return (
-    <div className={cn("flex flex-col gap-6", className)}>
+    <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
           <CardTitle>{title}</CardTitle>
           <CardDescription>
-            Create your account by filling in the details below
+            Create your account by filling in the details below. Fields marked{" "}
+            <span className="text-red-500">*</span> are required.
           </CardDescription>
         </CardHeader>
+
         <CardContent>
-          <form
-            className="flex flex-col gap-4"
-            onSubmit={handleSubmit(onSubmit)}
-          >
+          <form onSubmit={handleSubmit(onSubmit, onInvalid)} noValidate>
             {apiError && (
-              <div className="text-red-500 text-sm mb-4">{apiError}</div>
+              <div className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+                {apiError}
+              </div>
             )}
-            {/* 🧾 Full Name */}
-            <div>
-              <label className="block mb-1 font-medium">Full Name</label>
-              <input
-                {...register("fullName")}
-                className="w-full border rounded p-2"
-                placeholder="Enter full name"
-              />
-              {errors.fullName && (
-                <p className="text-red-500 text-sm">
-                  {errors.fullName.message}
+
+            {/* summary of everything that failed validation */}
+            {showSummary && (
+              <div
+                role="alert"
+                className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3"
+              >
+                <p className="flex items-center gap-2 text-sm font-semibold text-red-700">
+                  <AlertCircle className="h-4 w-4" />
+                  Please fix {errorList.length}{" "}
+                  {errorList.length === 1 ? "field" : "fields"} before
+                  submitting
                 </p>
-              )}
-            </div>
-
-            {/* 📱 Mobile */}
-            <div>
-              <label className="block mb-1 font-medium">Mobile </label>
-              <input
-                {...register("mobile")}
-                className="w-full border rounded p-2"
-                placeholder="Enter mobile number (e.g., +1234567890)"
-              />
-              {errors.mobile && (
-                <p className="text-red-500 text-sm">{errors.mobile.message}</p>
-              )}
-            </div>
-
-            {/* 📧 Email */}
-            <div>
-              <label className="block mb-1 font-medium">Email</label>
-              <input
-                {...register("email")}
-                className="w-full border rounded p-2"
-                placeholder="Enter email"
-              />
-              {errors.email && (
-                <p className="text-red-500 text-sm">{errors.email.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                NID
-              </label>
-              <div className="flex items-center">
-                <input
-                  {...register("nid")}
-                  type="text"
-                  placeholder="Enter NID number"
-                  className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                />
-              </div>
-              {errors.nid && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.nid.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Gender
-              </label>
-              <div className="flex items-center">
-                <select
-                  className="w-full border rounded-lg p-2"
-                  defaultValue="Bank"
-                  {...register("gender")}
-                >
-                  <option value="">Select Gender</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                </select>
-              </div>
-              {errors.gender && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.gender.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Current Profession
-              </label>
-              <div className="flex items-center">
-                <input
-                  {...register("currentProfession")}
-                  type="text"
-                  placeholder="Enter your profession"
-                  className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                />
-              </div>
-              {errors.currentProfession && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.currentProfession.message}
-                </p>
-              )}
-            </div>
-
-            {/* 🏠 Address */}
-            <div>
-              <label className="block mb-1 font-medium">Address</label>
-              <textarea
-                {...register("address")}
-                className="w-full border rounded p-2"
-                placeholder="Enter address (optional)"
-              />
-              {errors.address && (
-                <p className="text-red-500 text-sm">{errors.address.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Facebook Link
-              </label>
-              <div className="flex items-center">
-                <input
-                  {...register("facebook")}
-                  type="text"
-                  placeholder="Https://facebook.com/yourprofile"
-                  className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                />
-              </div>
-              {errors.facebook && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.facebook.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Father Name
-              </label>
-              <div className="flex items-center">
-                <input
-                  {...register("fatherName")}
-                  type="text"
-                  placeholder="Enter father name"
-                  className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                />
-              </div>
-              {errors.fatherName && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.fatherName.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Mother Name
-              </label>
-              <div className="flex items-center">
-                <input
-                  {...register("motherName")}
-                  type="text"
-                  placeholder="Enter mother name"
-                  className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                />
-              </div>
-              {errors.motherName && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.motherName.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Nominee Name
-              </label>
-              <div className="flex items-center">
-                <input
-                  {...register("nomineeName")}
-                  type="text"
-                  placeholder="Enter nominee name"
-                  className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                />
-              </div>
-              {errors.nomineeName && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.nomineeName.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Nominee Relation
-              </label>
-              <div className="flex items-center">
-                <input
-                  {...register("nomineeRelation")}
-                  type="text"
-                  placeholder="Enter nominee relation"
-                  className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                />
-              </div>
-              {errors.nomineeRelation && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors?.nomineeRelation?.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Nominee Mobile
-              </label>
-              <div className="flex items-center">
-                <input
-                  {...register("nomineeMobile")}
-                  type="text"
-                  placeholder="Enter nominee mobile"
-                  className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                />
-              </div>
-              {errors.nomineeMobile && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors?.nomineeMobile?.message}
-                </p>
-              )}
-            </div>
-
-            <hr />
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Bank Account Number
-              </label>
-              <div className="flex items-center">
-                <input
-                  {...register("bankAccountNo")}
-                  type="text"
-                  placeholder="Enter bank account number"
-                  className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                />
-              </div>
-              {errors.bankAccountNo && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors?.bankAccountNo?.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Account Name
-              </label>
-              <div className="flex items-center">
-                <input
-                  {...register("bankAccountName")}
-                  type="text"
-                  placeholder="Enter bank account name"
-                  className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                />
-              </div>
-              {errors.bankAccountName && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors?.bankAccountName?.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Bank Name
-              </label>
-              <div className="flex items-center">
-                <input
-                  {...register("branchName")}
-                  type="text"
-                  placeholder="Enter branch name"
-                  className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                />
-              </div>
-              {errors.branchName && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors?.branchName?.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Branch Name
-              </label>
-              <div className="flex items-center">
-                <input
-                  {...register("bankName")}
-                  type="text"
-                  placeholder="Enter bank name"
-                  className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                />
-              </div>
-              {errors.bankName && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors?.bankName?.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Routing No.
-              </label>
-              <div className="flex items-center">
-                <input
-                  {...register("routingNo")}
-                  type="text"
-                  placeholder="Enter routing no."
-                  className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                />
-              </div>
-              {errors.routingNo && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors?.routingNo?.message}
-                </p>
-              )}
-            </div>
-
-            <FieldGroup>
-              <Field>
-                <div className="flex items-center">
-                  <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <Link
-                    href="/forgot-password"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </Link>
-                </div>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    autoComplete="new-password"
-                    maxLength={128}
-                    {...register("password")}
-                    aria-invalid={errors.password ? "true" : "false"}
-                    aria-describedby={
-                      errors.password ? "password-error" : undefined
-                    }
-                  />
-                  <button
-                    type="button"
-                    className="absolute right-2 top-1/2 -translate-y-1/2 text-sm"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? "Hide" : "Show"}
-                  </button>
-                </div>
-                {errors.password && (
-                  <FieldDescription
-                    id="password-error"
-                    className="text-red-500"
-                  >
-                    {errors.password.message}
-                  </FieldDescription>
-                )}
-              </Field>
-
-              <Field>
-                <FieldLabel htmlFor="confirmPassword">
-                  Confirm Password
-                </FieldLabel>
-                <div className="relative">
-                  <Input
-                    id="confirmPassword"
-                    type={showConfirmPassword ? "text" : "password"}
-                    autoComplete="new-password"
-                    maxLength={128}
-                    {...register("confirmPassword")}
-                    aria-invalid={errors.confirmPassword ? "true" : "false"}
-                    aria-describedby={
-                      errors.confirmPassword
-                        ? "confirmPassword-error"
-                        : undefined
-                    }
-                  />
-                  <button
-                    type="button"
-                    className="absolute right-2 top-1/2 -translate-y-1/2 text-sm"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  >
-                    {showConfirmPassword ? "Hide" : "Show"}
-                  </button>
-                </div>
-                {errors.confirmPassword && (
-                  <FieldDescription
-                    id="confirmPassword-error"
-                    className="text-red-500"
-                  >
-                    {errors.confirmPassword.message}
-                  </FieldDescription>
-                )}
-              </Field>
-
-              <div className="">
-                <label className="block mb-1 font-medium">Profile Photo</label>
-                <SingleFileUpload
-                  image={photoPreview}
-                  setImage={setPhotoPreview}
-                  label=" "
-                  // existImage={userProfile?.photo}
-                />
-              </div>
-
-              <Field>
-                <Button
-                  style={{ cursor: isSubmitting ? "not-allowed" : "pointer" }}
-                  type="submit"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <span className="flex items-center gap-2">
-                      <svg
-                        className="animate-spin h-5 w-5"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
+                <ul className="mt-2 space-y-1 pl-6">
+                  {errorList.map((name) => (
+                    <li key={name} className="text-sm text-red-600">
+                      <button
+                        type="button"
+                        onClick={() => setFocus(name as any)}
+                        className="underline underline-offset-2 hover:no-underline"
                       >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        />
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                        />
-                      </svg>
-                      Signing up...
-                    </span>
-                  ) : (
-                    "Sign Up"
-                  )}
-                </Button>
-                <Link href="/login/login-user">
-                  <FieldDescription className="text-center">
-                    Already have an account?{" "}
-                    <span className="underline">Login</span>
-                  </FieldDescription>
-                </Link>
-              </Field>
-            </FieldGroup>
+                        {FIELD_LABELS[name] || name}
+                      </button>
+                      {": "}
+                      {errors[name]?.message as string}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <div className="space-y-6">
+              {/* ---------- Account ---------- */}
+              <Section
+                title="Account"
+                description="How you sign in and how we reach you"
+              >
+                <div className="sm:col-span-2">
+                  <Label htmlFor="fullName" required>
+                    Full Name
+                  </Label>
+                  <input
+                    autoComplete="name"
+                    placeholder="Enter full name"
+                    {...fieldProps("fullName")}
+                    {...register("fullName")}
+                  />
+                  <Err name="fullName" />
+                </div>
+
+                <div>
+                  <Label htmlFor="email" required>
+                    Email
+                  </Label>
+                  <input
+                    type="email"
+                    autoComplete="email"
+                    placeholder="you@example.com"
+                    {...fieldProps("email")}
+                    {...register("email")}
+                  />
+                  <Err name="email" />
+                </div>
+
+                <div>
+                  <Label htmlFor="mobile" required>
+                    Mobile
+                  </Label>
+                  <input
+                    type="tel"
+                    autoComplete="tel"
+                    placeholder="01XXXXXXXXX"
+                    {...fieldProps("mobile")}
+                    {...register("mobile")}
+                  />
+                  <Err name="mobile" />
+                </div>
+
+                <div>
+                  <Label htmlFor="password" required>
+                    Password
+                  </Label>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      autoComplete="new-password"
+                      maxLength={128}
+                      placeholder="At least 6 characters"
+                      {...fieldProps("password")}
+                      className={cn(fieldProps("password").className, "pr-11")}
+                      {...register("password")}
+                    />
+                    <button
+                      type="button"
+                      aria-label={
+                        showPassword ? "Hide password" : "Show password"
+                      }
+                      onClick={() => setShowPassword((v) => !v)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+                  <Err name="password" />
+                </div>
+
+                <div>
+                  <Label htmlFor="confirmPassword" required>
+                    Confirm Password
+                  </Label>
+                  <div className="relative">
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      autoComplete="new-password"
+                      maxLength={128}
+                      placeholder="Re-enter password"
+                      {...fieldProps("confirmPassword")}
+                      className={cn(
+                        fieldProps("confirmPassword").className,
+                        "pr-11",
+                      )}
+                      {...register("confirmPassword")}
+                    />
+                    <button
+                      type="button"
+                      aria-label={
+                        showConfirmPassword ? "Hide password" : "Show password"
+                      }
+                      onClick={() => setShowConfirmPassword((v) => !v)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+                  <Err name="confirmPassword" />
+                </div>
+              </Section>
+
+              {/* ---------- Personal ---------- */}
+              <Section title="Personal" description="A few details about you">
+                <div>
+                  <Label htmlFor="nid">NID</Label>
+                  <input
+                    placeholder="Enter NID number"
+                    {...fieldProps("nid")}
+                    {...register("nid")}
+                  />
+                  <Err name="nid" />
+                </div>
+
+                <div>
+                  <Label htmlFor="gender">Gender</Label>
+                  <select {...fieldProps("gender")} {...register("gender")}>
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </select>
+                  <Err name="gender" />
+                </div>
+
+                <div>
+                  <Label htmlFor="fatherName">Father&apos;s Name</Label>
+                  <input
+                    placeholder="Enter father's name"
+                    {...fieldProps("fatherName")}
+                    {...register("fatherName")}
+                  />
+                  <Err name="fatherName" />
+                </div>
+
+                <div>
+                  <Label htmlFor="motherName">Mother&apos;s Name</Label>
+                  <input
+                    placeholder="Enter mother's name"
+                    {...fieldProps("motherName")}
+                    {...register("motherName")}
+                  />
+                  <Err name="motherName" />
+                </div>
+
+                <div>
+                  <Label htmlFor="currentProfession">Current Profession</Label>
+                  <input
+                    placeholder="Enter your profession"
+                    {...fieldProps("currentProfession")}
+                    {...register("currentProfession")}
+                  />
+                  <Err name="currentProfession" />
+                </div>
+
+                <div>
+                  <Label htmlFor="facebook">Facebook Link</Label>
+                  <input
+                    type="url"
+                    placeholder="https://facebook.com/yourprofile"
+                    {...fieldProps("facebook")}
+                    {...register("facebook")}
+                  />
+                  <Err name="facebook" />
+                </div>
+
+                <div className="sm:col-span-2">
+                  <Label htmlFor="address">Address</Label>
+                  <textarea
+                    rows={3}
+                    autoComplete="street-address"
+                    placeholder="Enter address"
+                    {...fieldProps("address")}
+                    {...register("address")}
+                  />
+                  <Err name="address" />
+                </div>
+
+                <div className="sm:col-span-2">
+                  <p className="mb-1.5 block text-sm font-medium text-gray-700">
+                    Profile Photo
+                  </p>
+                  <SingleFileUpload
+                    image={photoFile}
+                    setImage={setPhotoFile}
+                    label=" "
+                  />
+                </div>
+              </Section>
+
+              {/* ---------- Nominee ---------- */}
+              <Section
+                title="Nominee"
+                description="Who receives your holdings in your absence"
+              >
+                <div>
+                  <Label htmlFor="nomineeName">Nominee Name</Label>
+                  <input
+                    placeholder="Enter nominee name"
+                    {...fieldProps("nomineeName")}
+                    {...register("nomineeName")}
+                  />
+                  <Err name="nomineeName" />
+                </div>
+
+                <div>
+                  <Label htmlFor="nomineeRelation">Nominee Relation</Label>
+                  <input
+                    placeholder="e.g. Spouse, Son, Daughter"
+                    {...fieldProps("nomineeRelation")}
+                    {...register("nomineeRelation")}
+                  />
+                  <Err name="nomineeRelation" />
+                </div>
+
+                <div>
+                  <Label htmlFor="nomineeMobile">Nominee Mobile</Label>
+                  <input
+                    type="tel"
+                    placeholder="01XXXXXXXXX"
+                    {...fieldProps("nomineeMobile")}
+                    {...register("nomineeMobile")}
+                  />
+                  <Err name="nomineeMobile" />
+                </div>
+              </Section>
+
+              {/* ---------- Bank ---------- */}
+              <Section
+                title="Bank Details"
+                description="Where your returns are paid out"
+              >
+                <div>
+                  <Label htmlFor="bankAccountName">Account Name</Label>
+                  <input
+                    placeholder="Enter bank account name"
+                    {...fieldProps("bankAccountName")}
+                    {...register("bankAccountName")}
+                  />
+                  <Err name="bankAccountName" />
+                </div>
+
+                <div>
+                  <Label htmlFor="bankAccountNo">Account Number</Label>
+                  <input
+                    placeholder="Enter bank account number"
+                    {...fieldProps("bankAccountNo")}
+                    {...register("bankAccountNo")}
+                  />
+                  <Err name="bankAccountNo" />
+                </div>
+
+                {/* these two used to be registered to each other's field */}
+                <div>
+                  <Label htmlFor="bankName">Bank Name</Label>
+                  <input
+                    placeholder="Enter bank name"
+                    {...fieldProps("bankName")}
+                    {...register("bankName")}
+                  />
+                  <Err name="bankName" />
+                </div>
+
+                <div>
+                  <Label htmlFor="branchName">Branch Name</Label>
+                  <input
+                    placeholder="Enter branch name"
+                    {...fieldProps("branchName")}
+                    {...register("branchName")}
+                  />
+                  <Err name="branchName" />
+                </div>
+
+                <div>
+                  <Label htmlFor="routingNo">Routing No.</Label>
+                  <input
+                    placeholder="Enter routing no."
+                    {...fieldProps("routingNo")}
+                    {...register("routingNo")}
+                  />
+                  <Err name="routingNo" />
+                </div>
+              </Section>
+            </div>
+
+            <div className="mt-8">
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full sm:w-auto"
+              >
+                {isSubmitting ? "Signing up..." : "Sign Up"}
+              </Button>
+            </div>
+
+            <p className="mt-6 text-center text-sm text-gray-600">
+              Already have an account?{" "}
+              <Link href="/login/login-user" className="underline">
+                Login
+              </Link>
+            </p>
           </form>
         </CardContent>
       </Card>
