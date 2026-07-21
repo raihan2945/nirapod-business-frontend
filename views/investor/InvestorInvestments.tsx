@@ -113,7 +113,12 @@ const InvestorInvestments = ({
       title: "Payment Date",
       dataIndex: "paymentDate",
       key: "paymentDate",
-      render: (text) => format(new Date(text), "dd-MM-yyyy"),
+      render: (text) =>
+        text ? (
+          format(new Date(text), "dd-MM-yyyy")
+        ) : (
+          <span className="text-gray-400">—</span>
+        ),
     },
     {
       title: "createdAt",

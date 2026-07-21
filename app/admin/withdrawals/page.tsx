@@ -35,6 +35,8 @@ import { cn } from "@/lib/utils";
 import WithdrawHeader from "@/views/admin/withdrawal/HeaderSection";
 import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
 import WalletTransactionForm from "@/views/admin/user/wallet/WalletTransactionForm";
+import SourceTag from "@/views/admin/user/wallet/transactionSource";
+import InvestmentView from "@/views/admin/project/InvestmentView";
 
 const WithDrawals = ({
   userId,
@@ -66,6 +68,7 @@ const WithDrawals = ({
 
   const [isEdit, setIsEdit] = useState<any>(null);
   const [openTransaction, setOpenTransaction] = useState<any>();
+  const [viewInvestment, setViewInvestment] = useState<any>(null);
 
   interface DataType {
     id: string;
@@ -138,6 +141,45 @@ const WithDrawals = ({
       ),
     },
     {
+      title: "Source",
+      key: "source",
+      render: (_, record: any) => <SourceTag record={record} />,
+    },
+    {
+      title: "Project / Investment",
+      key: "linkedInvestment",
+      render: (_, record: any) => {
+        const investment = record?.ProjectInvestment;
+
+        //linked, but the relation wasn't returned (older backend build)
+        if (!investment) {
+          return record?.investmentId ? (
+            <span className="text-gray-400 italic">linked investment</span>
+          ) : (
+            <span className="text-gray-400">—</span>
+          );
+        }
+
+        return (
+          <Button
+            type="link"
+            size="small"
+            style={{ padding: 0, height: "auto", textAlign: "left" }}
+            onClick={() => setViewInvestment(investment)}
+          >
+            <span className="block max-w-[220px]">
+              <span className="block truncate font-medium">
+                {investment?.Project?.title || "Untitled project"}
+              </span>
+              <span className="block text-xs opacity-70">
+                investment #{investment?.serial}
+              </span>
+            </span>
+          </Button>
+        );
+      },
+    },
+    {
       title: "Amount",
       dataIndex: "amount",
       key: "amount",
@@ -180,13 +222,23 @@ const WithDrawals = ({
       title: "Payment Date",
       dataIndex: "paymentDate",
       key: "paymentDate",
-      render: (text) => format(new Date(text), "dd-MM-yyyy"),
+      render: (text) =>
+        text ? (
+          format(new Date(text), "dd-MM-yyyy")
+        ) : (
+          <span className="text-gray-400">—</span>
+        ),
     },
     {
       title: "createdAt",
       dataIndex: "createdAt",
       key: "createdAt",
-      render: (text) => format(new Date(text), "dd-MM-yyyy"),
+      render: (text) =>
+        text ? (
+          format(new Date(text), "dd-MM-yyyy")
+        ) : (
+          <span className="text-gray-400">—</span>
+        ),
     },
     {
       title: "Action",
@@ -254,6 +306,20 @@ const WithDrawals = ({
         dataSource={data?.data}
         scroll={{ x: "max-content" }}
       />
+
+      {/* investment behind this transaction */}
+      <Modal
+        centered
+        open={!!viewInvestment}
+        onCancel={() => setViewInvestment(null)}
+        footer={null}
+        destroyOnHidden={true}
+        width="90vw"
+        styles={{ body: { padding: 0 } }}
+        className="responsive-ant-modal"
+      >
+        <InvestmentView investment={viewInvestment} />
+      </Modal>
 
       {/* Deposit/withdraw to wallet */}
       <Modal

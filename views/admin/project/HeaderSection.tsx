@@ -56,8 +56,9 @@ const ProjectHeader: React.FC<ComponentProps> = ({
               }}
               options={[
                 { value: "", label: "All" },
-                { value: "DRAFT", label: "DRAFT" },
-                { value: "PUBLISHED", label: "PUBLISHED" },
+                { value: "ACTIVE", label: "ACTIVE" },
+                { value: "INACTIVE", label: "INACTIVE" },
+                { value: "CLOSED", label: "CLOSED" },
               ]}
             />
           </div>

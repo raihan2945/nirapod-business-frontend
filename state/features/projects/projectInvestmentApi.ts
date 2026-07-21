@@ -72,6 +72,26 @@ const projectInvestmentApi = apiSlice.injectEndpoints({
       invalidatesTags: ["ProjectInvestments"],
     }),
 
+    cancelProjectInvestmentById: builder.mutation<
+      any,
+      { id: string; reason?: string }
+    >({
+      query: ({ id, reason }) => ({
+        url: `/api/v1/projects/investments/cancel/${id}`,
+        method: "PATCH",
+        body: { reason },
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }),
+      invalidatesTags: [
+        "ProjectInvestments",
+        "Projects",
+        "Users",
+        "Wallet",
+      ],
+    }),
+
     deleteProjectInvestmentById: builder.mutation<any, { id: string }>({
       query: (id) => ({
         url: `/api/v1/projects/investments/${id}`,
@@ -93,6 +113,7 @@ export const {
   useGetProjectInvestmentCountsQuery,
   useCreateNewProjectInvestmentMutation,
   useUpdateProjectInvestmentByIdMutation,
+  useCancelProjectInvestmentByIdMutation,
   useDeleteProjectInvestmentByIdMutation,
 } = projectInvestmentApi;
 export default projectInvestmentApi;

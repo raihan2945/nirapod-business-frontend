@@ -8,6 +8,7 @@ import Image from "next/image";
 //icons
 import { HiMiniClipboardDocumentList } from "react-icons/hi2";
 import { MdDelete } from "react-icons/md";
+import { FaEye } from "react-icons/fa";
 
 import { RiEditBoxFill } from "react-icons/ri";
 import TableSkeleton from "@/components/TableSkeleton";
@@ -15,7 +16,8 @@ import { baseUrl } from "@/utils/baseUrl";
 import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
 import { useDeleteBlogByIdMutation } from "@/state/features/blogs/blogsApi";
 import InvestmentReturnForm from "./InvestmentReturnForm";
-import { format } from "date-fns";
+import ReturnDetailView from "./ReturnDetailView";
+import { format, isBefore, startOfDay, isSameDay } from "date-fns";
 
 interface ComponentProps {
   data?: any;
@@ -29,7 +31,7 @@ const InvestmentReturnView: React.FC<ComponentProps> = ({
   // const { hasAccess } = useCheckAccess();
 
   const [isEdit, setIsEdit] = useState<any>(null);
-  const [showAlltoment, setShowAlltoment] = useState<any>(null);
+  const [isView, setIsView] = useState<any>(null);
 
   const { handleResponse } = useAPIResponseHandler();
 
@@ -58,23 +60,63 @@ const InvestmentReturnView: React.FC<ComponentProps> = ({
       width: 80,
     },
     {
-      title: "User ID(SL)",
+      title: "Due Date",
+      dataIndex: "date",
+      key: "date",
+      width: 165,
+      render: (text, record: any) => {
+        if (!text) return <span className="text-gray-400">—</span>;
+
+        const due = startOfDay(new Date(text));
+        const today = startOfDay(new Date());
+        const unpaid = record?.status === "PENDING";
+        const overdue = unpaid && isBefore(due, today);
+        const dueToday = unpaid && isSameDay(due, today);
+
+        return (
+          <div className="whitespace-nowrap">
+            <span className={overdue ? "text-red-600 font-medium" : ""}>
+              {format(new Date(text), "dd MMM yyyy")}
+            </span>
+            {overdue && (
+              <Tag color="red" className="ml-2">
+                OVERDUE
+              </Tag>
+            )}
+            {dueToday && (
+              <Tag color="gold" className="ml-2">
+                TODAY
+              </Tag>
+            )}
+          </div>
+        );
+      },
+    },
+    {
+      title: "Investor",
       dataIndex: "userId",
       key: "userId",
-      render: (text, data: any) => <Tag color="blue">{data?.ProjectInvestment?.User?.serial}</Tag>,
+      render: (text, data: any) => (
+        <div className="min-w-0">
+          <p className="truncate">{data?.ProjectInvestment?.User?.fullName}</p>
+          <Tag color="blue" className="mt-1">
+            #{data?.ProjectInvestment?.User?.serial}
+          </Tag>
+        </div>
+      ),
     },
     {
       title: "Project ID(SL)",
-      dataIndex: "qty",
-      key: "qty",
+      dataIndex: "projectSerial",
+      key: "projectSerial",
       render: (text, data: any) => {
         return data?.ProjectInvestment?.Project?.serial;
       },
     },
     {
       title: "Project Title",
-      dataIndex: "qty",
-      key: "qty",
+      dataIndex: "projectTitle",
+      key: "projectTitle",
       render: (text, data: any) => {
         return data?.ProjectInvestment?.Project?.title;
       },
@@ -83,29 +125,47 @@ const InvestmentReturnView: React.FC<ComponentProps> = ({
       title: "QTY",
       dataIndex: "qty",
       key: "qty",
+      width: 70,
       render: (text) => text,
+    },
+    {
+      title: "Amount",
+      dataIndex: "totalAmount",
+      key: "totalAmount",
+      width: 120,
+      render: (text) => (
+        <span className="whitespace-nowrap font-medium">
+          ৳
+          {Number(text || 0).toLocaleString(undefined, {
+            maximumFractionDigits: 0,
+          })}
+        </span>
+      ),
     },
 
     {
       title: "Return Proof",
-      dataIndex: "proof1",
-      key: "proof1",
-      render: (text) => (
-        <div className="relative w-20 h-20 p-1 overflow-hidden rounded">
-          <Image
-            alt="photo"
-            src={`${baseUrl}/uploads/photos/${text}`}
-            fill
-            className="w-full h-auto object-contain"
-          />
-        </div>
-      ),
+      dataIndex: "photo",
+      key: "photo",
+      render: (text) =>
+        text ? (
+          <div className="relative w-20 h-20 p-1 overflow-hidden rounded">
+            <Image
+              alt="photo"
+              src={`${baseUrl}/uploads/photos/${text}`}
+              fill
+              className="w-full h-auto object-contain"
+            />
+          </div>
+        ) : (
+          <span className="text-gray-400">—</span>
+        ),
     },
     {
       title: "Return Note",
-      dataIndex: "paymentDate",
-      key: "paymentDate",
-      render: (text) => text,
+      dataIndex: "note",
+      key: "note",
+      render: (text) => text || <span className="text-gray-400">—</span>,
     },
 
     {
@@ -115,7 +175,11 @@ const InvestmentReturnView: React.FC<ComponentProps> = ({
       render: (text) => (
         <Tag
           color={
-            text === "PAID" ? "green" : text === "REJECTED" ? "red" : "blue"
+            text === "PAID"
+              ? "green"
+              : text === "CANCELLED"
+                ? "volcano"
+                : "blue"
           }
         >
           {text}
@@ -135,8 +199,19 @@ const InvestmentReturnView: React.FC<ComponentProps> = ({
       key: "action",
       render: (_, record: any) => (
         <Space size="middle">
+          <Button
+            title="View full details"
+            onClick={() => {
+              setIsView(record);
+            }}
+            style={{ border: "none", padding: "5px" }}
+          >
+            <FaEye color="#1677ff" size={18} />
+          </Button>
+
           {/* {hasAccess(["bike_management"]) && ( */}
           <Button
+            title="Confirm paid"
             onClick={() => {
               setIsEdit(record);
             }}
@@ -168,8 +243,27 @@ const InvestmentReturnView: React.FC<ComponentProps> = ({
   return (
     <>
       <div className="mt-5 bg-white px-4 py-4 rounded-sm shadow-sm">
-        <Table columns={columns} dataSource={data} />
+        <Table
+          rowKey="id"
+          columns={columns}
+          dataSource={data}
+          scroll={{ x: "max-content" }}
+        />
       </div>
+
+      {/* full return / investor / investment detail */}
+      <Modal
+        centered
+        open={!!isView}
+        onCancel={() => setIsView(null)}
+        footer={null}
+        destroyOnHidden={true}
+        width="90vw"
+        style={{ maxWidth: 1100 }}
+        styles={{ body: { padding: 0 } }}
+      >
+        <ReturnDetailView info={isView} />
+      </Modal>
 
       {/* edit blog form */}
       <Modal

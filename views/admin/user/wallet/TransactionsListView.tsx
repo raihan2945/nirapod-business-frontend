@@ -13,6 +13,7 @@ import { format } from "date-fns";
 import { baseUrl } from "@/utils/baseUrl";
 import { useGetAllWalletTransactionsQuery } from "@/state/features/wallet/walletTransactionApi";
 import { cn } from "@/lib/utils";
+import SourceTag from "./transactionSource";
 
 const TransactionsListView = ({
   userId,
@@ -81,6 +82,23 @@ const TransactionsListView = ({
       ),
     },
     {
+      title: "Source",
+      key: "source",
+      render: (_, record: any) => <SourceTag record={record} />,
+    },
+    {
+      title: "Project",
+      key: "project",
+      render: (_, record: any) =>
+        record?.ProjectInvestment?.Project?.title ? (
+          <span className="block max-w-[200px] truncate">
+            {record.ProjectInvestment.Project.title}
+          </span>
+        ) : (
+          <span className="text-gray-400">—</span>
+        ),
+    },
+    {
       title: "Amount",
       dataIndex: "amount",
       key: "amount",
@@ -104,7 +122,12 @@ const TransactionsListView = ({
       title: "Payment Date",
       dataIndex: "paymentDate",
       key: "paymentDate",
-      render: (text) => format(new Date(text), "dd-MM-yyyy"),
+      render: (text) =>
+        text ? (
+          format(new Date(text), "dd-MM-yyyy")
+        ) : (
+          <span className="text-gray-400">—</span>
+        ),
     },
     {
       title: "Status",
@@ -129,7 +152,12 @@ const TransactionsListView = ({
       title: "createdAt",
       dataIndex: "createdAt",
       key: "createdAt",
-      render: (text) => format(new Date(text), "dd-MM-yyyy"),
+      render: (text) =>
+        text ? (
+          format(new Date(text), "dd-MM-yyyy")
+        ) : (
+          <span className="text-gray-400">—</span>
+        ),
     },
     // {
     //   title: "Action",

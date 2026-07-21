@@ -14,6 +14,7 @@ import { baseUrl } from "@/utils/baseUrl";
 import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
 import { Button, message, Popconfirm } from "antd";
 import { useUpdateProjectInvestmentByIdMutation } from "@/state/features/projects/projectInvestmentApi";
+import InvestmentReturnsSchedule from "./InvestmentReturn/InvestmentReturnsSchedule";
 
 const InvestmentView = ({
   investment,
@@ -202,6 +203,12 @@ const InvestmentView = ({
               </div>
             </div> */}
           </div>
+
+          {/* Repayment schedule */}
+          <InvestmentReturnsSchedule
+            investmentId={investment?.id}
+            canEdit={!!setIsEdit}
+          />
 
           {/* Comments & Proofs */}
           <div className="bg-white rounded-2xl shadow-xl p-8">

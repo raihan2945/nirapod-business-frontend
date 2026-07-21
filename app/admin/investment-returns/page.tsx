@@ -6,10 +6,13 @@ import InvestmentReturnView from "@/views/admin/project/InvestmentReturn/Investm
 import { useGetAllProjectInvestmentReturnsQuery } from "@/state/features/projects/investmentReturnApi";
 
 const Blogs = () => {
+  //default view: everything still owed (overdue first, then upcoming), nearest due date first
   const [query, setQuery] = useState<any>({
     search: null,
-    status: "",
+    status: "PENDING",
     days: 0,
+    sortBy: "date",
+    sort: "asc",
   });
 
   const { data, isLoading } = useGetAllProjectInvestmentReturnsQuery(

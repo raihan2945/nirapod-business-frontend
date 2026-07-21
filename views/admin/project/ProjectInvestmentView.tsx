@@ -107,7 +107,12 @@ const ProjectInvestmentView: React.FC<ComponentProps> = ({
       title: "Payment Date",
       dataIndex: "paymentDate",
       key: "paymentDate",
-      render: (text) => format(text, "dd-MM-yyyy"),
+      render: (text) =>
+        text ? (
+          format(new Date(text), "dd-MM-yyyy")
+        ) : (
+          <span className="text-gray-400">—</span>
+        ),
     },
     {
       title: "Transaction Id",

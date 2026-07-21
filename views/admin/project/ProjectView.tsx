@@ -1,59 +1,62 @@
 "use client";
 
 import React, { useState } from "react";
-import { Table, Tag, Space, Button, Popconfirm, Modal } from "antd";
+import {
+  Table,
+  Tag,
+  Space,
+  Button,
+  Popconfirm,
+  Modal,
+  Progress,
+  Tooltip,
+} from "antd";
 import type { TableProps } from "antd";
 import Image from "next/image";
 
 //icons
 import { HiMiniClipboardDocumentList } from "react-icons/hi2";
-import { MdDelete } from "react-icons/md";
-import { GrCompliance } from "react-icons/gr";
+import { MdLock } from "react-icons/md";
 
-// import { bikeData, carData } from "@/lib/data";
 import { RiEditBoxFill } from "react-icons/ri";
 import TableSkeleton from "@/components/TableSkeleton";
-import { generateQueryArray } from "@/utils/query";
 import { baseUrl } from "@/utils/baseUrl";
 import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
 // import useCheckAccess from "@/utils/checkAccess";
-import { useDeleteBlogByIdMutation } from "@/state/features/blogs/blogsApi";
 import ProjectForm from "./form/ProjectForm";
-import {
-  useCloseProjectByIdMutation,
-  useDeleteProjectByIdMutation,
-} from "@/state/features/projects/projectsApi";
+import { useCloseProjectByIdMutation } from "@/state/features/projects/projectsApi";
 import { format } from "date-fns";
+import ProjectInvestmentsList from "./ProjectInvestmentsList";
 
 interface ComponentProps {
   data?: any;
   isLoading?: any;
 }
 
+const money = (value: any) =>
+  `৳${Number(value || 0).toLocaleString(undefined, {
+    maximumFractionDigits: 0,
+  })}`;
+
+const statusColor: Record<string, string> = {
+  ACTIVE: "green",
+  INACTIVE: "orange",
+  CLOSED: "default",
+};
+
 const ProjectView: React.FC<ComponentProps> = ({ data, isLoading }) => {
   // const { hasAccess } = useCheckAccess();
 
   const [isEdit, setIsEdit] = useState<any>(null);
-  const [showAlltoment, setShowAlltoment] = useState<any>(null);
+  const [viewInvestments, setViewInvestments] = useState<any>(null);
 
   const { handleResponse } = useAPIResponseHandler();
 
-  const [deleteOne] = useDeleteProjectByIdMutation();
   const [closeOne] = useCloseProjectByIdMutation();
 
   interface DataType {
     id: string;
-    brand: string;
-    photo: string;
-    chasis_number: string;
-    status: boolean;
   }
-
-  const submitDelete = async (id: any) => {
-    const res = await deleteOne(id);
-
-    handleResponse(res);
-  };
 
   const submitClose = async (id: any) => {
     const res = await closeOne({ id: id, data: {} });
@@ -61,128 +64,178 @@ const ProjectView: React.FC<ComponentProps> = ({ data, isLoading }) => {
     handleResponse(res);
   };
 
-  const handleClose = (id: number) => {
-    return Modal.confirm({
-      title: "Close this project?",
-      content: `This project will be closed. This cannot be undone.`,
-      okText: "Close",
-      okType: "danger",
-      cancelText: "Cancel",
-      onOk() {
-        console.log("Deleted:", id);
-        submitClose(id);
-      },
-    });
-  };
-
   const columns: TableProps<DataType>["columns"] = [
     {
-      title: "SL ID",
+      title: "SL",
       dataIndex: "serial",
       key: "serial",
-      render: (text) => `#${text}`,
-      width: 170,
+      width: 70,
+      render: (text) => <span className="text-gray-500">#{text}</span>,
     },
     {
-      title: "Cover Photo",
-      dataIndex: "coverPhoto",
-      key: "coverPhoto",
-      render: (text) => (
-        <div className="relative w-20 h-20 p-1 overflow-hidden rounded">
-          <Image
-            alt="photo"
-            src={`${baseUrl}/uploads/photos/${text}`}
-            fill
-            className="w-full h-auto object-contain"
-          />
+      title: "Project",
+      dataIndex: "title",
+      key: "title",
+      width: 320,
+      render: (text, record: any) => (
+        <div className="flex gap-3 items-center">
+          <div className="relative w-14 h-14 shrink-0 overflow-hidden rounded-md bg-gray-100">
+            {record?.coverPhoto ? (
+              <Image
+                alt={text}
+                src={`${baseUrl}/uploads/photos/${record.coverPhoto}`}
+                fill
+                sizes="56px"
+                className="object-cover"
+              />
+            ) : (
+              <div className="w-full h-full grid place-items-center text-[10px] text-gray-400">
+                No image
+              </div>
+            )}
+          </div>
+          <div className="min-w-0">
+            <p className="font-semibold text-gray-900 truncate">{text}</p>
+            <Tooltip title={record?.description}>
+              <p className="text-xs text-gray-500 line-clamp-2">
+                {record?.description || "—"}
+              </p>
+            </Tooltip>
+          </div>
         </div>
       ),
     },
     {
-      title: "Title",
-      dataIndex: "title",
-      key: "title",
-      render: (text) => text,
-    },
-    {
-      title: "Description",
-      dataIndex: "description",
-      key: "description",
-      render: (text) => text,
-    },
-    {
-      title: "Total Shares",
-      dataIndex: "totalShares",
-      key: "totalShares",
-      render: (text) => text,
-    },
-    {
-      title: "Raised Shares",
+      title: "Funding",
       dataIndex: "raisedShares",
-      key: "raisedShares",
-      render: (text) => text,
+      key: "funding",
+      width: 230,
+      sorter: (a: any, b: any) =>
+        Number(a?.raisedShares || 0) - Number(b?.raisedShares || 0),
+      render: (_, record: any) => {
+        const total = Number(record?.totalShares || 0);
+        const raisedShares = Number(record?.raisedShares || 0);
+        const percent = total > 0 ? Math.round((raisedShares / total) * 100) : 0;
+        const raisedAmount = raisedShares * Number(record?.minInvestment || 0);
+
+        return (
+          <div className="min-w-[190px]">
+            <Progress
+              percent={percent}
+              size="small"
+              status={record?.status === "CLOSED" ? "normal" : "active"}
+              strokeColor={percent >= 100 ? "#31AD5C" : "#1677ff"}
+            />
+            <div className="flex justify-between text-xs text-gray-500">
+              <span>
+                {raisedShares.toLocaleString()} / {total.toLocaleString()} shares
+              </span>
+              <span className="font-medium text-gray-700">
+                {money(raisedAmount)}
+              </span>
+            </div>
+            <p className="text-xs text-gray-400">
+              Goal {money(record?.investmentGoal)}
+            </p>
+          </div>
+        );
+      },
     },
     {
-      title: "Raised Amount",
-      dataIndex: "raisedShares",
-      key: "raisedShares",
-      render: (text, record: any) =>
-        Number(text || 0) * Number(record?.minInvestment || 0),
+      title: "Per Share",
+      dataIndex: "minInvestment",
+      key: "minInvestment",
+      width: 120,
+      render: (text) => (
+        <span className="whitespace-nowrap">{money(text)}</span>
+      ),
     },
     {
-      title: "status",
+      title: "Terms",
+      key: "terms",
+      width: 150,
+      render: (_, record: any) => (
+        <div className="text-xs text-gray-600 leading-5">
+          <div>
+            {Number(record?.projectDuration || 0)} months ·{" "}
+            {Number(record?.repayment || 0)} repayments
+          </div>
+          {record?.expectedRoi && (
+            <div className="text-gray-500">ROI {record.expectedRoi}</div>
+          )}
+        </div>
+      ),
+    },
+    {
+      title: "Status",
       dataIndex: "status",
       key: "status",
-      render: (text) => text,
+      width: 110,
+      render: (text) => (
+        <Tag color={statusColor[text] || "blue"}>{text}</Tag>
+      ),
     },
     {
-      title: "createdAt",
+      title: "Created",
       dataIndex: "createdAt",
       key: "createdAt",
-      render: (text) => format(text, "yyyy-MM-dd"),
+      width: 120,
+      sorter: (a: any, b: any) =>
+        new Date(a?.createdAt).getTime() - new Date(b?.createdAt).getTime(),
+      render: (text) => (
+        <span className="whitespace-nowrap text-gray-600">
+          {text ? format(new Date(text), "dd MMM yyyy") : "—"}
+        </span>
+      ),
     },
     {
       title: "Action",
       key: "action",
-      render: (_, record: any) => (
-        <Space size="middle">
-          {/* {hasAccess(["bike_management"]) && ( */}
-          <Button
-            onClick={() => {
-              setIsEdit(record);
-            }}
-            style={{ border: "none", padding: "5px" }}
-          >
-            <RiEditBoxFill color="#4d4d4d" size={20} />
-          </Button>
-          {/* )} */}
+      width: 140,
+      fixed: "right",
+      render: (_, record: any) => {
+        const isClosed = record?.status === "CLOSED";
 
-          <Popconfirm
-            title="Delete the task"
-            description="Are you sure to delete this task?"
-            onConfirm={() => submitDelete(record?.id)}
-            // onCancel={cancel}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button disabled={record?.status == "CLOSED"} style={{ border: "none", padding: "5px" }}>
-              <MdDelete color="red" size={20} />
-            </Button>
-          </Popconfirm>
-          <Popconfirm
-            title="Close the project"
-            description="Are you sure to close this project?"
-            onConfirm={() => submitClose(record?.id)}
-            // onCancel={cancel}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button disabled={record?.status == "CLOSED"} style={{ border: "none", padding: "5px" }}>
-              <GrCompliance color="blue" size={20} />
-            </Button>
-          </Popconfirm>
-        </Space>
-      ),
+        return (
+          <Space size={4}>
+            <Tooltip title="Edit project">
+              <Button
+                onClick={() => setIsEdit(record)}
+                style={{ border: "none", padding: "5px" }}
+              >
+                <RiEditBoxFill color="#4d4d4d" size={20} />
+              </Button>
+            </Tooltip>
+
+            <Tooltip title="View investments">
+              <Button
+                onClick={() => setViewInvestments(record)}
+                style={{ border: "none", padding: "5px" }}
+              >
+                <HiMiniClipboardDocumentList color="#31AD5C" size={20} />
+              </Button>
+            </Tooltip>
+
+            <Tooltip title={isClosed ? "Already closed" : "Close project"}>
+              <Popconfirm
+                title="Close the project"
+                description="Are you sure to close this project?"
+                onConfirm={() => submitClose(record?.id)}
+                okText="Yes"
+                cancelText="No"
+                disabled={isClosed}
+              >
+                <Button
+                  disabled={isClosed}
+                  style={{ border: "none", padding: "5px" }}
+                >
+                  <MdLock color={isClosed ? "#bfbfbf" : "#d97706"} size={20} />
+                </Button>
+              </Popconfirm>
+            </Tooltip>
+          </Space>
+        );
+      },
     },
   ];
 
@@ -191,7 +244,18 @@ const ProjectView: React.FC<ComponentProps> = ({ data, isLoading }) => {
   return (
     <>
       <div className="mt-5 bg-white px-4 py-4 rounded-sm shadow-sm">
-        <Table columns={columns} dataSource={data} />
+        <Table
+          rowKey="id"
+          columns={columns}
+          dataSource={data}
+          size="middle"
+          scroll={{ x: "max-content" }}
+          pagination={{
+            showSizeChanger: true,
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} of ${total} projects`,
+          }}
+        />
       </div>
 
       {/* edit project form */}
@@ -209,6 +273,19 @@ const ProjectView: React.FC<ComponentProps> = ({ data, isLoading }) => {
           info={isEdit}
           modalCancel={() => setIsEdit(false)}
         />
+      </Modal>
+
+      {/* project-wise investment list */}
+      <Modal
+        centered
+        open={viewInvestments}
+        onCancel={() => setViewInvestments(null)}
+        footer={null}
+        destroyOnHidden={true}
+        width="90vw"
+        styles={{ body: { padding: 0 } }}
+      >
+        <ProjectInvestmentsList project={viewInvestments} />
       </Modal>
     </>
   );

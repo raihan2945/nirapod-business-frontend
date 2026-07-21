@@ -71,7 +71,8 @@ const projectInvestmentApi = apiSlice.injectEndpoints({
           authorization: `Bearer ${token}`,
         },
       }),
-      invalidatesTags: ["ProjectInvestments"],
+      //paying the last return closes the investment and credits the wallet
+      invalidatesTags: ["ProjectInvestments", "Users", "Wallet"],
     }),
 
     deleteProjectInvestmentReturnById: builder.mutation<any, { id: string }>({

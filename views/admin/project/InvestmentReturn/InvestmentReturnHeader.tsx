@@ -86,7 +86,7 @@ const InvestmentReturnHeader: React.FC<ComponentProps> = ({
                 { value: "", label: "All" },
                 { value: "PENDING", label: "Pending" },
                 { value: "PAID", label: "Paid" },
-                // { value: "CANCELLED", label: "REJECTED" },
+                { value: "CANCELLED", label: "Cancelled" },
               ]}
               onChange={({ target: { value } }: RadioChangeEvent) =>
                 changeQuery({ key: "status", value: value })
