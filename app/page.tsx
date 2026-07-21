@@ -12,6 +12,7 @@ import FeedbackSection from "@/views/feedback/FeedbackSection";
 import BlogSection from "@/views/blogs/BlogSection";
 import NewsletterSection from "@/views/newsLetter/NewsLetterSection";
 import ProjectSection from "@/views/projects/ProjectSection";
+import HowItWorksSection from "@/views/howItWorks/HowItWorksSection";
 
 export default function Home({
   children,
@@ -33,6 +34,7 @@ export default function Home({
         <Navbar />
         <HeroSection />
         <ProjectSection />
+        <HowItWorksSection />
         <StatisticsSection />
         {/* <FAQSection /> */}
         {/* <FeedbackSection /> */}

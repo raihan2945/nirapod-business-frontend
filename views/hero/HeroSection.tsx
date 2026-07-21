@@ -1,48 +1,23 @@
-import { Button } from "@/components/ui/button";
 import React from "react";
+import Image from "next/image";
 
 const HeroSection = () => {
   return (
-    <section className="mt-[75] w-full overflow-hidden">
-      <img
+    /* the navbar is transparent over this section, so the image runs to the
+       very top on every breakpoint - nothing is cropped, the header just
+       floats above it */
+    <section className="relative w-full overflow-hidden">
+      <Image
         src="/images/herobg4.jpeg"
-        alt="Team holding frames"
-        className="w-full h-auto"
+        alt="Nirapod Business"
+        width={2560}
+        height={1440}
+        priority
+        sizes="100vw"
+        /* mobile: natural 16:9 height, entire image visible
+           desktop: fills the viewport, cropped to taste */
+        className="h-auto w-full lg:h-[100svh] lg:object-cover lg:object-center"
       />
-      {/* Background Image with Overlay */}
-      <div className="absolute inset-0 z-0">
-        {/* <img
-          src="/images/herobg4.jpeg"
-          alt="Team holding frames"
-          className="w-full h-auto object-fit"
-        /> */}
-        {/* <div className="absolute inset-0 bg-gray-800/40 bg-gradient-to-b from-gray-500 to-transparent" /> */}
-      </div>
-
-      {/* Hero Content */}
-      <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
-        {/* <h1 className="text-4xl uppercase sm:text-5xl md:text-6xl lg:text-8xl font-bold text-white mb-8 leading-tight">
-          Nirapad Business
-        </h1>
-        <p className="text-white text-xl sm:text-base font-medium tracking-wider mb-4 uppercase">
-          Together we learn more
-        </p> */}
-      </div>
-
-      {/* Curved Bottom Edge */}
-      {/* <div className="absolute bottom-0 left-0 right-0 z-10">
-        <svg
-          viewBox="0 0 1440 120"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-full h-auto"
-        >
-          <path
-            d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z"
-            fill="white"
-          />
-        </svg>
-      </div> */}
     </section>
   );
 };

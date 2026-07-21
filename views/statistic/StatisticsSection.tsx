@@ -65,38 +65,50 @@ function StatItem({ value, label, prefix = "", suffix = "", hasComma = true }: S
   }
 
   return (
-    <div ref={ref} className="text-center">
-      <div className="flex items-center justify-center gap-2 mb-2">
-        {prefix && <span className="text-red-500 text-xl sm:text-2xl font-semibold">{prefix}</span>}
-        <span className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900">{formatNumber(count)}</span>
-        {suffix && <span className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900">{suffix}</span>}
+    <div
+      ref={ref}
+      className="rounded-2xl border border-white/10 bg-white/5 px-6 py-10 text-center backdrop-blur-sm transition hover:border-[#31AD5C]/40 hover:bg-white/10"
+    >
+      <div className="mb-3 flex flex-wrap items-baseline justify-center gap-x-2">
+        {prefix && (
+          <span className="text-lg font-semibold text-[#7bd39b] sm:text-xl">{prefix}</span>
+        )}
+        <span className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
+          {formatNumber(count)}
+        </span>
+        {suffix && (
+          <span className="text-3xl font-bold text-[#7bd39b] sm:text-4xl">{suffix}</span>
+        )}
       </div>
-      <p className="text-gray-600 text-sm sm:text-base font-medium tracking-wide uppercase">{label}</p>
+      <p className="text-sm font-medium uppercase tracking-wide text-gray-300 sm:text-base">
+        {label}
+      </p>
     </div>
   )
 }
 
 export default function StatisticsSection() {
   return (
-    <section className="py-12 sm:py-16 lg:py-20 bg-white">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 sm:mb-16">
-          <div className="flex items-center gap-4 mb-2">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900">Statistics</h2>
-            <div className="w-px h-12 bg-gray-300" />
-          </div>
-          <p className="text-gray-600 text-sm sm:text-base flex items-center gap-2">
-            <span className="w-5 h-5 rounded-full bg-gray-900 flex items-center justify-center text-white text-xs">
-              ✓
-            </span>
-            Nirapod Business Investment numbers
+    <section className="relative overflow-hidden bg-gray-900 py-16 sm:py-20 lg:py-24">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-[#31AD5C]/20 blur-3xl"
+      />
+
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto mb-12 max-w-2xl text-center sm:mb-16">
+          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
+            Our numbers so far
+          </h2>
+          <p className="mt-4 text-base text-gray-300">
+            What the Nirapod Business community has financed and repaid to date.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12 lg:gap-16">
-          <StatItem value={1445600} label="Financed" prefix="BDT" suffix=" +" />
-          <StatItem value={15} label="Investments" suffix=" +" hasComma={false} />
-          <StatItem value={300500} label="Repayment Completed" prefix="BDT" suffix=" +" />
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:gap-8">
+          <StatItem value={1445600} label="Financed" prefix="BDT" suffix="+" />
+          <StatItem value={15} label="Investments" suffix="+" hasComma={false} />
+          <StatItem value={300500} label="Repayment Completed" prefix="BDT" suffix="+" />
         </div>
       </div>
     </section>
