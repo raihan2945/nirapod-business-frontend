@@ -72,6 +72,17 @@ const projectInvestmentApi = apiSlice.injectEndpoints({
       invalidatesTags: ["ProjectInvestments"],
     }),
 
+    clearInvestmentsByStatus: builder.mutation<any, { status: "REJECTED" | "CANCELLED" }>({
+      query: ({ status }) => ({
+        url: `/api/v1/projects/investments/clear/${status.toLowerCase()}`,
+        method: "PATCH",
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }),
+      invalidatesTags: ["ProjectInvestments"],
+    }),
+
     cancelProjectInvestmentById: builder.mutation<
       any,
       { id: string; reason?: string }
@@ -114,6 +125,7 @@ export const {
   useCreateNewProjectInvestmentMutation,
   useUpdateProjectInvestmentByIdMutation,
   useCancelProjectInvestmentByIdMutation,
+  useClearInvestmentsByStatusMutation,
   useDeleteProjectInvestmentByIdMutation,
 } = projectInvestmentApi;
 export default projectInvestmentApi;

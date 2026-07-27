@@ -204,8 +204,9 @@ const ProjectInvestmentsList: React.FC<ComponentProps> = ({ project }) => {
       title: "Action",
       key: "action",
       render: (_, record: any) => {
-        const notCancellable =
-          record?.status === "CANCELLED" || record?.status === "CLOSED";
+        //only an APPROVED investment can be cancelled; a pending one is
+        //rejected instead, and closed/cancelled/rejected are terminal
+        const notCancellable = record?.status !== "APPROVED";
 
         return (
           <Space size="middle">
@@ -218,9 +219,11 @@ const ProjectInvestmentsList: React.FC<ComponentProps> = ({ project }) => {
 
             <Button
               title={
-                notCancellable
-                  ? `A ${record?.status?.toLowerCase()} investment cannot be cancelled`
-                  : "Cancel this investment"
+                record?.status === "PENDING"
+                  ? "A pending investment must be rejected, not cancelled"
+                  : notCancellable
+                    ? `A ${record?.status?.toLowerCase()} investment cannot be cancelled`
+                    : "Cancel this investment"
               }
               disabled={notCancellable}
               onClick={() => {
@@ -347,11 +350,9 @@ const ProjectInvestmentsList: React.FC<ComponentProps> = ({ project }) => {
                 ৳{Number(isCancel?.amount || 0).toLocaleString()} is refunded to
                 the investor&apos;s wallet as a deposit.
               </li>
-              {isCancel?.status === "APPROVED" && (
-                <li>
-                  {isCancel?.qty} share(s) are released back to the project.
-                </li>
-              )}
+              <li>
+                {isCancel?.qty} share(s) are released back to the project.
+              </li>
             </ul>
           }
         />
