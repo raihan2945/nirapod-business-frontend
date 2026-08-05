@@ -26,6 +26,7 @@ const projectSchema = z.object({
   minInvestment: decimalSchema.default(0),
   waiting: decimalSchema.default(0),
   murabahaMarkupReturn: decimalSchema.default(0),
+  temporaryReturnAmount: decimalSchema.default(500),
   calculatedRoi: decimalSchema.default(0),
   musharakaMarkupReturn: z.string().optional(),
   expectedRoi: z.string().optional(),
@@ -253,6 +254,7 @@ const ProjectForm: React.FC<ComponentProps> = ({
         totalShares: info?.totalShares || 0,
         raisedShares: info?.raisedShares || 0,
         murabahaMarkupReturn: info?.murabahaMarkupReturn || 0,
+        temporaryReturnAmount: info?.temporaryReturnAmount ?? 500,
         calculatedRoi: info?.calculatedRoi || 0,
         repayment: info?.repayment || 0,
         projectDuration: info?.projectDuration || 0,
@@ -528,6 +530,25 @@ const ProjectForm: React.FC<ComponentProps> = ({
           />
           {errors?.repayment && (
             <p className="text-red-500 text-sm">{errors?.repayment?.message}</p>
+          )}
+        </div>
+        <div>
+          <label className="block mb-1 font-medium">
+            Temporary Return Amount (per share)
+          </label>
+          <input
+            type="number"
+            step="0.01"
+            {...register("temporaryReturnAmount")}
+            className="w-full border rounded p-2"
+          />
+          <p className="text-xs text-gray-500 mt-1">
+            Each repayment returns qty × this amount.
+          </p>
+          {errors?.temporaryReturnAmount && (
+            <p className="text-red-500 text-sm">
+              {errors?.temporaryReturnAmount?.message}
+            </p>
           )}
         </div>
         <div>

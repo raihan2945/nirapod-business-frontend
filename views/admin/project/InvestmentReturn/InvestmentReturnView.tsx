@@ -17,7 +17,7 @@ import { useAPIResponseHandler } from "@/contexts/ApiResponseHandlerContext";
 import { useDeleteBlogByIdMutation } from "@/state/features/blogs/blogsApi";
 import InvestmentReturnForm from "./InvestmentReturnForm";
 import ReturnDetailView from "./ReturnDetailView";
-import { format, isBefore, startOfDay, isSameDay } from "date-fns";
+import { format, isBefore, startOfDay, isSameDay, addDays } from "date-fns";
 
 interface ComponentProps {
   data?: any;
@@ -91,6 +91,21 @@ const InvestmentReturnView: React.FC<ComponentProps> = ({
           </div>
         );
       },
+    },
+    {
+      title: "End Due Date",
+      dataIndex: "date",
+      key: "endDate",
+      width: 140,
+      //end of the 7-day pay-by window: due date + 7 days
+      render: (text) =>
+        text ? (
+          <span className="whitespace-nowrap text-gray-700">
+            {format(addDays(new Date(text), 7), "dd MMM yyyy")}
+          </span>
+        ) : (
+          <span className="text-gray-400">—</span>
+        ),
     },
     {
       title: "Investor",

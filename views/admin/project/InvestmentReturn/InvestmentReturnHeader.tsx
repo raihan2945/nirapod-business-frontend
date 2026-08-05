@@ -1,11 +1,22 @@
 "use client";
 
 import React, { useState } from "react";
-import { Select, Input, Button, Modal, Radio, RadioChangeEvent } from "antd";
+import {
+  Select,
+  Input,
+  Button,
+  Modal,
+  Radio,
+  RadioChangeEvent,
+  DatePicker,
+  Segmented,
+} from "antd";
+import dayjs from "dayjs";
 // import BlogForm from "./form/BlogForm";
 import useCheckAccess from "@/utils/checkAccess";
 
 const { Search } = Input;
+const { RangePicker } = DatePicker;
 
 //Icons
 import { MdAdd } from "react-icons/md";
@@ -17,13 +28,52 @@ interface ComponentProps {
   clickExport?: any;
 }
 
+type DateMode = "7days" | "single" | "range" | "all";
+
 const InvestmentReturnHeader: React.FC<ComponentProps> = ({
   query,
   changeQuery,
   clickExport,
 }) => {
   const [isAdd, setIsAdd] = useState<boolean>(false);
+  const [dateMode, setDateMode] = useState<DateMode>("7days");
+  const [fromDay, setFromDay] = useState<any>(null); //picked start date (single mode)
   const { hasAccess } = useCheckAccess();
+
+  //clear every date param, then apply the ones the chosen mode needs
+  const resetDateParams = () => {
+    changeQuery({ key: "fromDate", value: null });
+    changeQuery({ key: "toDate", value: null });
+    changeQuery({ key: "allDates", value: null });
+    changeQuery({ key: "days", value: null });
+  };
+
+  const onModeChange = (mode: DateMode) => {
+    setDateMode(mode);
+    setFromDay(null);
+    resetDateParams();
+    //  7days  -> no params, backend defaults to today..+7
+    //  all    -> allDates flag removes the window
+    //  single / range -> wait for the picker to supply dates
+    if (mode === "all") changeQuery({ key: "allDates", value: true });
+  };
+
+  //picking one start date spans a 7-day window: [date, date + 7 days]
+  const onSingleDate = (d: any) => {
+    setFromDay(d || null);
+    if (!d) {
+      changeQuery({ key: "fromDate", value: null });
+      changeQuery({ key: "toDate", value: null });
+      return;
+    }
+    changeQuery({ key: "fromDate", value: d.format("YYYY-MM-DD") });
+    changeQuery({ key: "toDate", value: d.add(7, "day").format("YYYY-MM-DD") });
+  };
+
+  const onRange = (range: any) => {
+    changeQuery({ key: "fromDate", value: range?.[0]?.format("YYYY-MM-DD") || null });
+    changeQuery({ key: "toDate", value: range?.[1]?.format("YYYY-MM-DD") || null });
+  };
 
   return (
     <>
@@ -61,23 +111,41 @@ const InvestmentReturnHeader: React.FC<ComponentProps> = ({
         </div>
         <div className="flex items-center gap-4">
           <div>
-            <p className="text-sm mb-1 opacity-70">Date </p>
-            <Select
-              value={query["days"]}
-              style={{ width: 120 }}
-              onChange={(e) => changeQuery({ key: "days", value: e })}
-              placeholder="Select Date"
-              options={[
-                { value: 0, label: "All" },
-                { value: 1, label: "Today" },
-                { value: 2, label: "2 Days" },
-                { value: 3, label: "3 Days" },
-                { value: 4, label: "4 Days" },
-                { value: 5, label: "5 Days" },
-                { value: 6, label: "6 Days" },
-                { value: 7, label: "7 Days" },
-              ]}
-            />
+            <p className="text-sm mb-1 opacity-70">Due date </p>
+            <div className="flex items-center gap-2">
+              <Segmented
+                value={dateMode}
+                onChange={(v) => onModeChange(v as DateMode)}
+                options={[
+                  { label: "Next 7 days", value: "7days" },
+                  { label: "From date +7", value: "single" },
+                  { label: "Range", value: "range" },
+                  { label: "All", value: "all" },
+                ]}
+              />
+              {dateMode === "single" && (
+                <div className="flex items-center gap-2">
+                  <DatePicker
+                    value={fromDay}
+                    onChange={onSingleDate}
+                    format="DD MMM YYYY"
+                    placeholder="From date"
+                  />
+                  {fromDay && (
+                    <span className="whitespace-nowrap text-sm text-gray-500">
+                      → {fromDay.add(7, "day").format("DD MMM YYYY")}
+                    </span>
+                  )}
+                </div>
+              )}
+              {dateMode === "range" && (
+                <RangePicker
+                  defaultValue={[dayjs(), dayjs().add(7, "day")]}
+                  onChange={onRange}
+                  format="DD MMM YYYY"
+                />
+              )}
+            </div>
           </div>
           <div>
             <p className="text-sm mb-1 opacity-70">Status </p>

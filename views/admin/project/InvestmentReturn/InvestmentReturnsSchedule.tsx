@@ -3,7 +3,7 @@
 import React, { useMemo, useState } from "react";
 import { Table, Tag, Button, Progress, Modal, Tooltip, Empty } from "antd";
 import type { TableProps } from "antd";
-import { format, isBefore, startOfDay } from "date-fns";
+import { format, isBefore, startOfDay, addDays } from "date-fns";
 import { CalendarClock } from "lucide-react";
 
 import { useGetAllProjectInvestmentReturnsQuery } from "@/state/features/projects/investmentReturnApi";
@@ -91,6 +91,21 @@ const InvestmentReturnsSchedule = ({
           </div>
         );
       },
+    },
+    {
+      title: "End Due Date",
+      dataIndex: "date",
+      key: "endDate",
+      width: 140,
+      //end of the 7-day pay-by window: due date + 7 days
+      render: (text) =>
+        text ? (
+          <span className="whitespace-nowrap text-gray-700">
+            {format(addDays(new Date(text), 7), "dd MMM yyyy")}
+          </span>
+        ) : (
+          "—"
+        ),
     },
     {
       title: "Qty",
