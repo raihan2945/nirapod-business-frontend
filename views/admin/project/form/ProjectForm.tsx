@@ -33,8 +33,16 @@ const projectSchema = z.object({
   bankInfo: z.string().optional(),
   totalShares: z.coerce.number().int().default(0),
   raisedShares: z.coerce.number().int().default(0),
-  repayment: z.coerce.number().int().default(0),
-  projectDuration: z.coerce.number().int().default(0),
+  //both drive the return schedule - a project with either at 0 cannot generate
+  //returns, so nobody can invest in it
+  repayment: z.coerce
+    .number()
+    .int()
+    .min(1, "Number of repayments must be at least 1"),
+  projectDuration: z.coerce
+    .number()
+    .int()
+    .min(1, "Project duration must be at least 1 month"),
   leftDays: z.coerce.number().int().default(0),
   roles: z.any().optional(),
   theBusiness: z.any().optional(),
@@ -524,10 +532,15 @@ const ProjectForm: React.FC<ComponentProps> = ({
           <label className="block mb-1 font-medium">Repayment</label>
           <input
             type="number"
-            step="0.01"
+            min={1}
+            step="1"
             {...register("repayment")}
             className="w-full border rounded p-2"
           />
+          <p className="text-xs text-gray-500 mt-1">
+            How many times the investor is repaid. Required — investments fail
+            without it.
+          </p>
           {errors?.repayment && (
             <p className="text-red-500 text-sm">{errors?.repayment?.message}</p>
           )}
@@ -557,9 +570,14 @@ const ProjectForm: React.FC<ComponentProps> = ({
           </label>
           <input
             type="number"
+            min={1}
             {...register("projectDuration")}
             className="w-full border rounded p-2"
           />
+          <p className="text-xs text-gray-500 mt-1">
+            Total months the repayments are spread over. Required — investments
+            fail without it.
+          </p>
           {errors?.projectDuration && (
             <p className="text-red-500 text-sm">
               {errors?.projectDuration?.message}

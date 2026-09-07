@@ -20,36 +20,102 @@ import { useState } from "react";
 import { AlertCircle, Eye, EyeOff } from "lucide-react";
 import SingleFileUpload from "../upload/singleFileUpload";
 
+//BD mobile numbers: 01[3-9] followed by 8 digits
+const bdMobile = /^01[3-9]\d{8}$/;
+//NID is 10, 13 or 17 digits depending on when it was issued
+const nidNumber = /^(\d{10}|\d{13}|\d{17})$/;
+
+const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+
+const required = (label: string) => `${label} is required`;
+
 const signupSchema = z
   .object({
-    fullName: z.string().min(1, "Full name is required"),
-    mobile: z.string().min(10, "Invalid phone number"),
-    email: z.email(),
-    fatherName: z.string().optional().nullable(),
-    motherName: z.string().optional().nullable(),
-    nid: z.string().optional().nullable(),
-    gender: z.string().optional().nullable(),
-    currentProfession: z.string().optional().nullable(),
-    facebook: z.string().optional().nullable(),
-    nomineeName: z.string().optional().nullable(),
-    nomineeRelation: z.string().optional().nullable(),
-    nomineeMobile: z.string().optional().nullable(),
-    address: z.string().optional().nullable(),
-    bankAccountNo: z.string().optional().nullable(),
-    bankAccountName: z.string().optional().nullable(),
-    bankName: z.string().optional().nullable(),
-    branchName: z.string().optional().nullable(),
-    routingNo: z.string().optional().nullable(),
-    password: z.string().min(6, "Password must be at least 6 characters long"),
-    confirmPassword: z.string().min(6, "Please confirm your password"),
+    fullName: z
+      .string()
+      .trim()
+      .min(1, required("Full name"))
+      .min(3, "Full name must be at least 3 characters"),
+    email: z
+      .string()
+      .trim()
+      .min(1, required("Email"))
+      .email("Enter a valid email address"),
+    mobile: z
+      .string()
+      .trim()
+      .min(1, required("Mobile"))
+      .regex(bdMobile, "Enter a valid 11-digit number, e.g. 01712345678"),
+    fatherName: z.string().trim().min(1, required("Father's name")),
+    motherName: z.string().trim().min(1, required("Mother's name")),
+    nid: z
+      .string()
+      .trim()
+      .min(1, required("NID"))
+      .regex(nidNumber, "NID must be 10, 13 or 17 digits"),
+    gender: z.string().trim().min(1, "Select a gender"),
+    bloodGroup: z.string().trim().min(1, "Select a blood group"),
+    currentProfession: z.string().trim().min(1, required("Current profession")),
+    facebook: z
+      .string()
+      .trim()
+      .min(1, required("Facebook link"))
+      .url("Enter a full link, e.g. https://facebook.com/yourprofile"),
+    address: z
+      .string()
+      .trim()
+      .min(1, required("Address"))
+      .min(10, "Enter a full address (at least 10 characters)"),
+    //not a registered input - kept in sync from the upload widget so it takes
+    //part in validation and shows up in the error summary like everything else
+    photo: z.custom<File>(
+      (value) => value instanceof File,
+      "Profile photo is required",
+    ),
+    nomineeName: z.string().trim().min(1, required("Nominee name")),
+    nomineeRelation: z.string().trim().min(1, required("Nominee relation")),
+    nomineeMobile: z
+      .string()
+      .trim()
+      .min(1, required("Nominee mobile"))
+      .regex(bdMobile, "Enter a valid 11-digit number, e.g. 01712345678"),
+    bankAccountName: z.string().trim().min(1, required("Account name")),
+    bankAccountNo: z
+      .string()
+      .trim()
+      .min(1, required("Account number"))
+      .regex(/^\d{6,20}$/, "Account number must be 6-20 digits"),
+    bankName: z.string().trim().min(1, required("Bank name")),
+    branchName: z.string().trim().min(1, required("Branch name")),
+    routingNo: z
+      .string()
+      .trim()
+      .min(1, required("Routing no."))
+      .regex(/^\d{9}$/, "Routing no. must be exactly 9 digits"),
+    password: z
+      .string()
+      .min(6, "Password must be at least 6 characters long")
+      .regex(/[A-Za-z]/, "Password must contain at least one letter")
+      .regex(/\d/, "Password must contain at least one number"),
+    confirmPassword: z.string().min(1, "Please confirm your password"),
+    terms: z
+      .boolean()
+      .refine((v) => v === true, "You must accept the terms to continue"),
   })
   .refine((data) => data.password === data?.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
+  })
+  .refine((data) => data.mobile !== data.nomineeMobile, {
+    message: "Nominee mobile must differ from your own",
+    path: ["nomineeMobile"],
   });
 
 type SignupFormData = z.infer<typeof signupSchema>;
 type FieldName = keyof SignupFormData;
+
+//fields that aren't plain text inputs - setFocus has no ref to move to
+const UNFOCUSABLE: FieldName[] = ["photo"];
 
 //readable names for the error summary
 const FIELD_LABELS: Record<string, string> = {
@@ -60,11 +126,13 @@ const FIELD_LABELS: Record<string, string> = {
   confirmPassword: "Confirm Password",
   nid: "NID",
   gender: "Gender",
+  bloodGroup: "Blood Group",
   fatherName: "Father's Name",
   motherName: "Mother's Name",
   currentProfession: "Current Profession",
   facebook: "Facebook Link",
   address: "Address",
+  photo: "Profile Photo",
   nomineeName: "Nominee Name",
   nomineeRelation: "Nominee Relation",
   nomineeMobile: "Nominee Mobile",
@@ -73,6 +141,7 @@ const FIELD_LABELS: Record<string, string> = {
   bankName: "Bank Name",
   branchName: "Branch Name",
   routingNo: "Routing No.",
+  terms: "Terms & Conditions",
 };
 
 const inputBase =
@@ -98,6 +167,7 @@ export function SignupFormV2({
     register,
     handleSubmit,
     setFocus,
+    setValue,
     formState: { errors, isSubmitting, isSubmitted },
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema) as any,
@@ -110,6 +180,13 @@ export function SignupFormV2({
   const errorList = Object.keys(errors) as FieldName[];
   const showSummary = isSubmitted && errorList.length > 0;
 
+  //the upload widget lives outside react-hook-form - mirror its value in so
+  //the required-photo rule runs with the rest of the schema
+  const handlePhotoChange = (file: any) => {
+    setPhotoFile(file);
+    setValue("photo", file, { shouldValidate: isSubmitted, shouldDirty: true });
+  };
+
   const onSubmit = async (data: SignupFormData) => {
     setApiError(null);
     try {
@@ -117,13 +194,15 @@ export function SignupFormV2({
       const form = new FormData();
 
       Object.entries(data).forEach(([key, value]) => {
-        if (key === "confirmPassword") return;
+        //client-only fields the API doesn't know about
+        if (key === "confirmPassword" || key === "terms" || key === "photo")
+          return;
         if (value === undefined || value === null || value === "") return;
         form.append(key, String(value));
       });
 
-      if (photoFile instanceof File) {
-        form.append("photo", photoFile);
+      if (data.photo instanceof File) {
+        form.append("photo", data.photo);
       }
 
       const res = await UserSignup(form).unwrap();
@@ -138,9 +217,19 @@ export function SignupFormV2({
   };
 
   //bring the first invalid field into view when submit is blocked
-  const onInvalid = () => {
-    const first = (Object.keys(errors) as FieldName[])[0];
-    if (first) setFocus(first as any);
+  const focusField = (name: FieldName) => {
+    if (UNFOCUSABLE.includes(name)) {
+      document
+        .getElementById(name)
+        ?.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+    setFocus(name as any);
+  };
+
+  const onInvalid = (formErrors: Record<string, unknown>) => {
+    const first = (Object.keys(formErrors) as FieldName[])[0];
+    if (first) focusField(first);
   };
 
   const Label = ({
@@ -203,8 +292,9 @@ export function SignupFormV2({
         <CardHeader>
           <CardTitle>{title}</CardTitle>
           <CardDescription>
-            Create your account by filling in the details below. Fields marked{" "}
-            <span className="text-red-500">*</span> are required.
+            Create your account by filling in the details below. Every field is
+            required — we need the full profile to verify your account and pay
+            out your returns.
           </CardDescription>
         </CardHeader>
 
@@ -233,7 +323,7 @@ export function SignupFormV2({
                     <li key={name} className="text-sm text-red-600">
                       <button
                         type="button"
-                        onClick={() => setFocus(name as any)}
+                        onClick={() => focusField(name)}
                         className="underline underline-offset-2 hover:no-underline"
                       >
                         {FIELD_LABELS[name] || name}
@@ -364,9 +454,12 @@ export function SignupFormV2({
               {/* ---------- Personal ---------- */}
               <Section title="Personal" description="A few details about you">
                 <div>
-                  <Label htmlFor="nid">NID</Label>
+                  <Label htmlFor="nid" required>
+                    NID
+                  </Label>
                   <input
-                    placeholder="Enter NID number"
+                    inputMode="numeric"
+                    placeholder="10, 13 or 17 digits"
                     {...fieldProps("nid")}
                     {...register("nid")}
                   />
@@ -374,17 +467,40 @@ export function SignupFormV2({
                 </div>
 
                 <div>
-                  <Label htmlFor="gender">Gender</Label>
+                  <Label htmlFor="gender" required>
+                    Gender
+                  </Label>
                   <select {...fieldProps("gender")} {...register("gender")}>
                     <option value="">Select Gender</option>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
+                    <option value="Other">Other</option>
                   </select>
                   <Err name="gender" />
                 </div>
 
                 <div>
-                  <Label htmlFor="fatherName">Father&apos;s Name</Label>
+                  <Label htmlFor="bloodGroup" required>
+                    Blood Group
+                  </Label>
+                  <select
+                    {...fieldProps("bloodGroup")}
+                    {...register("bloodGroup")}
+                  >
+                    <option value="">Select Blood Group</option>
+                    {BLOOD_GROUPS.map((group) => (
+                      <option key={group} value={group}>
+                        {group}
+                      </option>
+                    ))}
+                  </select>
+                  <Err name="bloodGroup" />
+                </div>
+
+                <div>
+                  <Label htmlFor="fatherName" required>
+                    Father&apos;s Name
+                  </Label>
                   <input
                     placeholder="Enter father's name"
                     {...fieldProps("fatherName")}
@@ -394,7 +510,9 @@ export function SignupFormV2({
                 </div>
 
                 <div>
-                  <Label htmlFor="motherName">Mother&apos;s Name</Label>
+                  <Label htmlFor="motherName" required>
+                    Mother&apos;s Name
+                  </Label>
                   <input
                     placeholder="Enter mother's name"
                     {...fieldProps("motherName")}
@@ -404,7 +522,9 @@ export function SignupFormV2({
                 </div>
 
                 <div>
-                  <Label htmlFor="currentProfession">Current Profession</Label>
+                  <Label htmlFor="currentProfession" required>
+                    Current Profession
+                  </Label>
                   <input
                     placeholder="Enter your profession"
                     {...fieldProps("currentProfession")}
@@ -414,7 +534,9 @@ export function SignupFormV2({
                 </div>
 
                 <div>
-                  <Label htmlFor="facebook">Facebook Link</Label>
+                  <Label htmlFor="facebook" required>
+                    Facebook Link
+                  </Label>
                   <input
                     type="url"
                     placeholder="https://facebook.com/yourprofile"
@@ -425,26 +547,30 @@ export function SignupFormV2({
                 </div>
 
                 <div className="sm:col-span-2">
-                  <Label htmlFor="address">Address</Label>
+                  <Label htmlFor="address" required>
+                    Address
+                  </Label>
                   <textarea
                     rows={3}
                     autoComplete="street-address"
-                    placeholder="Enter address"
+                    placeholder="House, road, area, city"
                     {...fieldProps("address")}
                     {...register("address")}
                   />
                   <Err name="address" />
                 </div>
 
-                <div className="sm:col-span-2">
+                <div className="sm:col-span-2" id="photo">
                   <p className="mb-1.5 block text-sm font-medium text-gray-700">
                     Profile Photo
+                    <span className="ml-0.5 text-red-500">*</span>
                   </p>
                   <SingleFileUpload
                     image={photoFile}
-                    setImage={setPhotoFile}
+                    setImage={handlePhotoChange}
                     label=" "
                   />
+                  <Err name="photo" />
                 </div>
               </Section>
 
@@ -454,7 +580,9 @@ export function SignupFormV2({
                 description="Who receives your holdings in your absence"
               >
                 <div>
-                  <Label htmlFor="nomineeName">Nominee Name</Label>
+                  <Label htmlFor="nomineeName" required>
+                    Nominee Name
+                  </Label>
                   <input
                     placeholder="Enter nominee name"
                     {...fieldProps("nomineeName")}
@@ -464,7 +592,9 @@ export function SignupFormV2({
                 </div>
 
                 <div>
-                  <Label htmlFor="nomineeRelation">Nominee Relation</Label>
+                  <Label htmlFor="nomineeRelation" required>
+                    Nominee Relation
+                  </Label>
                   <input
                     placeholder="e.g. Spouse, Son, Daughter"
                     {...fieldProps("nomineeRelation")}
@@ -474,7 +604,9 @@ export function SignupFormV2({
                 </div>
 
                 <div>
-                  <Label htmlFor="nomineeMobile">Nominee Mobile</Label>
+                  <Label htmlFor="nomineeMobile" required>
+                    Nominee Mobile
+                  </Label>
                   <input
                     type="tel"
                     placeholder="01XXXXXXXXX"
@@ -491,7 +623,9 @@ export function SignupFormV2({
                 description="Where your returns are paid out"
               >
                 <div>
-                  <Label htmlFor="bankAccountName">Account Name</Label>
+                  <Label htmlFor="bankAccountName" required>
+                    Account Name
+                  </Label>
                   <input
                     placeholder="Enter bank account name"
                     {...fieldProps("bankAccountName")}
@@ -501,8 +635,11 @@ export function SignupFormV2({
                 </div>
 
                 <div>
-                  <Label htmlFor="bankAccountNo">Account Number</Label>
+                  <Label htmlFor="bankAccountNo" required>
+                    Account Number
+                  </Label>
                   <input
+                    inputMode="numeric"
                     placeholder="Enter bank account number"
                     {...fieldProps("bankAccountNo")}
                     {...register("bankAccountNo")}
@@ -512,7 +649,9 @@ export function SignupFormV2({
 
                 {/* these two used to be registered to each other's field */}
                 <div>
-                  <Label htmlFor="bankName">Bank Name</Label>
+                  <Label htmlFor="bankName" required>
+                    Bank Name
+                  </Label>
                   <input
                     placeholder="Enter bank name"
                     {...fieldProps("bankName")}
@@ -522,7 +661,9 @@ export function SignupFormV2({
                 </div>
 
                 <div>
-                  <Label htmlFor="branchName">Branch Name</Label>
+                  <Label htmlFor="branchName" required>
+                    Branch Name
+                  </Label>
                   <input
                     placeholder="Enter branch name"
                     {...fieldProps("branchName")}
@@ -532,9 +673,12 @@ export function SignupFormV2({
                 </div>
 
                 <div>
-                  <Label htmlFor="routingNo">Routing No.</Label>
+                  <Label htmlFor="routingNo" required>
+                    Routing No.
+                  </Label>
                   <input
-                    placeholder="Enter routing no."
+                    inputMode="numeric"
+                    placeholder="9 digits"
                     {...fieldProps("routingNo")}
                     {...register("routingNo")}
                   />
@@ -543,7 +687,29 @@ export function SignupFormV2({
               </Section>
             </div>
 
-            <div className="mt-8">
+            <div className="mt-8 border-t border-gray-100 pt-6">
+              <label
+                htmlFor="terms"
+                className="flex cursor-pointer items-start gap-3 text-sm text-gray-700"
+              >
+                <input
+                  id="terms"
+                  type="checkbox"
+                  aria-invalid={errors.terms ? "true" : "false"}
+                  aria-describedby={errors.terms ? "terms-error" : undefined}
+                  className="mt-0.5 h-4 w-4 shrink-0 rounded border-gray-300 accent-[#31AD5C]"
+                  {...register("terms")}
+                />
+                <span>
+                  I confirm the information above is accurate and I accept the
+                  terms &amp; conditions
+                  <span className="ml-0.5 text-red-500">*</span>
+                </span>
+              </label>
+              <Err name="terms" />
+            </div>
+
+            <div className="mt-6">
               <Button
                 type="submit"
                 disabled={isSubmitting}

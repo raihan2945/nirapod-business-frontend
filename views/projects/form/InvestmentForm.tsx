@@ -73,7 +73,8 @@ const InvestmentForm: React.FC<ComponentProps> = ({
     project ? project : null,
   );
 
-  const query = {};
+  //only running projects can take an investment
+  const query = { status: "ACTIVE" };
 
   const { data: projects } = useGetAllProjectsQuery(generateQueryArray(query));
   const { data: userData, isLoading: userLoading } =
@@ -137,7 +138,11 @@ const InvestmentForm: React.FC<ComponentProps> = ({
       }
 
       handleResponse(res);
-      modalCancel();
+
+      //keep the modal open on failure so the user can see the error and retry
+      if (!(res as any)?.error) {
+        modalCancel();
+      }
     } catch (error) {
       console.error("❌ Error submitting form:", error);
       alert("Failed to create blog.");

@@ -25,16 +25,29 @@ type componentProps = {
   createInvestment: any;
 };
 
-const BankInfoView = ({ createInvestment }: componentProps) => {
-  const [page, setPage] = useState<any>(3);
+//how many running projects are shown before "View All" is offered
+const PREVIEW_COUNT = 3;
 
-  const { data } = useGetAllProjectsQuery(generateQueryArray({ size: page }));
+const BankInfoView = ({ createInvestment }: componentProps) => {
+  const [page, setPage] = useState<any>(PREVIEW_COUNT);
+
+  //only running projects can be invested in - closed/inactive ones must not
+  //appear here, since every card offers a "Make Investment" button
+  const { data } = useGetAllProjectsQuery(
+    generateQueryArray({ size: page, status: "ACTIVE" }),
+  );
+
+  const projects = data?.data || [];
+  const totalProjects = data?.pagination?.total_items ?? projects.length;
 
   return (
     <div className="mt-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 md:gap-8">
-        {data?.data?.map((project: any) => (
-          <div className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-2xl transition-all duration-300 group border border-gray-100 flex flex-col h-full">
+        {projects.map((project: any) => (
+          <div
+            key={project.id}
+            className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-2xl transition-all duration-300 group border border-gray-100 flex flex-col h-full"
+          >
             {/* Image */}
             {/* <div className="relative h-20 sm:h-20 overflow-hidden">
               <Image
@@ -97,11 +110,25 @@ const BankInfoView = ({ createInvestment }: componentProps) => {
           </div>
         ))}
       </div>
-      <div className="mt-6 w-full flex justify-center">
-        <Button size="large"  className="bg-green-500 hover:bg-green-600 rounded-lg" onClick={() => setPage(page == 3 ? 0 : 3)}>
-          {page == 3 ? "View All" : "View Less"}
-        </Button>
-      </div>
+
+      {projects.length === 0 && (
+        <p className="text-gray-500 py-6 text-center">
+          There are no running projects at the moment.
+        </p>
+      )}
+
+      {/* nothing to expand to when every running project already fits */}
+      {totalProjects > PREVIEW_COUNT && (
+        <div className="mt-6 w-full flex justify-center">
+          <Button
+            size="large"
+            className="bg-green-500 hover:bg-green-600 rounded-lg"
+            onClick={() => setPage(page == PREVIEW_COUNT ? 0 : PREVIEW_COUNT)}
+          >
+            {page == PREVIEW_COUNT ? "View All" : "View Less"}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
