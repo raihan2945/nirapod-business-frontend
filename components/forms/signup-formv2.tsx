@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AlertCircle, Eye, EyeOff } from "lucide-react";
 import SingleFileUpload from "../upload/singleFileUpload";
+import { compressImage } from "@/utils/compressImage";
 
 //BD mobile numbers: 01[3-9] followed by 8 digits
 const bdMobile = /^01[3-9]\d{8}$/;
@@ -27,7 +28,22 @@ const nidNumber = /^(\d{10}|\d{13}|\d{17})$/;
 
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
+//matches the backend multer limit and nginx client_max_body_size
+const MAX_PHOTO_MB = 5;
+const MAX_PHOTO_BYTES = MAX_PHOTO_MB * 1024 * 1024;
+
 const required = (label: string) => `${label} is required`;
+
+//errors that never reached the API (nginx 413, network drop, CORS) come back
+//without a JSON body, so there is no `data.message` to show
+const signupErrorMessage = (error: any): string => {
+  if (error?.data?.message) return error.data.message;
+  if (error?.status === 413 || error?.originalStatus === 413)
+    return `Profile photo is too large. Please choose an image under ${MAX_PHOTO_MB}MB.`;
+  if (error?.status === "FETCH_ERROR")
+    return "Could not reach the server. If you attached a large photo, try a smaller one; otherwise check your connection and try again.";
+  return "Signup failed. Please try again.";
+};
 
 const signupSchema = z
   .object({
@@ -68,10 +84,12 @@ const signupSchema = z
       .min(10, "Enter a full address (at least 10 characters)"),
     //not a registered input - kept in sync from the upload widget so it takes
     //part in validation and shows up in the error summary like everything else
-    photo: z.custom<File>(
-      (value) => value instanceof File,
-      "Profile photo is required",
-    ),
+    photo: z
+      .custom<File>((value) => value instanceof File, "Profile photo is required")
+      .refine(
+        (file) => !(file instanceof File) || file.size <= MAX_PHOTO_BYTES,
+        `Photo must be ${MAX_PHOTO_MB}MB or smaller`,
+      ),
     nomineeName: z.string().trim().min(1, required("Nominee name")),
     nomineeRelation: z.string().trim().min(1, required("Nominee relation")),
     nomineeMobile: z
@@ -184,7 +202,8 @@ export function SignupFormV2({
   //the required-photo rule runs with the rest of the schema
   const handlePhotoChange = (file: any) => {
     setPhotoFile(file);
-    setValue("photo", file, { shouldValidate: isSubmitted, shouldDirty: true });
+    //validate straight away so an oversized photo is flagged on selection
+    setValue("photo", file, { shouldValidate: true, shouldDirty: true });
   };
 
   const onSubmit = async (data: SignupFormData) => {
@@ -202,7 +221,8 @@ export function SignupFormV2({
       });
 
       if (data.photo instanceof File) {
-        form.append("photo", data.photo);
+        const photo = await compressImage(data.photo);
+        form.append("photo", photo, photo.name);
       }
 
       const res = await UserSignup(form).unwrap();
@@ -212,7 +232,7 @@ export function SignupFormV2({
       if (process.env.NODE_ENV !== "production") {
         console.error("Signup failed:", error);
       }
-      setApiError(error?.data?.message || "Signup failed. Please try again.");
+      setApiError(signupErrorMessage(error));
     }
   };
 
@@ -564,6 +584,9 @@ export function SignupFormV2({
                   <p className="mb-1.5 block text-sm font-medium text-gray-700">
                     Profile Photo
                     <span className="ml-0.5 text-red-500">*</span>
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    JPG, PNG or WEBP, up to {MAX_PHOTO_MB}MB
                   </p>
                   <SingleFileUpload
                     image={photoFile}

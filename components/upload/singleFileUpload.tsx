@@ -84,7 +84,7 @@ const SingleFileUpload: React.FC<ComponentProps> = ({
           ref={fileInputRef}
           style={{ display: "none" }}
           type="file"
-          accept="/*image/"
+          accept="image/*"
         />
         <Button
           //   size="small"
