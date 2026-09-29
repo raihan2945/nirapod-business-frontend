@@ -38,6 +38,11 @@ export const createUserDTOSchema = z.object({
   verifyStatus: z.enum(["PENDING", "APPROVED", "CANCELLED"]).optional(),
 });
 
+// Email is the login identifier, so an existing user can't be left without one
+const updateUserDTOSchema = createUserDTOSchema.extend({
+  email: z.string().trim().email("Invalid email"),
+});
+
 type UserFormData = z.infer<typeof createUserDTOSchema>;
 
 interface ComponentProps {
@@ -119,7 +124,9 @@ const UserForm: React.FC<ComponentProps> = ({
     reset,
     control,
   } = useForm<UserFormData>({
-    resolver: zodResolver(createUserDTOSchema) as any,
+    resolver: zodResolver(
+      formType === "edit" ? updateUserDTOSchema : createUserDTOSchema
+    ) as any,
     defaultValues: {
       ...info,
     },
@@ -240,7 +247,10 @@ const UserForm: React.FC<ComponentProps> = ({
         <input
           {...register("email")}
           className="w-full border rounded p-2"
-          placeholder="Enter email (optional)"
+          type="email"
+          placeholder={
+            formType === "edit" ? "Enter email" : "Enter email (optional)"
+          }
         />
         {errors.email && (
           <p className="text-red-500 text-sm">{errors.email.message}</p>
