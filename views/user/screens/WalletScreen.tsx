@@ -34,7 +34,7 @@ export default function WalletScreen() {
     <div>
       <PageTitle title="Wallet" />
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,380px)_1fr] lg:items-start">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,380px)_1fr] lg:items-start">
         <div {...rise(0)} className="relative animate-np-rise overflow-hidden rounded-[28px] bg-gradient-to-br from-[#123F31] to-[#1C6B4B] p-5 text-white sm:p-6 lg:sticky lg:top-8">
           <span aria-hidden className="pointer-events-none absolute -right-20 -top-24 size-56 rounded-full border-[28px] border-white/[0.05]" />
           <div className="relative flex items-center justify-between">

@@ -78,7 +78,7 @@ export default function PortfolioScreen({ status }: { status?: string }) {
         <ErrorState onRetry={list.refetch} />
       ) : list.items.length ? (
         <>
-          <div className="grid gap-3 md:grid-cols-2 2xl:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 2xl:grid-cols-3">
             {list.items.map((inv, i) => (
               <div key={inv.id} {...rise(Math.min(i, 8))}>
                 <InvestmentCard investment={inv} />

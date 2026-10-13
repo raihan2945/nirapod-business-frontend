@@ -100,7 +100,7 @@ export default function ProjectDetailScreen({ id }: { id: string }) {
         <div className="absolute inset-0 bg-gradient-to-b from-np-deeper/30 via-transparent to-np-deeper/70" />
       </div>
 
-      <div className="grid gap-4 pt-5 lg:grid-cols-[1fr_340px] lg:items-start">
+      <div className="grid grid-cols-1 gap-4 pt-5 lg:grid-cols-[1fr_340px] lg:items-start">
         <div className="space-y-4">
           <div {...rise(0)} className="animate-np-rise space-y-2">
             <StatusBadge status={project.status} />

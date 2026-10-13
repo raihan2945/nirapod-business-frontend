@@ -63,7 +63,7 @@ export default function InvestmentDetailScreen({ id }: { id: string }) {
     <>
       <ScreenHeader title={`Investment #${investment.serial}`} back="/user/portfolio" />
 
-      <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:items-start">
         <div className="space-y-4">
           {/* summary */}
           <Card {...rise(0)} className="animate-np-rise">

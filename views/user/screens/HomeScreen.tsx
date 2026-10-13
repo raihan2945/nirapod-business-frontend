@@ -73,7 +73,7 @@ export default function HomeScreen() {
         </div>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[1.35fr_1fr]">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.35fr_1fr]">
         {/* balance + actions */}
         <div {...rise(1)}>
           <BalanceCard

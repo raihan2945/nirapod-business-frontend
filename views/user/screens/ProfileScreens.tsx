@@ -111,7 +111,7 @@ export function ProfileScreen() {
         </div>
       </div>
 
-      <div className="mt-6 grid gap-5 md:grid-cols-2">
+      <div className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2">
         <div {...rise(1)} className="animate-np-rise space-y-5">
           <MenuGroup title="Account">
             <MenuItem icon={IdCard} label="Personal details" description="KYC, nominee and bank info" href="/user/profile/details" />
@@ -200,7 +200,7 @@ function UserDetailsCards({ user }: { user: User }) {
   ];
 
   return (
-    <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:items-start">
       {groups.map((g, i) => (
         <Card key={g.title} {...rise(i)} className={cn("animate-np-rise", i === 0 && "lg:row-span-2")}>
           <h3 className="mb-1 text-[17px] font-bold">{g.title}</h3>
@@ -333,7 +333,7 @@ export function EditProfileScreen() {
         </div>
 
         <Section title="Personal">
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <TextInput label="Full name" required {...register("fullName")} error={e("fullName")} />
             <TextInput label="Mobile" required inputMode="tel" maxLength={11} {...register("mobile")} error={e("mobile")} />
             <TextInput label="NID" inputMode="numeric" maxLength={17} {...register("nid")} error={e("nid")} />
@@ -350,7 +350,7 @@ export function EditProfileScreen() {
         </Section>
 
         <Section title="Nominee">
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <TextInput label="Nominee name" {...register("nomineeName")} />
             <TextInput label="Relation" {...register("nomineeRelation")} />
             <TextInput label="Nominee mobile" inputMode="tel" maxLength={11} {...register("nomineeMobile")} error={e("nomineeMobile")} />
@@ -358,7 +358,7 @@ export function EditProfileScreen() {
         </Section>
 
         <Section title="Bank account">
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <TextInput label="Account name" {...register("bankAccountName")} />
             <TextInput label="Account number" inputMode="numeric" {...register("bankAccountNo")} error={e("bankAccountNo")} />
             <TextInput label="Bank name" {...register("bankName")} />

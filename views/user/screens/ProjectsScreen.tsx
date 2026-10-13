@@ -55,7 +55,7 @@ export default function ProjectsScreen() {
 
       <div className="mt-5">
         {list.loading ? (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
             {[0, 1, 2].map((i) => (
               <Skeleton key={i} className="h-[340px] rounded-[20px]" />
             ))}
@@ -64,7 +64,7 @@ export default function ProjectsScreen() {
           <ErrorState onRetry={list.refetch} />
         ) : list.items.length ? (
           <>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
               {list.items.map((p, i) => (
                 <div key={p.id} {...rise(Math.min(i, 8))} className="flex min-w-0 animate-np-rise">
                   <ProjectCard project={p} />
