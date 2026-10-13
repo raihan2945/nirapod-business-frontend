@@ -227,7 +227,7 @@ export function SignupFormV2({
 
       const res = await UserSignup(form).unwrap();
       handleResponse(res);
-      router.push("/user/profile");
+      router.push("/user");
     } catch (error: any) {
       if (process.env.NODE_ENV !== "production") {
         console.error("Signup failed:", error);

@@ -78,7 +78,7 @@ export function SignupForm({
     try {
       const res = await UserSignup({ ...data }).unwrap();
       handleResponse(res);
-      router.push("/user/profile"); // Redirect to login page after successful signup
+      router.push("/user"); // Redirect to login page after successful signup
     } catch (error: any) {
       if (process.env.NODE_ENV !== "production") {
         console.error("Signup failed:", error);

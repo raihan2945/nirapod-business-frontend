@@ -120,6 +120,19 @@ const authApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Users"],
     }),
+
+    //signed-in password change - the backend identifies the user by x-user-id
+    changePassword: builder.mutation<
+      { message?: string },
+      { userId: string; oldPassword: string; newPassword: string }
+    >({
+      query: ({ userId, oldPassword, newPassword }) => ({
+        url: `/api/v1/auth/update-password`,
+        method: "PATCH",
+        body: { oldPassword, newPassword },
+        headers: { "x-user-id": userId },
+      }),
+    }),
   }),
   overrideExisting: true,
 });
@@ -131,6 +144,7 @@ export const {
   useVerifyOtpMutation,
   useUpdateForgotPasswordMutation,
   useUpdatePasswordMutation,
+  useChangePasswordMutation,
 } = authApi;
 
 export default authApi;

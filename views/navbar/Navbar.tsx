@@ -76,7 +76,7 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
     userProfile?.role === "admin"
       ? { href: "/admin/dashboard", label: "Dashboard" }
       : userProfile?.role === "user"
-        ? { href: "/user/profile", label: "Profile" }
+        ? { href: "/user", label: "My Account" }
         : { href: "/login/login-user", label: "Login" };
 
   return (
