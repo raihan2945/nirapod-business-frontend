@@ -30,6 +30,9 @@ const projectSchema = z.object({
   calculatedRoi: decimalSchema.default(0),
   musharakaMarkupReturn: z.string().optional(),
   expectedRoi: z.string().optional(),
+  //drive the expectedRoi auto-calculation
+  baseAmount: decimalSchema.default(100000),
+  returnPercentage: decimalSchema.default(3),
   bankInfo: z.string().optional(),
   totalShares: z.coerce.number().int().default(0),
   raisedShares: z.coerce.number().int().default(0),
@@ -145,8 +148,48 @@ const ProjectForm: React.FC<ComponentProps> = ({
     watch,
   } = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema) as any,
-    defaultValues: info || {},
+    defaultValues: { baseAmount: 100000, returnPercentage: 3, ...(info || {}) },
   });
+
+  // 🧮 Expected ROI = (minInvestment / baseAmount) x (baseAmount x pct%) x repayment.
+  // Only recalculates on user input, so editing a project keeps its saved value.
+  useEffect(() => {
+    const deps = ["minInvestment", "baseAmount", "returnPercentage", "repayment"];
+    const sub = watch((v, { name, type }) => {
+      if (type !== "change" || !name || !deps.includes(name)) return;
+      const base = Number(v.baseAmount) || 0;
+      const min = Number(v.minInvestment) || 0;
+      const pct = Number(v.returnPercentage) || 0;
+      const rep = Number(v.repayment) || 0;
+      //without a repayment count the total would just be 0 - leave the field alone
+      if (base <= 0 || rep <= 0) return;
+      const roi = base * (pct / 100) * (min / base) * rep;
+      setValue("expectedRoi", String(Math.round(roi * 100) / 100));
+    });
+    return () => sub.unsubscribe();
+  }, [watch, setValue]);
+
+  // live breakdown shown under Expected ROI
+  const [wMin, wBase, wPct, wRep] = watch([
+    "minInvestment",
+    "baseAmount",
+    "returnPercentage",
+    "repayment",
+  ]);
+  const roiHint = (() => {
+    const base = Number(wBase) || 0;
+    const min = Number(wMin) || 0;
+    const pct = Number(wPct) || 0;
+    const rep = Number(wRep) || 0;
+    if (base <= 0) return "Enter a Base Amount to calculate Expected ROI.";
+    if (min <= 0) return "Enter Min Investment to calculate Expected ROI.";
+    const monthly = base * (pct / 100) * (min / base);
+    const fmt = (n: number) =>
+      n.toLocaleString("en-US", { maximumFractionDigits: 2 });
+    if (rep <= 0)
+      return `${fmt(monthly)} tk per repayment — enter Repayment to calculate the total.`;
+    return `${fmt(monthly)} tk × ${rep} repayments = ${fmt(monthly * rep)} tk`;
+  })();
 
   // ✅ Handle cover photo change
   const handleCoverPhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -264,6 +307,9 @@ const ProjectForm: React.FC<ComponentProps> = ({
         murabahaMarkupReturn: info?.murabahaMarkupReturn || 0,
         temporaryReturnAmount: info?.temporaryReturnAmount ?? 500,
         calculatedRoi: info?.calculatedRoi || 0,
+        expectedRoi: info?.expectedRoi || "",
+        baseAmount: info?.baseAmount ?? 100000,
+        returnPercentage: info?.returnPercentage ?? 3,
         repayment: info?.repayment || 0,
         projectDuration: info?.projectDuration || 0,
         leftDays: info?.leftDays || 0,
@@ -467,6 +513,41 @@ const ProjectForm: React.FC<ComponentProps> = ({
         </div>
 
         <div>
+          <label className="block mb-1 font-medium">Base Amount (tk)</label>
+          <input
+            type="number"
+            step="0.01"
+            {...register("baseAmount")}
+            className="w-full border rounded p-2"
+          />
+          {errors?.baseAmount && (
+            <p className="text-red-500 text-sm">
+              {errors?.baseAmount?.message}
+            </p>
+          )}
+        </div>
+        <div>
+          <label className="block mb-1 font-medium">
+            Return Percentage (% per month)
+          </label>
+          <input
+            type="number"
+            step="0.01"
+            {...register("returnPercentage")}
+            className="w-full border rounded p-2"
+          />
+          <p className="text-xs text-gray-500 mt-1">
+            Expected ROI = (Min Investment ÷ Base Amount) × Base Amount × % ×
+            Repayment
+          </p>
+          {errors?.returnPercentage && (
+            <p className="text-red-500 text-sm">
+              {errors?.returnPercentage?.message}
+            </p>
+          )}
+        </div>
+
+        <div>
           <label className="block mb-1 font-medium">
             Musharakah Muarkup Return
           </label>
@@ -490,9 +571,10 @@ const ProjectForm: React.FC<ComponentProps> = ({
             {...register("expectedRoi")}
             className="w-full border rounded p-2"
           />
-          {errors?.calculatedRoi && (
+          <p className="text-xs text-gray-500 mt-1">{roiHint}</p>
+          {errors?.expectedRoi && (
             <p className="text-red-500 text-sm">
-              {errors?.calculatedRoi?.message}
+              {errors?.expectedRoi?.message}
             </p>
           )}
         </div>
