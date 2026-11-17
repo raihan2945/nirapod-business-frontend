@@ -121,7 +121,8 @@ const authApi = apiSlice.injectEndpoints({
       invalidatesTags: ["Users"],
     }),
 
-    //signed-in password change - the backend identifies the user by x-user-id
+    //signed-in password change - the backend identifies the user from the
+    //bearer token (attached by prepareHeaders); x-user-id is ignored
     changePassword: builder.mutation<
       { message?: string },
       { userId: string; oldPassword: string; newPassword: string }

@@ -71,7 +71,8 @@ const projectInvestmentApi = apiSlice.injectEndpoints({
           authorization: `Bearer ${token}`,
         },
       }),
-      //paying the last return closes the investment and credits the wallet
+      //paying a return credits the wallet; the last one also closes the
+      //investment and refunds the principal
       invalidatesTags: ["ProjectInvestments", "Users", "Wallet"],
     }),
 

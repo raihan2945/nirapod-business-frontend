@@ -541,7 +541,7 @@ const UserForm: React.FC<ComponentProps> = ({
           type="text"
           {...register("password")}
           className="w-full border rounded p-2"
-          placeholder="Enter password"
+          placeholder={formType === "edit" ? "Leave blank to keep current password" : "Enter password"}
         />
         {errors?.password && (
           <p className="text-red-500 text-sm">{errors?.password?.message}</p>
