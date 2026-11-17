@@ -76,6 +76,16 @@ const projectInvestmentApi = apiSlice.injectEndpoints({
       invalidatesTags: ["ProjectInvestments", "Users", "Wallet"],
     }),
 
+    //marks every pending return matching the list filters as PAID
+    bulkPayProjectInvestmentReturns: builder.mutation<any, { data: any }>({
+      query: ({ data }) => ({
+        url: `/api/v1/projects/investments/returns/bulk-pay`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["ProjectInvestments", "Users", "Wallet"],
+    }),
+
     deleteProjectInvestmentReturnById: builder.mutation<any, { id: string }>({
       query: (id) => ({
         url: `/api/v1/projects/investments/returns/${id}`,
@@ -96,6 +106,7 @@ useGetAllProjectInvestmentReturnsQuery,
 useGetSingleProjectInvestmentReturnByIdQuery,
 useCreateNewProjectInvestmentReturnMutation,
 useUpdateProjectInvestmentReturnByIdMutation,
+useBulkPayProjectInvestmentReturnsMutation,
 useDeleteProjectInvestmentReturnByIdMutation
 } = projectInvestmentApi;
 export default projectInvestmentApi;

@@ -14,6 +14,8 @@ import {
 import dayjs from "dayjs";
 // import BlogForm from "./form/BlogForm";
 import useCheckAccess from "@/utils/checkAccess";
+import ProjectFilterSelect from "./ProjectFilterSelect";
+import BulkPayButton from "./BulkPayButton";
 
 const { Search } = Input;
 const { RangePicker } = DatePicker;
@@ -26,6 +28,8 @@ interface ComponentProps {
   changeQuery?: any;
   query?: any;
   clickExport?: any;
+  rows?: any[]; //rows loaded for the current filters (drives bulk pay)
+  isLoading?: boolean;
 }
 
 type DateMode = "7days" | "single" | "range" | "all";
@@ -34,6 +38,8 @@ const InvestmentReturnHeader: React.FC<ComponentProps> = ({
   query,
   changeQuery,
   clickExport,
+  rows,
+  isLoading,
 }) => {
   const [isAdd, setIsAdd] = useState<boolean>(false);
   const [dateMode, setDateMode] = useState<DateMode>("7days");
@@ -79,8 +85,15 @@ const InvestmentReturnHeader: React.FC<ComponentProps> = ({
     <>
       <h1 className="text-xl font-bold mb-6">Investment Returns</h1>
 
-      <div className="flex justify-between items-center">
+      <div className="flex flex-wrap justify-between items-end gap-4">
         <div className="my-2 flex gap-4">
+          <div>
+            <p className="text-sm mb-1 opacity-70">Project</p>
+            <ProjectFilterSelect
+              value={query["projectId"] || undefined}
+              onChange={(id) => changeQuery({ key: "projectId", value: id || null })}
+            />
+          </div>
           {/* <div>
             <p className="text-sm mb-1 opacity-70">Bike Type </p>
             <Select
@@ -109,7 +122,9 @@ const InvestmentReturnHeader: React.FC<ComponentProps> = ({
             />
           </div> */}
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-end gap-4">
+          {/* pays every pending row matching the filters (admin-only endpoint) */}
+          <BulkPayButton query={query} rows={rows} isLoading={isLoading} />
           <div>
             <p className="text-sm mb-1 opacity-70">Due date </p>
             <div className="flex items-center gap-2">

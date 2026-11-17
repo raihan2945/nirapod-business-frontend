@@ -157,6 +157,55 @@ const InvestmentReturnView: React.FC<ComponentProps> = ({
         </span>
       ),
     },
+    {
+      title: "Return",
+      key: "returnNo",
+      width: 130,
+      //which installment this row is (e.g. 4 / 6) + a strip of the whole schedule
+      render: (_, record: any) => {
+        const no = record?.returnNo;
+        const total = record?.returnTotal;
+        if (!no || !total) return <span className="text-gray-400">—</span>;
+
+        const statuses: string[] = record?.returnStatuses || [];
+        const paid = record?.returnPaid ?? 0;
+        const segColor = (s: string) =>
+          s === "PAID" ? "#22c55e" : s === "CANCELLED" ? "#f87171" : "#e5e7eb";
+
+        return (
+          <div
+            className="min-w-[96px]"
+            title={`Return ${no} of ${total} — ${paid} paid`}
+          >
+            <div className="flex items-baseline gap-1 whitespace-nowrap">
+              <span className="text-base font-semibold text-gray-800">
+                {no}
+              </span>
+              <span className="text-xs text-gray-400">/ {total}</span>
+            </div>
+            <div className="mt-1 flex gap-[3px]">
+              {statuses.map((s, i) => (
+                <span
+                  key={i}
+                  className="h-1.5 flex-1 rounded-full"
+                  style={{
+                    maxWidth: 14,
+                    minWidth: 4,
+                    background: segColor(s),
+                    //outline the segment that this row represents
+                    boxShadow:
+                      i + 1 === no ? "0 0 0 1.5px #1677ff" : undefined,
+                  }}
+                />
+              ))}
+            </div>
+            <p className="mt-1 whitespace-nowrap text-[11px] text-gray-500">
+              {paid} of {total} paid
+            </p>
+          </div>
+        );
+      },
+    },
 
     {
       title: "Return Proof",
