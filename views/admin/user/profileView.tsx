@@ -2,6 +2,8 @@
 // components/ProfileView.tsx
 import { baseUrl } from "@/utils/baseUrl";
 import Image from "next/image";
+import { useState } from "react";
+import { useLazyGetUserPasswordQuery } from "@/state/features/user/userApi";
 // import { User } from '@/types/user'; // ← adjust path & type name as needed
 import demoProfile from "/public/images/demo-profile.jpg";
 
@@ -90,7 +92,7 @@ export default function ProfileView({ user }: ProfileViewProps) {
           <InfoItem label="Nominee Mobile" value={user?.nomineeMobile} /> */}
 
           <InfoItem label="Address" value={user?.address}  />
-          <InfoItem label="Password" value={user?.password}  />
+          <InfoItem label="Password" value={<PasswordReveal userId={user?.id} />} />
 
           {/* Nominee Section */}
           {(user?.nomineeName ||
@@ -144,6 +146,52 @@ export default function ProfileView({ user }: ProfileViewProps) {
         </div>
       </div>
     </div>
+  );
+}
+
+//Admin-only: the password is fetched from GET /users/:id/password only when
+//"Show" is clicked, and dropped again on "Hide"
+function PasswordReveal({ userId }: { userId?: string }) {
+  const [fetchPassword, { data, isFetching, isError }] =
+    useLazyGetUserPasswordQuery();
+  const [visible, setVisible] = useState(false);
+
+  if (!userId) return null;
+
+  const toggle = () => {
+    if (visible) {
+      setVisible(false);
+      return;
+    }
+    fetchPassword(userId);
+    setVisible(true);
+  };
+
+  let content: React.ReactNode = "••••••••";
+  if (visible) {
+    if (isFetching) content = "Loading…";
+    else if (isError) content = <span className="text-red-600">Couldn't load password</span>;
+    else if (data?.data?.available)
+      content = <span className="font-mono select-all">{data.data.password}</span>;
+    else
+      content = (
+        <span className="text-gray-500 text-sm">
+          Not available yet. It will be after the user's next login or password change.
+        </span>
+      );
+  }
+
+  return (
+    <span className="inline-flex items-center gap-3 flex-wrap">
+      {content}
+      <button
+        type="button"
+        onClick={toggle}
+        className="text-sm font-medium text-green-700 hover:underline"
+      >
+        {visible ? "Hide" : "Show"}
+      </button>
+    </span>
   );
 }
 

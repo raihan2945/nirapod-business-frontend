@@ -98,6 +98,18 @@ const userApi = apiSlice.injectEndpoints({
       invalidatesTags: ["Users"],
     }),
 
+    //admin only. Not cached: fetched fresh each time the admin clicks "Show"
+    getUserPassword: builder.query<
+      { data: { password: string | null; available: boolean } },
+      string
+    >({
+      query: (id) => ({
+        url: `/api/v1/users/${id}/password`,
+        method: "GET",
+      }),
+      keepUnusedDataFor: 0,
+    }),
+
     deleteUserById: builder.mutation<any, any>({
       query: (id) => ({
         url: `/api/v1/users/${id}`,
@@ -119,6 +131,7 @@ export const {
   useGetAllUsersQuery,
   useCreateNewUserMutation,
   useDeleteUserByIdMutation,
-  useGetUserCountsByIdQuery
+  useGetUserCountsByIdQuery,
+  useLazyGetUserPasswordQuery,
 } = userApi;
 export default userApi;
